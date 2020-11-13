@@ -1,7 +1,6 @@
 package com.motrixi.datacollection.utils
 
 import android.content.Context
-import android.webkit.WebView
 
 /**
  * author : Jason

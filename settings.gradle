@@ -1,2 +1,2 @@
-include ':SDKLib'
-rootProject.name = "DataCollectionSDK"
+include ':app'
+rootProject.name = "MotrixiSDK"

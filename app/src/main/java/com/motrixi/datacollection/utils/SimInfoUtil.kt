@@ -3,7 +3,6 @@ package com.motrixi.datacollection.utils
 import android.content.Context
 import android.telephony.TelephonyManager
 import android.text.TextUtils
-import java.util.*
 
 
 /**

@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.UploadCollectedData
 import org.apache.commons.lang3.concurrent.BasicThreadFactory

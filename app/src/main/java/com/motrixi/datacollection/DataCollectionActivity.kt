@@ -3,8 +3,6 @@ package com.motrixi.datacollection
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.content.res.Resources
-import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +16,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.gson.JsonObject
@@ -36,7 +33,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
-import androidx.core.content.res.ResourcesCompat.ThemeCompat as ThemeCompat1
 
 
 class DataCollectionActivity : AppCompatActivity() {

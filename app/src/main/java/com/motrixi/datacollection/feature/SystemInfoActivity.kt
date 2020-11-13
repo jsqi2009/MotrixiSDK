@@ -1,8 +1,6 @@
 package com.motrixi.datacollection.feature
 
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.utils.SystemInfoUtils

@@ -16,13 +16,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.core.view.ViewCompat
 import com.motrixi.datacollection.DataCollectionActivity
-import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.NetworkUtil
-import kotlinx.android.synthetic.main.fragment_show_more.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

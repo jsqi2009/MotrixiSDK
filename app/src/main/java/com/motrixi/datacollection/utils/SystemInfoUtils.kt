@@ -2,9 +2,7 @@ package com.motrixi.datacollection.utils
 
 import android.content.Context
 import android.os.Build
-import android.telephony.TelephonyManager
 import android.util.Log
-import androidx.annotation.RequiresApi
 import java.util.*
 
 

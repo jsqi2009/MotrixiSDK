@@ -19,7 +19,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
 
-    <!--<application
+   <!-- <application
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,16 +38,16 @@
         </activity>-->
 
         <activity
-            android:name=".DataCollectionActivity"
+            android:name="com.motrixi.datacollection.DataCollectionActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
 
         <!--<activity
             android:name=".DataCollectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
-        <activity android:name=".feature.SystemInfoActivity" />
+        <activity android:name="com.motrixi.datacollection.feature.SystemInfoActivity" />
 
-        <service android:name=".service.MotrixiService">
+        <service android:name="com.motrixi.datacollection.service.MotrixiService">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

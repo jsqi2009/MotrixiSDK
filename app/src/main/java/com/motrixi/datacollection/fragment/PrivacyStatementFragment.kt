@@ -2,7 +2,6 @@ package com.motrixi.datacollection.fragment
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -26,7 +25,6 @@ import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.utils.CustomStyle
 import com.motrixi.datacollection.utils.DisplayUtil
-import kotlinx.android.synthetic.main.fragment_option.*
 
 
 // TODO: Rename parameter arguments, choose names that match

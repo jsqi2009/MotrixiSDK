@@ -1,20 +1,17 @@
 package com.motrixi.datacollection.utils
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startForegroundService
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.AndroidBus
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.listener.OnAppkeyListener
-import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.ManifestMetaReader
 import com.motrixi.datacollection.network.event.UploadDataResponseEvent
