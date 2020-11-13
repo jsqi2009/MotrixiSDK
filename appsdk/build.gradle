@@ -3,7 +3,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 //添加发布到jitpack脚本
-apply from : '../publishAndroidLib.gradle'
+//apply from : '../publishAndroidLib.gradle'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.jsqi2009'//
 
 android {
     compileSdkVersion 30
