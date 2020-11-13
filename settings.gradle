@@ -1,2 +1,2 @@
-include ':appsdk'
+include ':SDKLib'
 rootProject.name = "DataCollectionSDK"
