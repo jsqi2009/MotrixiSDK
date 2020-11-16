@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+
+
 //apply plugin: 'com.github.dcendents.android-maven'
 
 
@@ -20,6 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,6 +35,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "1g"
     }
 
     /*task makeJar(type: Copy) {

@@ -45,7 +45,8 @@
             android:name=".DataCollectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
-        <activity android:name="com.motrixi.datacollection.feature.SystemInfoActivity" />
+        <activity android:name="com.motrixi.datacollection.feature.SystemInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
 
         <service android:name="com.motrixi.datacollection.service.MotrixiService">
             <intent-filter android:priority="1000">

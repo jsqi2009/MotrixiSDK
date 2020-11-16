@@ -18,7 +18,7 @@ object CustomStyle {
 
         val strokeWidth = DisplayUtil.dp2px(context, 3) // 3dp width
         val roundRadius = DisplayUtil.dp2px(context, 15) // 15dp radius
-        val strokeColor = Color.parseColor("#0096B6") // stroke color
+        val strokeColor = Color.parseColor("#000000") // stroke color
         val fillColor = Color.parseColor("#ffffff") // fill color
         val gradientDrawable = GradientDrawable() //创建drawable
         gradientDrawable.setColor(fillColor)

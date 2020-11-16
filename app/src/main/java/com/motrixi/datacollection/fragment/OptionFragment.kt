@@ -213,8 +213,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         val tvBack = TextView(activity)
         tvBack.textSize = 18F
         tvBack.text = "Back"
-//        tvBack.setTextColor(activity!!.resources.getColor(R.color.black))
-        tvBack.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
+        tvBack.setTextColor(Color.BLACK)
+//        tvBack.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
         val backParams = LinearLayout.LayoutParams(
             0,
             DisplayUtil.dp2px(activity!!, 50), 1F
@@ -229,8 +229,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         val tvConfirm = TextView(activity)
         tvConfirm.textSize = 18F
         tvConfirm.text = "Confirm"
-//        tvConfirm.setTextColor(activity!!.resources.getColor(R.color.black))
-        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
+        tvConfirm.setTextColor(Color.BLACK)
+//        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
         val more = LinearLayout.LayoutParams(
             0,
             DisplayUtil.dp2px(activity!!, 50), 1F

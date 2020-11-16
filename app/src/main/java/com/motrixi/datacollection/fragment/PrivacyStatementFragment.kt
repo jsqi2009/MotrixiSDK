@@ -178,8 +178,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         val tvCancel = TextView(activity)
         tvCancel.textSize = 18F
         tvCancel.text = "Cancel"
-//        tvCancel.setTextColor(Color.BLACK)
-        tvCancel.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
+        tvCancel.setTextColor(Color.BLACK)
+//        tvCancel.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvCancel.setTextColor(Color.WHITE)
         val cancelParams = LinearLayout.LayoutParams(
             0,
@@ -196,8 +196,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         val tvOption = TextView(activity)
         tvOption.textSize = 18F
         tvOption.text = "Options"
-//        tvOption.setTextColor(activity!!.resources.getColor(R.color.black))
-        tvOption.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
+        tvOption.setTextColor(Color.BLACK)
+//        tvOption.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvOption.setTextColor(Color.WHITE)
         val confirmParams = LinearLayout.LayoutParams(
             0,
@@ -212,8 +212,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         val tvConfirm = TextView(activity)
         tvConfirm.textSize = 18F
         tvConfirm.text = "Confirm"
-//        tvConfirm.setTextColor(activity!!.resources.getColor(R.color.black))
-        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
+        tvConfirm.setTextColor(Color.BLACK)
+//        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvConfirm.setTextColor(Color.WHITE)
         val more = LinearLayout.LayoutParams(
             0,
