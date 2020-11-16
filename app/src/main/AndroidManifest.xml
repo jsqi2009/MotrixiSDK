@@ -19,7 +19,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
 
-   <!-- <application
+    <!--<application
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -54,9 +54,13 @@
             </intent-filter>
         </service>
 
-        <meta-data
+       <!-- <meta-data
             android:name="MOTRIXI_SDK_APPID"
-            android:value="ce13d5d0-1f2e-11eb-b44e-7132fcb9deec" />
+            android:value="7536f220-27b5-11eb-96a9-6d9cb391fb34" />-->
+
+        <!--<meta-data
+            android:name="MOTRIXI_SDK_APPID"
+            android:value="ce13d5d0-1f2e-11eb-b44e-7132fcb9deec" />-->
 
     </application>
 

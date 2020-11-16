@@ -135,7 +135,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         scrollView.addView(contentLayout)
 
         val style = SpannableStringBuilder()
-        style.append(getString(R.string.fragment_private_statement))
+        style.append(Contants.PRIVATE_STATEMENT_1)
         //设置部分文字点击事件
         val clickableSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -145,13 +145,13 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
                     .commit()
             }
         }
-        style.setSpan(clickableSpan, getString(R.string.fragment_private_statement).length - 5,
-            getString(R.string.fragment_private_statement).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        style.setSpan(clickableSpan, Contants.PRIVATE_STATEMENT_1.length - 5,
+            Contants.PRIVATE_STATEMENT_1.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
 //        val colorSpan = ForegroundColorSpan(Color.parseColor(R.color.app_color.toString()))
-        val colorSpan = ForegroundColorSpan(activity!!.resources.getColor(R.color.app_color))
-        style.setSpan(colorSpan, getString(R.string.fragment_private_statement).length - 5,
-            getString(R.string.fragment_private_statement).length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+        val colorSpan = ForegroundColorSpan(Color.rgb(0, 150, 182))
+        style.setSpan(colorSpan, Contants.PRIVATE_STATEMENT_1.length - 5,
+            Contants.PRIVATE_STATEMENT_1.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
         val tvContent1 = TextView(activity)
         tvContent1.text = style
@@ -160,7 +160,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
         val tvContent2 = TextView(activity)
         tvContent2.textSize = 18F
-        tvContent2.text = getString(R.string.fragment_private_statement2)
+        tvContent2.text = Contants.PRIVATE_STATEMENT_2
 
         contentLayout.addView(tvContent1)
         contentLayout.addView(tvContent2)

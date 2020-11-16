@@ -100,8 +100,12 @@ object MotrixiSDK {
 
     private fun getAppkey(context: Context): String? {
 
-        val value = ManifestMetaReader.getMetaValue(context, "MOTRIXI_SDK_APPID")
-        return value
+        try {
+            val value = ManifestMetaReader.getMetaValue(context, "MOTRIXI_SDK_APPID")
+            return value
+        } catch (e: Exception) {
+            return ""
+        }
     }
 
     /**
