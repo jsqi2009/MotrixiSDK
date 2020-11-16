@@ -17,8 +17,7 @@ object InstalledPackagesUtil {
     fun getInstalledPackageList(context: Context): List<String>? {
         val packages: MutableList<String> = ArrayList()
         try {
-            val packageInfos: List<PackageInfo> = context.packageManager.getInstalledPackages(
-                    PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES)
+            val packageInfos: List<PackageInfo> = context.packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES)
             for (info in packageInfos) {
 
                 //非系统应用

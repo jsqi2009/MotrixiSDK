@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.TextUtils
 import com.motrixi.datacollection.network.models.DataInfo
 import com.google.gson.JsonObject
-import com.motrixi.datacollection.content.AndroidBus
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import okhttp3.OkHttpClient
@@ -31,27 +30,23 @@ object HttpClient {
 
     private var httpClient: OkHttpClient? = null
 
-    private var mBus: AndroidBus? = null
 
     var authorization: String? = null
 
     var mSession: Session? = null
 
-    var dispatchClient: DispatchClient? = null
 
     //var severRootUrl: String? = "http://" + mSession!!.baseIP + "/api/"
     var severRootUrl: String? = null
 
 
-    fun init(context: Context, bus: AndroidBus) {
+    fun init(context: Context) {
         //severRootUrl = ManifestMetaReader.getMetaValue(context, "SERVER_ROOT_URL")
         mSession = Session(context)
         if (mSession!!.hasToken()) {
             authorization = mSession!!.token
         }
         initOkHTTP(context)
-        mBus = bus
-        dispatchClient = DispatchClient(mBus!!)
         //severRootUrl = "http://" + mSession!!.baseIP + "/api/"
     }
 
@@ -133,10 +128,10 @@ object HttpClient {
         return headerMap
     }
 
-    fun verifyAppkey(context: Context, key: String?): Call<JsonObject>  {
+    fun verifyAppkey(context: Context, key: String): Call<JsonObject>  {
 
         var map: HashMap<String, Any> = HashMap()
-        map.put("app_key", key!!)
+        map.put("app_key", key)
 
         val call = mHttpApi!!.requestAuthPost(getHeaders(context),
             "api","app","check", map)

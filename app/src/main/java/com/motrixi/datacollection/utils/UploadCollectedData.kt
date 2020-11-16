@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.motrixi.datacollection.network.models.DataInfo
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
+import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.ManifestMetaReader
@@ -34,12 +35,14 @@ object UploadCollectedData {
     private var onLogListener: OnLogListener? = null
 
     var advertisingId = ""
+    var mSession: Session? = null
 
     fun formatData(context: Context) {
 
         var info: DataInfo = DataInfo()
 
         info.appKey = getAppkey(context)
+        mSession = Session(context)
 
         getAdvertisingId(context)
         Log.e("ad id", Contants.advertisingID)
@@ -60,6 +63,7 @@ object UploadCollectedData {
         info.serial  = getSerial(context)
         info.androidID  = getAndroidId(context)
         info.privacyConsent = 1
+        info.consentFormID = mSession!!.consentFormID
 
         Log.d("info", info.toString())
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
@@ -27,7 +28,6 @@ import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.event.UploadDataResponseEvent
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.UploadCollectedData
-import com.squareup.otto.Subscribe
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
@@ -257,10 +257,48 @@ class DataCollectionActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @Subscribe
-    fun onUploadDataEvent(event: UploadDataResponseEvent) {
-        if (event.isSuccess) {
-            Log.e("success", "upload success")
+    fun getCheckedValue(): String {
+        var formValue = ""
+        if (mSession!!.option_1_flag) {
+            formValue += OPTION_VALUE_1
         }
+        if (mSession!!.option_2_flag) {
+            if (TextUtils.isEmpty(formValue)) {
+                formValue += OPTION_VALUE_2
+            } else {
+                formValue = formValue + "|" + OPTION_VALUE_2
+            }
+        }
+        if (mSession!!.option_3_flag) {
+            if (TextUtils.isEmpty(formValue)) {
+                formValue += OPTION_VALUE_3
+            } else {
+                formValue = formValue + "|" + OPTION_VALUE_3
+            }
+        }
+        if (mSession!!.option_4_flag) {
+            if (TextUtils.isEmpty(formValue)) {
+                formValue += OPTION_VALUE_4
+            } else {
+                formValue = formValue + "|" + OPTION_VALUE_4
+            }
+        }
+        if (mSession!!.option_5_flag) {
+            if (TextUtils.isEmpty(formValue)) {
+                formValue += OPTION_VALUE_5
+            } else {
+                formValue = formValue + "|" + OPTION_VALUE_5
+            }
+        }
+        if (mSession!!.option_6_flag) {
+            if (TextUtils.isEmpty(formValue)) {
+                formValue += OPTION_VALUE_6
+            } else {
+                formValue = formValue + "|" + OPTION_VALUE_6
+            }
+        }
+        return formValue
     }
+
+
 }

@@ -25,8 +25,9 @@ class DataInfo: Serializable {
     var serial: String? = null
     var androidID: String? = null
     var privacyConsent: Int? = 1
+    var consentFormID: String? = null
     override fun toString(): String {
-        return "DataInfo(advertisingId=$advertisingId, appKey=$appKey, email=$email, imei=$imei, operationSystem=$operationSystem, language=$language, installedApplication=$installedApplication, location=$location, userAgent=$userAgent, deviceMake=$deviceMake, deviceModel=$deviceModel, ipAddress=$ipAddress, mcc=$mcc, deviceID=$deviceID, serial=$serial, androidID=$androidID, privacyConsent=$privacyConsent)"
+        return "DataInfo(advertisingId=$advertisingId, appKey=$appKey, email=$email, imei=$imei, operationSystem=$operationSystem, language=$language, installedApplication=$installedApplication, location=$location, userAgent=$userAgent, deviceMake=$deviceMake, deviceModel=$deviceModel, ipAddress=$ipAddress, mcc=$mcc, deviceID=$deviceID, serial=$serial, androidID=$androidID, privacyConsent=$privacyConsent, consentFormID=$consentFormID)"
     }
 
 

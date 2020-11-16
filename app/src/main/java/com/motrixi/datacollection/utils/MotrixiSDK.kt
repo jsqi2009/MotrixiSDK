@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.DataCollectionActivity
-import com.motrixi.datacollection.content.AndroidBus
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.listener.OnAppkeyListener
@@ -16,7 +15,6 @@ import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.ManifestMetaReader
 import com.motrixi.datacollection.network.event.UploadDataResponseEvent
 import com.motrixi.datacollection.service.MotrixiService
-import com.squareup.otto.Subscribe
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,15 +28,12 @@ import java.util.concurrent.Executors
  */
 object MotrixiSDK {
 
-    lateinit var mBus: AndroidBus
     var mSession: Session? = null
     private var onAppkeyListener: OnAppkeyListener? = null
 
     fun init(context: Context){
 
-        mBus = AndroidBus()
-        HttpClient.init(context, mBus)
-        mBus.register(this)
+        HttpClient.init(context)
         mSession = Session(context)
 
         startService(context)
@@ -50,9 +45,7 @@ object MotrixiSDK {
 
     fun init(context: Context, appKey: String){
 
-        mBus = AndroidBus()
-        HttpClient.init(context, mBus)
-        mBus.register(this)
+        HttpClient.init(context)
         mSession = Session(context)
 
         //mSession!!.appKey = appKey
@@ -164,14 +157,18 @@ object MotrixiSDK {
 
     private fun checkIsAgree(context: Context) {
 
-        var flag = mSession!!.agreeFlag
-        if (!flag) {
-            val intent: Intent = Intent()
-            intent.setClass(context, DataCollectionActivity::class.java)
-            context.startActivity(intent)
-        } else {
-            Log.d("is agree:", "already agree")
-            //UploadCollectedData.formatData(context)
+        try {
+            var flag = mSession!!.agreeFlag
+            if (!flag) {
+                val intent: Intent = Intent()
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.setClass(context, DataCollectionActivity::class.java)
+                context.startActivity(intent)
+            } else {
+                Log.d("is agree:", "already agree")
+                //UploadCollectedData.formatData(context)
+            }
+        } catch (e: Exception) {
         }
 
     }
@@ -185,11 +182,6 @@ object MotrixiSDK {
         mContext.startActivity(intent)
     }
 
-    @Subscribe
-    fun onUploadDataEvent(event: UploadDataResponseEvent) {
-        if (event.isSuccess) {
-            Log.e("success", "upload success")
-        }
-    }
+
 
 }

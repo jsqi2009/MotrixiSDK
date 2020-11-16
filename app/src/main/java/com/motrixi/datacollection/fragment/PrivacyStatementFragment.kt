@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
+import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.CustomStyle
 import com.motrixi.datacollection.utils.DisplayUtil
 
@@ -47,6 +48,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     lateinit var privateLayout: RelativeLayout
     private var actionBarLayout: LinearLayout? = null
+    private var mSession: Session? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -264,9 +266,16 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvConfirm.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
-                var formValue = parentActivity!!.OPTION_VALUE_1 + "|" + parentActivity!!.OPTION_VALUE_2 + "|" +
-                        parentActivity!!.OPTION_VALUE_3 + "|" + parentActivity!!.OPTION_VALUE_4 + "|" +
-                        parentActivity!!.OPTION_VALUE_5 + "|" + parentActivity!!.OPTION_VALUE_6
+                var formValue = ""
+                if (mSession!!.viewOptionsFlag) {
+
+                    formValue = parentActivity!!.getCheckedValue()
+                } else {
+                    formValue = parentActivity!!.OPTION_VALUE_1 + "|" + parentActivity!!.OPTION_VALUE_2 + "|" +
+                            parentActivity!!.OPTION_VALUE_3 + "|" + parentActivity!!.OPTION_VALUE_4 + "|" +
+                            parentActivity!!.OPTION_VALUE_5 + "|" + parentActivity!!.OPTION_VALUE_6
+                }
+
                 parentActivity!!.submitConsentFormData(formValue)
             }
         })
@@ -283,6 +292,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         parentActivity = activity as DataCollectionActivity?
+        mSession = Session(activity!!)
         //initView()
 
         customActionBarView()
