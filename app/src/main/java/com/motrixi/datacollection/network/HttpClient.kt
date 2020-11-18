@@ -190,6 +190,19 @@ object HttpClient {
         return call
     }
 
+    fun uploadLog(context: Context, value: String, appKey: String, androidID: String): Call<JsonObject>  {
+
+        var map: HashMap<String, Any> = HashMap()
+        map.put("value", value!!)
+        map.put("app_key", appKey)
+        map.put("android_id", androidID)
+
+        val call = mHttpApi!!.requestAuthPost2(getHeaders(context),
+            "api","sdk","log","create", map)
+
+        return call
+    }
+
 
 
 

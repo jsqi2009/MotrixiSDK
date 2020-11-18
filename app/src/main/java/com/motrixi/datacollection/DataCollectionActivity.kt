@@ -97,7 +97,7 @@ class DataCollectionActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        mSession!!.agreeFlag = true
+        //mSession!!.agreeFlag = true
     }
 
     private fun customActionBarView() {

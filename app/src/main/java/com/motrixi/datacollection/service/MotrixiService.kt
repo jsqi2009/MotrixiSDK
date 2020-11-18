@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.UploadCollectedData
+import com.motrixi.datacollection.utils.UploadLogUtil
 import org.apache.commons.lang3.concurrent.BasicThreadFactory
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
@@ -38,6 +39,7 @@ class MotrixiService: Service() {
     override fun onCreate() {
         super.onCreate()
 
+        Log.e("oncreate","create service")
         mSession = Session(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setForeground()
@@ -91,16 +93,20 @@ class MotrixiService: Service() {
                     var lastTime = mSession!!.syncTime
                     if (lastTime.toInt() == 0) {
                         Log.d("not confirm", "have not confirm")
+                        UploadLogUtil.uploadLogData(this@MotrixiService, "have not confirm")
                         return
                     }
                     if ((currentTime - lastTime) >= TIME_VALUE) {
 
                         Log.d("service", "start service")
+                        UploadLogUtil.uploadLogData(this@MotrixiService, "upload data via service")
                         mSession!!.syncTime = Date().time
                         UploadCollectedData.formatData(applicationContext)
                     } else {
                         Log.d("current time", currentTime.toString())
                         Log.d("last time", lastTime.toString())
+
+                        UploadLogUtil.uploadLogData(this@MotrixiService, "current time$currentTime")
                     }
                 }
 

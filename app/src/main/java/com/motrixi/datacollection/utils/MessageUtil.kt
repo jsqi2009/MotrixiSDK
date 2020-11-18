@@ -22,4 +22,17 @@ object MessageUtil {
             return ""
         }
     }
+
+    fun uploadLog(msg: String): String {
+
+        try {
+            var jsonObject = JSONObject()
+            jsonObject.put("info", msg)
+
+//            return jsonObject.toString()
+            return msg
+        } catch (e: Exception) {
+            return ""
+        }
+    }
 }

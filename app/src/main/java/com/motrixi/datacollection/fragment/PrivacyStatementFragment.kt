@@ -254,18 +254,21 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
         ivBack.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
+
                 activity!!.finish()
             }
         })
 
         tvCancel.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
+                mSession!!.agreeFlag = true
                 activity!!.finish()
             }
         })
         tvConfirm.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
+                mSession!!.agreeFlag = true
                 var formValue = ""
                 if (mSession!!.viewOptionsFlag) {
 

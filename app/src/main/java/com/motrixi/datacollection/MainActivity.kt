@@ -68,8 +68,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         MotrixiSDK.setOnLogListener(object : OnLogListener{
             override fun onLogListener(info: String) {
                 Log.e("listener", info)
+
+                //info 内容为json字符串，格式如{"type":1001,"success":true,"info":"App key available"}
             }
         })
+
+        MotrixiSDK.resetConsentForm(this)
+
+
+        UploadCollectedData.formatData(this)
 
 
     }

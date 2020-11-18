@@ -70,9 +70,12 @@ object GPSLocationUtil {
         //location changed
         override fun onLocationChanged(location: Location) {
             mLocation = location
-            Log.d(TAG, "time：" + location.time)
-            Log.d(TAG, "lon：" + location.longitude)
-            Log.d(TAG, "lat：" + location.latitude)
+            if (mLocation != null) {
+                Log.d(TAG, "time：" + location.time)
+                Log.d(TAG, "lon：" + location.longitude)
+                Log.d(TAG, "lat：" + location.latitude)
+            }
+
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

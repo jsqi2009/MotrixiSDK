@@ -74,8 +74,10 @@ object MotrixiSDK {
         val startService = Intent(context, MotrixiService::class.java)
         if (Build.VERSION.SDK_INT >= 26) {
             context.startForegroundService(startService)
+            UploadLogUtil.uploadLogData(context, "startForegroundService ")
         } else {
             context.startService(startService)
+            UploadLogUtil.uploadLogData(context, "startService")
         }
     }
 
@@ -178,8 +180,11 @@ object MotrixiSDK {
     /**
      * reset the consent form data
      */
-    fun resetConsentFormData(mContext: Context) {
+    fun resetConsentForm(mContext: Context) {
+        UploadLogUtil.uploadLogData(mContext, "call reset consent form API")
+
         val intent: Intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.setClass(mContext, DataCollectionActivity::class.java)
         mContext.startActivity(intent)
     }

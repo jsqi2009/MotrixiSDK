@@ -43,5 +43,8 @@ public interface HttpApi {
     @FormUrlEncoded
     Call<JsonObject> requestAuthPost(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
 
+    @POST("{key}/{key1}/{key2}/{key3}/")
+    @FormUrlEncoded
+    Call<JsonObject> requestAuthPost2(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @Path("key3") String key3, @FieldMap Map<String, Object> map);
 
 }

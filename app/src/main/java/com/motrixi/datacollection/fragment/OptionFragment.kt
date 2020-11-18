@@ -137,6 +137,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox1.setTextColor(activity!!.resources.getColor(R.color.black))
         checkBox1.textSize = 15F
         checkBox1.layoutParams = checkBoxParams1
+        checkBox1.isClickable = false
         contentLayout.addView(checkBox1)
 
         checkBox2 = CheckBox(activity)
@@ -149,6 +150,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox2.setTextColor(activity!!.resources.getColor(R.color.black))
         checkBox2.textSize = 15F
         checkBox2.layoutParams = checkBoxParams2
+        checkBox2.isClickable = false
         contentLayout.addView(checkBox2)
 
         checkBox3 = CheckBox(activity)
@@ -161,6 +163,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox3.setTextColor(activity!!.resources.getColor(R.color.black))
         checkBox3.textSize = 15F
         checkBox3.layoutParams = checkBoxParams3
+        checkBox3.isClickable = false
         contentLayout.addView(checkBox3)
 
         checkBox4 = CheckBox(activity)
@@ -173,6 +176,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox4.setTextColor(activity!!.resources.getColor(R.color.black))
         checkBox4.textSize = 15F
         checkBox4.layoutParams = checkBoxParams4
+        checkBox4.isClickable = false
         contentLayout.addView(checkBox4)
 
         checkBox5 = CheckBox(activity)
@@ -185,6 +189,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox5.setTextColor(activity!!.resources.getColor(R.color.black))
         checkBox5.textSize = 15F
         checkBox5.layoutParams = checkBoxParams5
+        checkBox5.isClickable = false
         contentLayout.addView(checkBox5)
 
         checkBox6 = CheckBox(activity)
@@ -198,6 +203,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox6.textSize = 15F
         checkBox6.layoutParams = checkBoxParams6
         checkBox6.highlightColor = Color.rgb(0, 150, 182)
+        checkBox6.isClickable = false
         contentLayout.addView(checkBox6)
 
         var bottomLayout: LinearLayout = LinearLayout(activity)
@@ -255,6 +261,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
 
         tvBack.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
+                mSession!!.agreeFlag = true
                 activity!!.onBackPressed()
             }
         })
@@ -262,6 +269,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvConfirm.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
+                mSession!!.agreeFlag = true
                 var checkedValue = getCheckedValue()
                 parentActivity!!.submitConsentFormData(checkedValue)
             }

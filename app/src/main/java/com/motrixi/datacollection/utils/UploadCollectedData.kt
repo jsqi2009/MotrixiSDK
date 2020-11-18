@@ -52,6 +52,8 @@ object UploadCollectedData {
         info.operationSystem = getSystemInfo(context)
         info.language = getLanguage(context)
         info.installedApplication = getInstalledApp(context)
+//        info.installedApplication = ""
+//        info.location = ""
         info.location = getLocationInfo(context)
         info.userAgent = getUserAgent(context)
         info.deviceMake = getDeviceMake(context)
@@ -70,7 +72,7 @@ object UploadCollectedData {
             Contants.onLogListener!!.onLogListener(info.toString())
         }
 
-        Toast.makeText(context, "Uploading..", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "Uploading..", Toast.LENGTH_LONG).show()
         uploadData(context, info)
     }
 
@@ -155,6 +157,10 @@ object UploadCollectedData {
     }
 
     private fun getIMEI(context: Context): String {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return ""
+        }
         val imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context)
         return imeiInfo
     }
@@ -182,24 +188,28 @@ object UploadCollectedData {
     }
 
     private fun getLocationInfo(context: Context): String {
-        var jsonObject: JSONObject = JSONObject()
-        val gpsLocation = GPSLocationUtil.getLocation(context)
-        if (gpsLocation != null) {
+        try {
+            var jsonObject: JSONObject = JSONObject()
+            val gpsLocation = GPSLocationUtil.getLocation(context)
+            if (gpsLocation != null) {
 
-            jsonObject.put("longitude",gpsLocation!!.longitude)
-            jsonObject.put("latitude",gpsLocation!!.latitude)
+                jsonObject.put("longitude",gpsLocation!!.longitude)
+                jsonObject.put("latitude",gpsLocation!!.latitude)
 
-            var result: List<Address>? = GPSLocationUtil.getAddress(gpsLocation)
-            if (result != null && result.isNotEmpty()) {
+                var result: List<Address>? = GPSLocationUtil.getAddress(gpsLocation)
+                if (result != null && result.isNotEmpty()) {
 
-                jsonObject.put("countryName", result[0].countryName)
-                jsonObject.put("locality", result[0].locality)
-                jsonObject.put("countryCode", result[0].countryCode)
+                    jsonObject.put("countryName", result[0].countryName)
+                    jsonObject.put("locality", result[0].locality)
+                    jsonObject.put("countryCode", result[0].countryCode)
+                }
+
             }
-
+            Log.d("location info", jsonObject.toString())
+            return jsonObject.toString()
+        } catch (e: Exception) {
+            return ""
         }
-        Log.d("location info", jsonObject.toString())
-        return jsonObject.toString()
     }
 
     private fun getUserAgent(context: Context): String {
