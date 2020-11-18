@@ -27,6 +27,7 @@ import com.motrixi.datacollection.listener.OnRequestPermissionListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.event.UploadDataResponseEvent
 import com.motrixi.datacollection.utils.DisplayUtil
+import com.motrixi.datacollection.utils.MessageUtil
 import com.motrixi.datacollection.utils.UploadCollectedData
 import org.json.JSONObject
 import retrofit2.Callback
@@ -170,12 +171,34 @@ class DataCollectionActivity : AppCompatActivity() {
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
-                    val responseObject:JSONObject = JSONObject(response.body().toString())
-                    val resultObject:JSONObject = responseObject.optJSONObject("result")
+                    val responseObject: JSONObject = JSONObject(response.body().toString())
+                    val resultObject: JSONObject = responseObject.optJSONObject("result")
                     val consentFormID = resultObject.optString("id")
                     mSession!!.consentFormID = consentFormID
 
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(
+                                Contants.CONSENT_FORM_CODE,
+                                true,
+                                responseObject.optString("message")
+                            )
+                        )
+                    }
+
                     initPermission()
+                } else {
+                    var error = JSONObject(response.errorBody()!!.string())
+                    //Log.d("verify failure", error.optString("message"))
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(
+                                Contants.CONSENT_FORM_CODE,
+                                false,
+                                error.optString("message")
+                            )
+                        )
+                    }
                 }
             }
         })

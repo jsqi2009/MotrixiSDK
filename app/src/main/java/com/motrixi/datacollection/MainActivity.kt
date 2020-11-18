@@ -14,7 +14,10 @@ import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.motrixi.datacollection.feature.SystemInfoActivity
+import com.motrixi.datacollection.listener.OnAppkeyListener
+import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.ManifestMetaReader
+import com.motrixi.datacollection.network.models.LogInfo
 import com.motrixi.datacollection.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Executors
@@ -62,13 +65,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
 
 
-        /*UploadCollectedData.setOnLogListener(object : OnLogListener{
-            override fun onLogListener(content: String) {
-                Log.d("call back",content)
+        MotrixiSDK.setOnLogListener(object : OnLogListener{
+            override fun onLogListener(info: String) {
+                Log.e("listener", info)
             }
-        })*/
-
-
+        })
 
 
     }

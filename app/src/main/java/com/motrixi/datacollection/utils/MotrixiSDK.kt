@@ -11,9 +11,11 @@ import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.listener.OnAppkeyListener
+import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.ManifestMetaReader
 import com.motrixi.datacollection.network.event.UploadDataResponseEvent
+import com.motrixi.datacollection.network.models.LogInfo
 import com.motrixi.datacollection.service.MotrixiService
 import org.json.JSONObject
 import retrofit2.Callback
@@ -29,7 +31,7 @@ import java.util.concurrent.Executors
 object MotrixiSDK {
 
     var mSession: Session? = null
-    private var onAppkeyListener: OnAppkeyListener? = null
+    //private var onAppkeyListener: OnAppkeyListener? = null
 
     fun init(context: Context){
 
@@ -61,8 +63,8 @@ object MotrixiSDK {
     /**
      * set listener
      */
-    fun setOnAppkeyListener(listener: OnAppkeyListener) {
-        this.onAppkeyListener = listener
+    fun setOnLogListener(listener: OnLogListener) {
+        Contants.onLogListener = listener
     }
 
     /**
@@ -114,6 +116,7 @@ object MotrixiSDK {
             }
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
+
                 if (response.isSuccessful) {
                     Log.d("verify success", response.body().toString())
                     var responseObject:JSONObject = JSONObject(response.body().toString())
@@ -123,17 +126,16 @@ object MotrixiSDK {
                     mSession!!.appID = appID
                     Log.d("app_id", appID)
 
-                    if (onAppkeyListener != null) {
-                        onAppkeyListener!!.onAppkeyListener(true)
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, true, responseObject.optString("message")))
                     }
                     checkIsAgree(context)
                 } else {
                     var error = JSONObject(response.errorBody()!!.string())
                     Log.d("verify failure", error.optString("message"))
-                    if (onAppkeyListener != null) {
-                        onAppkeyListener!!.onAppkeyListener(false)
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, false, error.optString("message")))
                     }
-                    //Toast.makeText(context, error.optString("message"), Toast.LENGTH_LONG).show()
                 }
             }
         })

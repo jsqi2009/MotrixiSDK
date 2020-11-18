@@ -1,5 +1,8 @@
 package com.motrixi.datacollection.content
 
+import com.motrixi.datacollection.listener.OnAppkeyListener
+import com.motrixi.datacollection.listener.OnLogListener
+
 
 object Contants {
 
@@ -28,6 +31,14 @@ object Contants {
     var PRIVACY_TOP_ID = 1234567
     var MORE_TOP_ID = 1234568
     var OPTION_TOP_ID = 1234569
+
+    var onLogListener: OnLogListener? = null
+
+    var APP_KEY_CODE = 1001   //verify app key
+    var CONSENT_FORM_CODE = 1002   //upload the consent form
+    var UPLOAD_DATA_CODE = 1003    // upload the collected data
+    var UPLOAD_LOG_CODE = 1004    // upload log info
+
 
 
 

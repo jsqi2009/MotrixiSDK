@@ -32,7 +32,6 @@ import java.util.regex.Pattern
  */
 object UploadCollectedData {
 
-    private var onLogListener: OnLogListener? = null
 
     var advertisingId = ""
     var mSession: Session? = null
@@ -67,16 +66,12 @@ object UploadCollectedData {
 
         Log.d("info", info.toString())
 
-        if (onLogListener != null) {
-            onLogListener!!.onLogListener(info.toString())
+        if (Contants.onLogListener != null) {
+            Contants.onLogListener!!.onLogListener(info.toString())
         }
 
         Toast.makeText(context, "Uploading..", Toast.LENGTH_LONG).show()
         uploadData(context, info)
-    }
-
-    fun setOnLogListener(listener: OnLogListener) {
-        this.onLogListener = listener
     }
 
     private fun uploadData(context: Context, info: DataInfo) {
@@ -88,7 +83,28 @@ object UploadCollectedData {
             }
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
-                Log.e("success", "success")
+
+                if (response.isSuccessful) {
+                    val responseObject: JSONObject = JSONObject(response.body().toString())
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(
+                                Contants.UPLOAD_DATA_CODE,
+                                true,
+                                responseObject.optString("message")
+                            )
+                        )
+                    }
+                } else {
+                    var error = JSONObject(response.errorBody()!!.string())
+                    Contants.onLogListener!!.onLogListener(
+                        MessageUtil.logMessage(
+                            Contants.UPLOAD_DATA_CODE,
+                            false,
+                            error.optString("message")
+                        )
+                    )
+                }
             }
         })
     }

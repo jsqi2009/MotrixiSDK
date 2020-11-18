@@ -1,5 +1,7 @@
 package com.motrixi.datacollection.listener
 
+import com.motrixi.datacollection.network.models.LogInfo
+
 /**
  * author : Jason
  *  date   : 2020/11/3 4:21 PM
@@ -7,6 +9,6 @@ package com.motrixi.datacollection.listener
  */
 interface OnLogListener {
 
-    fun onLogListener(content: String)
+    fun onLogListener(info: String)
 
 }
