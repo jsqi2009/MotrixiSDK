@@ -93,7 +93,7 @@ object UploadCollectedData {
                             MessageUtil.logMessage(
                                 Contants.UPLOAD_DATA_CODE,
                                 true,
-                                responseObject.optString("message")
+                                responseObject.optJSONObject("result").toString()
                             )
                         )
                     }

@@ -10,12 +10,10 @@ import com.google.gson.JsonObject
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
-import com.motrixi.datacollection.listener.OnAppkeyListener
 import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.ManifestMetaReader
-import com.motrixi.datacollection.network.event.UploadDataResponseEvent
-import com.motrixi.datacollection.network.models.LogInfo
+import com.motrixi.datacollection.network.models.ConsentDetailInfo
 import com.motrixi.datacollection.service.MotrixiService
 import org.json.JSONObject
 import retrofit2.Callback
@@ -50,13 +48,16 @@ object MotrixiSDK {
         HttpClient.init(context)
         mSession = Session(context)
 
+        //get consent form data
+        getConsentDataList(context, appKey)
+
         //mSession!!.appKey = appKey
         Contants.APP_KEY = appKey
         startService(context)
         //init ad id
         getAdvertisingId(context)
 
-        verifyAppkey(context, appKey)
+        //verifyAppkey(context, appKey)
     }
 
 
@@ -167,12 +168,14 @@ object MotrixiSDK {
                 val intent: Intent = Intent()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.setClass(context, DataCollectionActivity::class.java)
+//                intent.setClass(context, JumpActivity::class.java)
                 context.startActivity(intent)
             } else {
                 Log.d("is agree:", "already agree")
                 //UploadCollectedData.formatData(context)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            Log.e("start error", e.message.toString())
         }
 
     }
@@ -187,6 +190,44 @@ object MotrixiSDK {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.setClass(mContext, DataCollectionActivity::class.java)
         mContext.startActivity(intent)
+    }
+
+    private fun getConsentDataList(context: Context, appKey: String) {
+
+        var call = HttpClient.fetchConsentData(context)
+        call.enqueue(object : Callback<ConsentDetailInfo> {
+            override fun onFailure(call: retrofit2.Call<ConsentDetailInfo>, t: Throwable) {
+                Log.d("fetch consent", "failure")
+
+                UploadLogUtil.uploadLogData(context, t.message.toString())
+            }
+
+            override fun onResponse(call: retrofit2.Call<ConsentDetailInfo>, response: Response<ConsentDetailInfo>) {
+
+                try {
+                    if (response.isSuccessful) {
+                        Log.d("result", response.body()!!.result.toString())
+                        mSession!!.consentDataInfo = response.body()!!.result!!
+
+                        if (Contants.onLogListener != null) {
+                            Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, response.body()!!.result!!.toString()))
+                        }
+
+                        UploadLogUtil.uploadLogData(context, "get consent form data success ")
+
+                        verifyAppkey(context, appKey)
+                    } else {
+
+                        UploadLogUtil.uploadLogData(context, "get consent form data failure ")
+                        if (Contants.onLogListener != null) {
+                            Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, response.body()!!.result!!.toString()))
+                        }
+                    }
+                } catch (e: Exception) {
+                    UploadLogUtil.uploadLogData(context, e.message.toString())
+                }
+            }
+        })
     }
 
 

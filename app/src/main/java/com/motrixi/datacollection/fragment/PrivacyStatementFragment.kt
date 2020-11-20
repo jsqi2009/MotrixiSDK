@@ -3,23 +3,24 @@ package com.motrixi.datacollection.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
+import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.URLSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.Gravity.CENTER
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
+import android.widget.*
 import android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM
-import android.widget.TextView
-import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
@@ -49,6 +50,11 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
     lateinit var privateLayout: RelativeLayout
     private var actionBarLayout: LinearLayout? = null
     private var mSession: Session? = null
+    lateinit var tvTitle: TextView
+    lateinit var tvContent1: TextView
+    lateinit var tvCancel: TextView
+    lateinit var tvOption: TextView
+    lateinit var tvConfirm: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,13 +108,13 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         ivBack.layoutParams = imageParams
         topLayout.addView(ivBack)
 
-        var tvTitle = TextView(activity)
+        tvTitle = TextView(activity)
         val titleParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         titleParams.addRule(RelativeLayout.CENTER_IN_PARENT)
-        tvTitle.text = "Consent"
+        //tvTitle.text = "Consent"
         tvTitle.textSize = 20F
 //        tvTitle.setTextColor(activity!!.resources.getColor(R.color.black))
         tvTitle.setTextColor(Color.BLACK)
@@ -155,8 +161,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         style.setSpan(colorSpan, Contants.PRIVATE_STATEMENT_1.length - 5,
             Contants.PRIVATE_STATEMENT_1.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
-        val tvContent1 = TextView(activity)
-        tvContent1.text = style
+        tvContent1 = TextView(activity)
+        //tvContent1.text = style
         tvContent1.textSize = 18F
         tvContent1.movementMethod = LinkMovementMethod.getInstance()
 
@@ -165,7 +171,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvContent2.text = Contants.PRIVATE_STATEMENT_2
 
         contentLayout.addView(tvContent1)
-        contentLayout.addView(tvContent2)
+        //contentLayout.addView(tvContent2)
 
         var bottomLayout: LinearLayout = LinearLayout(activity)
         bottomLayout.orientation = LinearLayout.HORIZONTAL
@@ -177,9 +183,9 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         bottomLayout.layoutParams = bottomParams
         bottomLayout.gravity = CENTER
 
-        val tvCancel = TextView(activity)
+        tvCancel = TextView(activity)
         tvCancel.textSize = 18F
-        tvCancel.text = "Cancel"
+        //tvCancel.text = "Cancel"
         tvCancel.setTextColor(Color.BLACK)
 //        tvCancel.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvCancel.setTextColor(Color.WHITE)
@@ -195,9 +201,9 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvCancel.gravity = Gravity.CENTER
         tvCancel.background = CustomStyle.getGradientDrawable(activity!!)
 
-        val tvOption = TextView(activity)
+        tvOption = TextView(activity)
         tvOption.textSize = 18F
-        tvOption.text = "Options"
+        //tvOption.text = "Options"
         tvOption.setTextColor(Color.BLACK)
 //        tvOption.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvOption.setTextColor(Color.WHITE)
@@ -211,9 +217,9 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 //        tvOption.background = activity!!.resources.getDrawable(R.drawable.constant_button_bg)
 //        tvOption.setBackgroundColor(Color.rgb(0, 150, 182))  //#0096B6
 
-        val tvConfirm = TextView(activity)
+        tvConfirm = TextView(activity)
         tvConfirm.textSize = 18F
-        tvConfirm.text = "Confirm"
+        //tvConfirm.text = "Confirm"
         tvConfirm.setTextColor(Color.BLACK)
 //        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
 //        tvConfirm.setTextColor(Color.WHITE)
@@ -239,11 +245,6 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 //        gd.cornerRadius = roundRadius.toFloat()
 //        gd.setStroke(strokeWidth, strokeColor)
 //        tvConfirm.background = gd
-
-
-
-
-
 
         bottomLayout.addView(tvCancel)
         bottomLayout.addView(tvOption)
@@ -302,6 +303,9 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         parentActivity!!.actionBar!!.customView = actionBarLayout
         parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
 
+        Log.d("fragment", mSession!!.consentDataInfo.toString())
+        setData()
+
     }
 
 
@@ -318,7 +322,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
         val tvTitle = TextView(activity)
         tvTitle.textSize = 22F
-        tvTitle.text = "Consent"
+//        tvTitle.text = "Consent"
+        tvTitle.text = parentActivity!!.info!!.value!!.terms_page_title
         tvTitle.setTextColor(Color.WHITE)
         val titleParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -330,6 +335,36 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvTitle.gravity = Gravity.CENTER
 
         actionBarLayout!!.addView(tvTitle)
+    }
+
+    private fun setData() {
+
+        tvCancel.text = parentActivity!!.info!!.value!!.cancel_button_text
+        tvOption.text = parentActivity!!.info!!.value!!.option_button_text
+        tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
+
+        tvContent1.text = Html.fromHtml(parentActivity!!.info!!.value!!.terms_content)
+        val str: CharSequence = tvContent1.text
+        if (str is Spannable) {
+            val end = str.length
+            val sp = tvContent1.text as Spannable
+            val urls = sp.getSpans(0, end, URLSpan::class.java) //find a tag of the text
+            val style = SpannableStringBuilder(str)
+            style.clearSpans() //should clear old spans
+            for (url in urls) {
+                //set click event
+                val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        activity!!.supportFragmentManager.beginTransaction()
+                            .addToBackStack("show_more")
+                            .replace(Contants.HOME_CONTAINER_ID, ShowMoreFragment.newInstance(url.url.toString()))
+                            .commit()
+                    }
+                }
+                style.setSpan(clickableSpan, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            tvContent1.text = style
+        }
     }
 
     @SuppressLint("ResourceAsColor")

@@ -1,6 +1,7 @@
 package com.motrixi.datacollection.network;
 
 import com.google.gson.JsonObject;
+import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 
 import java.util.Map;
 
@@ -31,6 +32,11 @@ public interface HttpApi {
 
     @GET("{key}/{key1}/{key2}/")
     Call<JsonObject> requestAuth(@Header("Authorization") String authorization, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2);
+
+
+    @GET("{key}/{key1}/{key2}/")
+    Call<ConsentDetailInfo> requestAuthConsent(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);
+
 
     @GET("{key}/{key1}/{key2}/")
     Call<JsonObject> requestAuth(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);

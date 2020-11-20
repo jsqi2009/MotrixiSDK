@@ -3,9 +3,9 @@ package com.motrixi.datacollection.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +18,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
+import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.NetworkUtil
 
@@ -33,8 +34,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class ShowMoreFragment : Fragment(), View.OnClickListener {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var linkURL: String? = null
 
     private var rootView: View? = null
     private var parentActivity: DataCollectionActivity? = null
@@ -42,13 +42,13 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     lateinit var moreLayout: RelativeLayout
     lateinit var webView: WebView
     private var actionBarLayout: LinearLayout? = null
+    private var mSession: Session? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            linkURL = it.getString(ARG_PARAM1)
         }
     }
 
@@ -128,6 +128,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         parentActivity = activity as DataCollectionActivity?
+        mSession = Session(activity!!)
 
         customActionBarView()
         parentActivity!!.actionBar!!.customView = actionBarLayout
@@ -139,7 +140,10 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     private fun initView() {
 
         initWebView()
-        webView.loadUrl(Contants.WEB_URL)
+        //webView.loadUrl(Contants.WEB_URL)
+//        webView.loadUrl(parentActivity!!.info!!.value!!.terms_link!!)
+        Log.e("link", linkURL!!)
+        webView.loadUrl(linkURL!!)
 
         //iv_back.setOnClickListener(this)
     }
@@ -180,7 +184,8 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
 
         val tvTitle = TextView(activity)
         tvTitle.textSize = 22F
-        tvTitle.text = "Detailed Terms"
+//        tvTitle.text = "Detailed Terms"
+        tvTitle.text = mSession!!.consentDataInfo.value!!.link_page_title
         tvTitle.setTextColor(Color.WHITE)
         val titleParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -216,11 +221,10 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         val TAG=ShowMoreFragment::class.simpleName  //定义Log的TAG
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String) =
             ShowMoreFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }

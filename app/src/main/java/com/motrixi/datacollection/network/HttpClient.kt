@@ -2,10 +2,12 @@ package com.motrixi.datacollection.network
 
 import android.content.Context
 import android.text.TextUtils
-import com.motrixi.datacollection.network.models.DataInfo
+import android.util.Log
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
+import com.motrixi.datacollection.network.models.ConsentDetailInfo
+import com.motrixi.datacollection.network.models.DataInfo
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -13,11 +15,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+import kotlin.collections.HashMap
 
 
 object HttpClient {
@@ -116,6 +120,7 @@ object HttpClient {
             mHttpApi = restAdapter.create(HttpApi::class.java)
         } catch (E: Throwable) {
 
+            Log.e("httpAPI ", E.message.toString())
         }
 
     }
@@ -199,6 +204,22 @@ object HttpClient {
 
         val call = mHttpApi!!.requestAuthPost2(getHeaders(context),
             "api","sdk","log","create", map)
+
+        return call
+    }
+
+
+    fun fetchConsentData(context: Context) : Call<ConsentDetailInfo> {
+
+        val locale: Locale = Locale.getDefault()
+        val lan: String = locale.language.toLowerCase() + "-" + locale.country.toLowerCase()
+//        val lan: String = locale.language.toLowerCase()
+
+        var map: HashMap<String, Any> = HashMap()
+        map.put("language", lan)
+
+        val call = mHttpApi!!.requestAuthConsent(getHeaders(context),
+            "api","consent","detail", map)
 
         return call
     }

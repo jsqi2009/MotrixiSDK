@@ -6,6 +6,12 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.ActionBar
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -13,22 +19,17 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment
 import com.motrixi.datacollection.listener.OnRequestPermissionListener
 import com.motrixi.datacollection.network.HttpClient
-import com.motrixi.datacollection.network.event.UploadDataResponseEvent
+import com.motrixi.datacollection.network.models.ConsentDetailInfo
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.MessageUtil
 import com.motrixi.datacollection.utils.UploadCollectedData
+import com.motrixi.datacollection.utils.UploadLogUtil
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
@@ -63,13 +64,13 @@ class DataCollectionActivity : AppCompatActivity() {
     private var frameLayout: FrameLayout? = null
     private var onRequestListener: OnRequestPermissionListener? = null
     private var actionBarLayout: LinearLayout? = null
+    var info: ConsentDetailInfo.ResultInfo? = null
+    lateinit var optionArray: ArrayList<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_data_collection)
-
-
 
         initLayout()
         setContentView(rootLayout)
@@ -154,10 +155,15 @@ class DataCollectionActivity : AppCompatActivity() {
     private fun initView() {
         mSession = Session(this)
 
+        info = mSession!!.consentDataInfo
+        optionArray = info!!.value!!.options!!.split("|") as ArrayList<String>
+        Log.d("option array", optionArray.size.toString())
+
         // 获取碎片管理器
         val fm: FragmentManager = supportFragmentManager
 //        fm.beginTransaction().add(R.id.home_container, PrivacyStatementFragment()).commit()
 
+//        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
         fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
     }
 
@@ -167,6 +173,8 @@ class DataCollectionActivity : AppCompatActivity() {
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
                 Log.d("submit status", "failure")
+
+                UploadLogUtil.uploadLogData(this@DataCollectionActivity, t.message.toString())
             }
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {

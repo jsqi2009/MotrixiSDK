@@ -2,15 +2,20 @@ package com.motrixi.datacollection.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.widget.NestedScrollView
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
@@ -44,6 +49,9 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
     lateinit var checkBox5: CheckBox
     lateinit var checkBox6: CheckBox
     private var actionBarLayout: LinearLayout? = null
+    lateinit var contentLayout: LinearLayout
+    lateinit var tvBack: TextView
+    lateinit var tvConfirm: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +109,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         titleParams.addRule(RelativeLayout.CENTER_IN_PARENT)
-        tvTitle.text = "Options"
+//        tvTitle.text = "Options"
         tvTitle.textSize = 20F
         tvTitle.setTextColor(Color.BLACK)
         tvTitle.layoutParams = titleParams
@@ -117,14 +125,14 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         scrollView.layoutParams  =scrollParams
         optionLayout.addView(scrollView)
 
-        var contentLayout: LinearLayout = LinearLayout(activity)
-        contentLayout.orientation = LinearLayout.VERTICAL
+        contentLayout = LinearLayout(activity)
+        contentLayout!!.orientation = LinearLayout.VERTICAL
         val contentParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         contentParams.setMargins(DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15))
-        contentLayout.layoutParams = contentParams
+        contentLayout!!.layoutParams = contentParams
         scrollView.addView(contentLayout)
 
         checkBox1 = CheckBox(activity)
@@ -134,11 +142,11 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams1.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox1.text = Contants.OPTION_VALUE_1
-        checkBox1.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox1.setTextColor(Color.BLACK)
         checkBox1.textSize = 15F
         checkBox1.layoutParams = checkBoxParams1
         checkBox1.isClickable = false
-        contentLayout.addView(checkBox1)
+        //contentLayout.addView(checkBox1)
 
         checkBox2 = CheckBox(activity)
         val checkBoxParams2 = LinearLayout.LayoutParams(
@@ -147,11 +155,11 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams2.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox2.text = Contants.OPTION_VALUE_2
-        checkBox2.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox2.setTextColor(Color.BLACK)
         checkBox2.textSize = 15F
         checkBox2.layoutParams = checkBoxParams2
         checkBox2.isClickable = false
-        contentLayout.addView(checkBox2)
+        //contentLayout.addView(checkBox2)
 
         checkBox3 = CheckBox(activity)
         val checkBoxParams3 = LinearLayout.LayoutParams(
@@ -160,11 +168,11 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams3.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox3.text = Contants.OPTION_VALUE_3
-        checkBox3.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox3.setTextColor(Color.BLACK)
         checkBox3.textSize = 15F
         checkBox3.layoutParams = checkBoxParams3
         checkBox3.isClickable = false
-        contentLayout.addView(checkBox3)
+        //contentLayout.addView(checkBox3)
 
         checkBox4 = CheckBox(activity)
         val checkBoxParams4 = LinearLayout.LayoutParams(
@@ -173,11 +181,11 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams4.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox4.text = Contants.OPTION_VALUE_4
-        checkBox4.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox4.setTextColor(Color.BLACK)
         checkBox4.textSize = 15F
         checkBox4.layoutParams = checkBoxParams4
         checkBox4.isClickable = false
-        contentLayout.addView(checkBox4)
+        //contentLayout.addView(checkBox4)
 
         checkBox5 = CheckBox(activity)
         val checkBoxParams5 = LinearLayout.LayoutParams(
@@ -186,11 +194,11 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams5.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox5.text = Contants.OPTION_VALUE_5
-        checkBox5.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox5.setTextColor(Color.BLACK)
         checkBox5.textSize = 15F
         checkBox5.layoutParams = checkBoxParams5
         checkBox5.isClickable = false
-        contentLayout.addView(checkBox5)
+        //contentLayout.addView(checkBox5)
 
         checkBox6 = CheckBox(activity)
         val checkBoxParams6 = LinearLayout.LayoutParams(
@@ -199,12 +207,12 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         checkBoxParams6.topMargin = DisplayUtil.dp2px(activity!!, 15)
         checkBox6.text = Contants.OPTION_VALUE_6
-        checkBox6.setTextColor(activity!!.resources.getColor(R.color.black))
+        checkBox6.setTextColor(Color.BLACK)
         checkBox6.textSize = 15F
         checkBox6.layoutParams = checkBoxParams6
         checkBox6.highlightColor = Color.rgb(0, 150, 182)
         checkBox6.isClickable = false
-        contentLayout.addView(checkBox6)
+        //contentLayout.addView(checkBox6)
 
         var bottomLayout: LinearLayout = LinearLayout(activity)
         bottomLayout.orientation = LinearLayout.HORIZONTAL
@@ -216,9 +224,9 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         bottomLayout.layoutParams = bottomParams
         bottomLayout.gravity = Gravity.CENTER
 
-        val tvBack = TextView(activity)
+        tvBack = TextView(activity)
         tvBack.textSize = 18F
-        tvBack.text = "Back"
+//        tvBack.text = "Back"
         tvBack.setTextColor(Color.BLACK)
 //        tvBack.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
         val backParams = LinearLayout.LayoutParams(
@@ -232,9 +240,9 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvBack.background = CustomStyle.getGradientDrawable(activity!!)
         tvBack.gravity = Gravity.CENTER
 
-        val tvConfirm = TextView(activity)
+        tvConfirm = TextView(activity)
         tvConfirm.textSize = 18F
-        tvConfirm.text = "Confirm"
+//        tvConfirm.text = "Confirm"
         tvConfirm.setTextColor(Color.BLACK)
 //        tvConfirm.setTextColor(Color.rgb(0, 150, 182))  //#0096B6
         val more = LinearLayout.LayoutParams(
@@ -261,7 +269,6 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
 
         tvBack.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
-                mSession!!.agreeFlag = true
                 activity!!.onBackPressed()
             }
         })
@@ -274,8 +281,6 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                 parentActivity!!.submitConsentFormData(checkedValue)
             }
         })
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -286,6 +291,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         customActionBarView()
         parentActivity!!.actionBar!!.customView = actionBarLayout
         parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
+
+        setData()
     }
 
 
@@ -302,7 +309,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
 
         val tvTitle = TextView(activity)
         tvTitle.textSize = 22F
-        tvTitle.text = "Options"
+//        tvTitle.text = "Options"
+        tvTitle.text = parentActivity!!.info!!.value!!.option_page_title
         tvTitle.setTextColor(Color.WHITE)
         val titleParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -314,6 +322,36 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvTitle.gravity = Gravity.CENTER
 
         actionBarLayout!!.addView(tvTitle)
+    }
+
+    private fun setData() {
+
+        tvBack.text = parentActivity!!.info!!.value!!.back_button_text
+        tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
+
+        contentLayout.removeAllViews()
+        for (index in parentActivity!!.optionArray.indices) {
+            addCheckBoxView(index)
+        }
+
+    }
+
+    private fun addCheckBoxView(index: Int) {
+
+        val checkBox: CheckBox = CheckBox(activity)
+        val checkBoxParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        checkBoxParams.topMargin = DisplayUtil.dp2px(activity!!, 15)
+        checkBox.text = parentActivity!!.optionArray[index]
+        checkBox.setTextColor(Color.BLACK)
+        checkBox.textSize = 15F
+        checkBox.layoutParams = checkBoxParams
+        checkBox.highlightColor = Color.rgb(0, 150, 182)
+        checkBox.isClickable = false
+        checkBox.isChecked = true
+        contentLayout.addView(checkBox)
     }
 
     private fun initView() {
@@ -358,6 +396,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         if (!mSession!!.viewOptionsFlag) {
             Log.d("view status", "true")
             mSession!!.viewOptionsFlag = true
+
 
             checkBox1.isChecked = true
             checkBox2.isChecked = true

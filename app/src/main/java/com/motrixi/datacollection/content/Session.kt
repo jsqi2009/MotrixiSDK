@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 
 import com.google.gson.Gson
+import com.motrixi.datacollection.network.models.ConsentDetailInfo
 
 
 class Session(c: Context) {
@@ -26,6 +27,7 @@ class Session(c: Context) {
         private val KEY_APP_KEY_ID = "app_key_id"
         private val KEY_CONSENT_FORM_ID = "consent_form_id"
         private val KEY_APP_KEY = "app_key"
+        private val KEY_CONSENT_FORM_DATA = "consent_form_data"
 
 
         private val KEY_TOKEN = "token"
@@ -111,9 +113,9 @@ class Session(c: Context) {
         set(paramString) = this.mHashStorage.put(KEY_APP_KEY, paramString)
 
 
-
-
-
+    var consentDataInfo: ConsentDetailInfo.ResultInfo
+        get() = this.getData(ConsentDetailInfo.ResultInfo::class.java, KEY_CONSENT_FORM_DATA)
+        set(info) = this.setData(info, ConsentDetailInfo.ResultInfo::class.java, KEY_CONSENT_FORM_DATA)
 
     var token: String
         get() = this.mHashStorage.getString(KEY_TOKEN)
