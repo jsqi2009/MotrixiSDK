@@ -272,7 +272,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
-                var checkedValue = getCheckedValue()
+                //var checkedValue = getCheckedValue()
+                var checkedValue = getOptionValue()
                 parentActivity!!.submitConsentFormData(checkedValue)
             }
         })
@@ -444,6 +445,21 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             cb_6.isChecked = mSession!!.option_6_flag
         }*/
 
+    }
+
+    private fun getOptionValue(): String {
+        var formValue = ""
+        if (parentActivity!!.optionArray.size > 0) {
+
+            for (index in parentActivity!!.optionArray.indices) {
+                if (index == parentActivity!!.optionArray.size -1) {
+                    formValue = formValue + parentActivity!!.optionArray[index]
+                } else {
+                    formValue = formValue + parentActivity!!.optionArray[index] + "|"
+                }
+            }
+        }
+        return formValue
     }
 
     private fun getCheckedValue(): String {

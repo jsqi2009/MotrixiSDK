@@ -112,6 +112,7 @@ object MotrixiSDK {
     private fun verifyAppkey(context: Context, key: String?) {
 
         Log.d("app_key", key!!)
+        UploadLogUtil.uploadLogData(context, key)
         var call = HttpClient.verifyAppkey(context, key)
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {

@@ -13,7 +13,6 @@ import android.util.Log
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.UploadCollectedData
 import com.motrixi.datacollection.utils.UploadLogUtil
-import org.apache.commons.lang3.concurrent.BasicThreadFactory
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledThreadPoolExecutor
@@ -33,7 +32,7 @@ class MotrixiService: Service() {
     private var id = 100
     private var mSession: Session? = null
 //    private val TIME_VALUE: Long = 24*60*60*1000
-    private val TIME_VALUE: Long = 3*60*1000
+    private val TIME_VALUE: Long = 10*60*1000
 
 
     override fun onCreate() {
@@ -84,8 +83,9 @@ class MotrixiService: Service() {
 
         try {
             if (startUploadExecutor == null) {
-                startUploadExecutor = ScheduledThreadPoolExecutor(1,
-                    BasicThreadFactory.Builder().namingPattern("start-thread").daemon(true).build())
+                /*startUploadExecutor = ScheduledThreadPoolExecutor(1,
+                    BasicThreadFactory.Builder().namingPattern("start-thread").daemon(true).build())*/
+                startUploadExecutor = ScheduledThreadPoolExecutor(1)
             }
             startUploadExecutor!!.scheduleAtFixedRate(object : Runnable{
                 override fun run() {
@@ -99,7 +99,7 @@ class MotrixiService: Service() {
                     if ((currentTime - lastTime) >= TIME_VALUE) {
 
                         Log.d("service", "start service")
-                        UploadLogUtil.uploadLogData(this@MotrixiService, "upload data via service")
+                        UploadLogUtil.uploadLogData(this@MotrixiService, "uploading data")
                         mSession!!.syncTime = Date().time
                         UploadCollectedData.formatData(applicationContext)
                     } else {

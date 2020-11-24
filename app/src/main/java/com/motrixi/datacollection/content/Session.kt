@@ -46,7 +46,7 @@ class Session(c: Context) {
         return !TextUtils.isEmpty(token)
     }
 
-    // 清除所有与登陆相关的信息
+    // clear all the info
     fun removeLoginInfo() {
 
         this.mHashStorage.remove(KEY_TOKEN)
@@ -120,12 +120,6 @@ class Session(c: Context) {
     var token: String
         get() = this.mHashStorage.getString(KEY_TOKEN)
         set(paramString) = this.mHashStorage.put(KEY_TOKEN, paramString)
-
-
-
-
-
-
 
 
 

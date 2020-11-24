@@ -6,21 +6,12 @@ import android.content.Context
 
 import java.util.Stack
 
-/**
- * 应用程序Activity管理类：用于Activity管理和应用程序退出
- * 可以让所有的activity都继承BaseActivity然后给activity在onCreate中添加到栈中onDetroyed中移除
- *
- *
- * 添加Activity到堆栈
- * AppManager.getAppManager().addActivity(this);
- * 结束Activity&从堆栈中移除
- * AppManager.getAppManager().finishActivity(this);
- */
+
 
 class AppManager private constructor() {
 
     /**
-     * 添加Activity到堆栈
+     * add Activity
      */
     fun addActivity(activity: Activity) {
         if (activityStack == null) {
@@ -30,14 +21,14 @@ class AppManager private constructor() {
     }
 
     /**
-     * 获取当前Activity（堆栈中最后一个压入的）
+     * get current Activity
      */
     fun currentActivity(): Activity {
         return activityStack!!.lastElement()
     }
 
     /**
-     * 结束当前Activity（堆栈中最后一个压入的）
+     * finish current Activity
      */
     fun finishActivity() {
         val activity = activityStack!!.lastElement()
@@ -45,7 +36,7 @@ class AppManager private constructor() {
     }
 
     /**
-     * 结束指定的Activity
+     * finish Activity
      */
     fun finishActivity(activity: Activity?) {
         var activity = activity
@@ -57,7 +48,7 @@ class AppManager private constructor() {
     }
 
     /**
-     * 结束指定类名的Activity
+     * finish Activity
      */
     fun finishActivity(cls: Class<*>) {
         for (activity in activityStack!!) {
@@ -69,7 +60,7 @@ class AppManager private constructor() {
 
 
     /**
-     * 结束所有Activity
+     * finish all Activity
      */
     fun finishAllActivity() {
         try {
@@ -89,7 +80,7 @@ class AppManager private constructor() {
     }
 
     /**
-     * 退出应用程序
+     * exit app
      */
     fun AppExit(context: Context) {
         try {
@@ -107,7 +98,7 @@ class AppManager private constructor() {
         private var instance: AppManager? = null
 
         /**
-         * 单一实例
+         * single
          */
         val appManager: AppManager
             get() {

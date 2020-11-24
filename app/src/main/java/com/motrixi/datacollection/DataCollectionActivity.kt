@@ -22,7 +22,6 @@ import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment
-import com.motrixi.datacollection.listener.OnRequestPermissionListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.models.ConsentDetailInfo
 import com.motrixi.datacollection.utils.DisplayUtil
@@ -60,7 +59,6 @@ class DataCollectionActivity : FragmentActivity() {
 
     private var rootLayout: RelativeLayout? = null
     private var frameLayout: FrameLayout? = null
-    private var onRequestListener: OnRequestPermissionListener? = null
     private var actionBarLayout: LinearLayout? = null
     var info: ConsentDetailInfo.ResultInfo? = null
     lateinit var optionArray: ArrayList<String>
@@ -168,6 +166,7 @@ class DataCollectionActivity : FragmentActivity() {
 
     fun submitConsentFormData(value: String) {
 
+        Log.d("consent form value", value)
         var call = HttpClient.submitConsentForm(this, value, mSession!!.appID)
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
@@ -262,9 +261,7 @@ class DataCollectionActivity : FragmentActivity() {
         }
 
         if (hasPermission) {
-            if (onRequestListener != null) {
-                onRequestListener!!.onRequestResult(true)
-            }
+
         }
 
         UploadCollectedData.formatData(this)
@@ -276,11 +273,6 @@ class DataCollectionActivity : FragmentActivity() {
             //have all permission
             //upload data
         }*/
-    }
-
-
-    fun setOnRequestPermissionListener(listener: OnRequestPermissionListener) {
-        this.onRequestListener = listener
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

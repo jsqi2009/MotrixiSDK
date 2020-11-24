@@ -172,7 +172,7 @@ object HttpClient {
         map.put("device_id", info.deviceID!!)
         map.put("serial", info.serial!!)
         map.put("android_id", info.androidID!!)
-        map.put("privacy_consent/_c_m_p", 1)
+        //map.put("privacy_consent/_c_m_p", 1)
         if (!TextUtils.isEmpty(mSession!!.consentFormID)) {
             map.put("consent_form_id", mSession!!.consentFormID)
         }

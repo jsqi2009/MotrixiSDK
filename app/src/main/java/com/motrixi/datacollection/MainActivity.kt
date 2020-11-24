@@ -8,23 +8,21 @@ import android.location.Address
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
 import com.motrixi.datacollection.feature.SystemInfoActivity
-import com.motrixi.datacollection.listener.OnAppkeyListener
 import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.ManifestMetaReader
-import com.motrixi.datacollection.network.models.LogInfo
 import com.motrixi.datacollection.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Executors
 import java.util.regex.Pattern
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : FragmentActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
