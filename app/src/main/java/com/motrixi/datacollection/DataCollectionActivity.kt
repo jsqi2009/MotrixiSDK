@@ -33,6 +33,7 @@ import com.motrixi.datacollection.utils.UploadLogUtil
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -169,6 +170,7 @@ class DataCollectionActivity : AppCompatActivity() {
 
     fun submitConsentFormData(value: String) {
 
+        Log.e("form data", value)
         var call = HttpClient.submitConsentForm(this, value, mSession!!.appID)
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
@@ -286,6 +288,18 @@ class DataCollectionActivity : AppCompatActivity() {
             this.onBackPressed()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun getOptionValue(): String {
+        var formValue = ""
+        for (index in optionArray.indices) {
+            if (index == optionArray.size - 1) {
+                formValue += optionArray[index]
+            } else {
+                formValue = formValue + optionArray[index] + "|"
+            }
+        }
+        return formValue
     }
 
     fun getCheckedValue(): String {

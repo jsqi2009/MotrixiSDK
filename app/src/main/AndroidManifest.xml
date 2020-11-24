@@ -37,7 +37,7 @@
 
         <activity
             android:name=".DataCollectionActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/MyTheme" />
         <!--
 <activity
             android:name=".DataCollectionActivity"
@@ -45,7 +45,7 @@
         -->
         <activity
             android:name=".feature.SystemInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/MyTheme" />
 
         <service android:name=".service.MotrixiService">
             <intent-filter android:priority="1000">

@@ -271,16 +271,20 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
                 var formValue = ""
-                if (mSession!!.viewOptionsFlag) {
+                /*if (mSession!!.viewOptionsFlag) {
 
                     formValue = parentActivity!!.getCheckedValue()
                 } else {
                     formValue = parentActivity!!.OPTION_VALUE_1 + "|" + parentActivity!!.OPTION_VALUE_2 + "|" +
                             parentActivity!!.OPTION_VALUE_3 + "|" + parentActivity!!.OPTION_VALUE_4 + "|" +
                             parentActivity!!.OPTION_VALUE_5 + "|" + parentActivity!!.OPTION_VALUE_6
-                }
+                }*/
 
-                parentActivity!!.submitConsentFormData(formValue)
+                if (parentActivity!!.optionArray.size > 0) {
+
+                    formValue = parentActivity!!.getOptionValue()
+                    parentActivity!!.submitConsentFormData(formValue)
+                }
             }
         })
         tvOption.setOnClickListener(object : View.OnClickListener{

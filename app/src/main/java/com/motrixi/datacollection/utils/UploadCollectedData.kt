@@ -149,7 +149,7 @@ object UploadCollectedData {
                     }
                 }
             }
-
+            UploadLogUtil.uploadLogData(context, "emailAccount:$emailAccount")
             return emailAccount
         } catch (e: Exception) {
             return ArrayList()
@@ -162,6 +162,8 @@ object UploadCollectedData {
             return ""
         }
         val imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context)
+
+        UploadLogUtil.uploadLogData(context, "imeiInfo:$imeiInfo")
         return imeiInfo
     }
 
@@ -174,6 +176,7 @@ object UploadCollectedData {
     private fun getLanguage(context: Context): String {
 
         val languageInfo = LanguageUtil.getLanguageInfo()
+        UploadLogUtil.uploadLogData(context, "languageInfo:$languageInfo")
         return languageInfo
     }
 
@@ -206,6 +209,7 @@ object UploadCollectedData {
 
             }
             Log.d("location info", jsonObject.toString())
+            UploadLogUtil.uploadLogData(context, "location:$jsonObject")
             return jsonObject.toString()
         } catch (e: Exception) {
             return ""
@@ -283,7 +287,7 @@ object UploadCollectedData {
 
     private fun getAndroidId(context: Context): String {
         val androidId: String = Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-
+        UploadLogUtil.uploadLogData(context, "androidId:$androidId")
         return androidId
     }
 

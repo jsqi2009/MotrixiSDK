@@ -277,8 +277,13 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
-                var checkedValue = getCheckedValue()
-                parentActivity!!.submitConsentFormData(checkedValue)
+//                var checkedValue = getCheckedValue()
+//                parentActivity!!.submitConsentFormData(checkedValue)
+
+                if (parentActivity!!.optionArray.size > 0) {
+                    var checkedValue = parentActivity!!.getOptionValue()
+                    parentActivity!!.submitConsentFormData(checkedValue)
+                }
             }
         })
     }

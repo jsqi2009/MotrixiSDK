@@ -37,8 +37,9 @@ object Contants {
     var APP_KEY_CODE = 1001   //verify app key
     var CONSENT_FORM_CODE = 1002   //upload the consent form
     var UPLOAD_DATA_CODE = 1003    // upload the collected data
-    var UPLOAD_LOG_CODE = 1004    // upload log info
-    var FETCH_CONSENT_DATA = 1005   // fetch consent form data
+    var FETCH_CONSENT_DATA = 1004   // fetch consent form data
+    var UPLOAD_LOG_CODE = 1005    // upload log info
+
 
 
 

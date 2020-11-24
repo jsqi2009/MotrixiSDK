@@ -154,6 +154,8 @@ object MotrixiSDK {
                     val googleId: String = AdvertisingIdUtil.getGoogleAdId(context.applicationContext)!!
                     Log.d("google Id:", googleId)
                     Contants.advertisingID = googleId
+
+                    UploadLogUtil.uploadLogData(context, "advertisingID: $googleId")
                 }
             })
         } catch (e: Exception) {
