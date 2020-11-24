@@ -6,6 +6,11 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
+import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -13,12 +18,6 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
@@ -37,7 +36,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DataCollectionActivity : AppCompatActivity() {
+class DataCollectionActivity : FragmentActivity() {
 
     val OPTION_VALUE_1 = "Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement"
     val OPTION_VALUE_2 = "Measurement: measure key point indicators to evaluate marketin"
@@ -58,7 +57,6 @@ class DataCollectionActivity : AppCompatActivity() {
     private val request_code = 1
     var mPermissionList: ArrayList<String> = ArrayList()
     var mSession: Session? = null
-    var actionBar: ActionBar? = null
 
     private var rootLayout: RelativeLayout? = null
     private var frameLayout: FrameLayout? = null
@@ -72,11 +70,12 @@ class DataCollectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_data_collection)
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         initLayout()
         setContentView(rootLayout)
 
-        actionBar = this.supportActionBar
-        actionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
 //        customActionBarView()
 //        actionBar!!.customView = actionBarLayout
 //        actionBar!!.setDisplayShowCustomEnabled(true)
@@ -219,6 +218,9 @@ class DataCollectionActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission()
+        } else {
+            UploadCollectedData.formatData(this)
+            finish()
         }
     }
 

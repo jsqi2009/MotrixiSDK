@@ -3,6 +3,7 @@ package com.motrixi.datacollection.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -19,8 +20,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM
-import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
@@ -94,7 +93,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         )
         topLayout.id = Contants.PRIVACY_TOP_ID
         topLayout.layoutParams = topParams
-        topLayout.visibility = View.GONE
+        topLayout.setBackgroundColor(Color.rgb(0, 150, 182))
         privateLayout.addView(topLayout)
 
         var ivBack = ImageView(activity)
@@ -106,7 +105,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         imageParams.addRule(RelativeLayout.CENTER_VERTICAL)
         //ivBack.setImageResource(R.drawable.ic_back)
         ivBack.layoutParams = imageParams
-        topLayout.addView(ivBack)
+        //topLayout.addView(ivBack)
 
         tvTitle = TextView(activity)
         val titleParams = RelativeLayout.LayoutParams(
@@ -122,7 +121,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         topLayout.addView(tvTitle)
 
 
-        var scrollView: NestedScrollView = NestedScrollView(activity!!)
+        var scrollView: ScrollView = ScrollView(activity!!)
         val scrollParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -300,8 +299,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         //initView()
 
         customActionBarView()
-        parentActivity!!.actionBar!!.customView = actionBarLayout
-        parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
+        //parentActivity!!.actionBar!!.customView = actionBarLayout
+        //parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
 
         Log.d("fragment", mSession!!.consentDataInfo.toString())
         setData()
@@ -339,6 +338,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     private fun setData() {
 
+        tvTitle.text = parentActivity!!.info!!.value!!.terms_page_title
         tvCancel.text = parentActivity!!.info!!.value!!.cancel_button_text
         tvOption.text = parentActivity!!.info!!.value!!.option_button_text
         tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text

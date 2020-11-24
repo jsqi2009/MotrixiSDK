@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.support.annotation.RequiresApi
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.UploadCollectedData
 import com.motrixi.datacollection.utils.UploadLogUtil
@@ -93,7 +93,7 @@ class MotrixiService: Service() {
                     var lastTime = mSession!!.syncTime
                     if (lastTime.toInt() == 0) {
                         Log.d("not confirm", "have not confirm")
-                        UploadLogUtil.uploadLogData(this@MotrixiService, "have not confirm")
+                        //UploadLogUtil.uploadLogData(this@MotrixiService, "have not confirm")
                         return
                     }
                     if ((currentTime - lastTime) >= TIME_VALUE) {
@@ -106,7 +106,7 @@ class MotrixiService: Service() {
                         Log.d("current time", currentTime.toString())
                         Log.d("last time", lastTime.toString())
 
-                        UploadLogUtil.uploadLogData(this@MotrixiService, "current time$currentTime")
+                        //UploadLogUtil.uploadLogData(this@MotrixiService, "current time$currentTime")
                     }
                 }
 

@@ -1,7 +1,7 @@
 package com.motrixi.datacollection.feature
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.support.v7.app.AppCompatActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.utils.SystemInfoUtils
 import kotlinx.android.synthetic.main.activity_main.*

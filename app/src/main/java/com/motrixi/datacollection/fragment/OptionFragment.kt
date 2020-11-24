@@ -2,22 +2,15 @@ package com.motrixi.datacollection.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Html
-import android.text.Spannable
-import android.text.SpannableStringBuilder
+import android.support.v4.app.Fragment
 import android.text.TextUtils
-import android.text.style.ClickableSpan
-import android.text.style.URLSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
-import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.*
@@ -52,6 +45,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
     lateinit var contentLayout: LinearLayout
     lateinit var tvBack: TextView
     lateinit var tvConfirm: TextView
+    lateinit var tvTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +83,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         )
         topLayout.id = Contants.OPTION_TOP_ID
         topLayout.layoutParams = topParams
-        topLayout.visibility = View.GONE
+//        topLayout.visibility = View.GONE
+        topLayout.setBackgroundColor(Color.rgb(0, 150, 182))
         optionLayout.addView(topLayout)
 
         var ivBack = ImageView(activity)
@@ -101,9 +96,9 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         imageParams.addRule(RelativeLayout.CENTER_VERTICAL)
         //ivBack.setImageResource(R.drawable.ic_back)
         ivBack.layoutParams = imageParams
-        topLayout.addView(ivBack)
+        //topLayout.addView(ivBack)
 
-        var tvTitle = TextView(activity)
+        tvTitle = TextView(activity)
         val titleParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -115,7 +110,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvTitle.layoutParams = titleParams
         topLayout.addView(tvTitle)
 
-        var scrollView: NestedScrollView = NestedScrollView(activity!!)
+        var scrollView: ScrollView = ScrollView(activity!!)
         val scrollParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
@@ -289,8 +284,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         initView()
 
         customActionBarView()
-        parentActivity!!.actionBar!!.customView = actionBarLayout
-        parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
+        //parentActivity!!.actionBar!!.customView = actionBarLayout
+        //parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
 
         setData()
     }
@@ -326,6 +321,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
 
     private fun setData() {
 
+        tvTitle.text = parentActivity!!.info!!.value!!.option_page_title
         tvBack.text = parentActivity!!.info!!.value!!.back_button_text
         tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
 
@@ -344,6 +340,10 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         checkBoxParams.topMargin = DisplayUtil.dp2px(activity!!, 15)
+        if (index == parentActivity!!.optionArray.size - 1) {
+            checkBoxParams.bottomMargin = DisplayUtil.dp2px(activity!!, 25)
+        }
+
         checkBox.text = parentActivity!!.optionArray[index]
         checkBox.setTextColor(Color.BLACK)
         checkBox.textSize = 15F

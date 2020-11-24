@@ -3,6 +3,7 @@ package com.motrixi.datacollection.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -15,7 +16,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
@@ -43,6 +43,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     lateinit var webView: WebView
     private var actionBarLayout: LinearLayout? = null
     private var mSession: Session? = null
+    lateinit var tvTitle: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +83,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         )
         topLayout.id = Contants.MORE_TOP_ID
         topLayout.layoutParams = topParams
-        topLayout.visibility = View.GONE
+        topLayout.setBackgroundColor(Color.rgb(0, 150, 182))
         moreLayout.addView(topLayout)
 
         var ivBack = ImageView(activity)
@@ -94,15 +95,15 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         imageParams.addRule(RelativeLayout.CENTER_VERTICAL)
         //ivBack.setImageResource(R.drawable.ic_back)
         ivBack.layoutParams = imageParams
-        topLayout.addView(ivBack)
+        //topLayout.addView(ivBack)
 
-        var tvTitle = TextView(activity)
+        tvTitle = TextView(activity)
         val titleParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         titleParams.addRule(RelativeLayout.CENTER_IN_PARENT)
-        tvTitle.text = "Detailed Terms"
+        //tvTitle.text = "Detailed Terms"
         tvTitle.textSize = 20F
         tvTitle.setTextColor(Color.BLACK)
         tvTitle.layoutParams = titleParams
@@ -130,9 +131,11 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         parentActivity = activity as DataCollectionActivity?
         mSession = Session(activity!!)
 
+        tvTitle.text = parentActivity!!.info!!.value!!.link_page_title
+
         customActionBarView()
-        parentActivity!!.actionBar!!.customView = actionBarLayout
-        parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
+        //parentActivity!!.actionBar!!.customView = actionBarLayout
+        //parentActivity!!.actionBar!!.setDisplayShowCustomEnabled(true)
 
         initView()
     }
