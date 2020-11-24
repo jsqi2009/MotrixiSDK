@@ -56,7 +56,7 @@ object HttpClient {
 
 
     /**
-     * 初始化OKHttp
+     * init OKHttp
      */
     private fun initOkHTTP(context: Context) {
         httpClient = provideOkHttpClient(context)
@@ -65,7 +65,7 @@ object HttpClient {
 
     private fun provideOkHttpClient(context: Context): OkHttpClient {
 
-        // Log信息
+        // Log information
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val builder = OkHttpClient.Builder()
