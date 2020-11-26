@@ -133,7 +133,11 @@ object MotrixiSDK {
                     if (Contants.onLogListener != null) {
                         Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, true, responseObject.optString("message")))
                     }
-                    checkIsAgree(context)
+
+                    if (responseObject.optBoolean("success")) {
+                        checkIsAgree(context)
+                    }
+
                 } else {
                     var error = JSONObject(response.errorBody()!!.string())
                     Log.d("verify failure", error.optString("message"))

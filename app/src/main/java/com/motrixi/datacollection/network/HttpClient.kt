@@ -224,6 +224,19 @@ object HttpClient {
         return call
     }
 
+    fun rejectCollectionData(context:Context,appKey:String,androidID:String):Call<JsonObject>{
+
+        var map:HashMap<String,Any> = HashMap()
+        map.put("app_key",appKey)
+        map.put("android_id",androidID)
+
+        val call=mHttpApi!!.requestAuthPost(getHeaders(context),
+            "api","cancel_consent","add",map)
+
+        return call
+    }
+
+
 
 
 
