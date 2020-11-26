@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -206,6 +207,49 @@ class DataCollectionActivity : AppCompatActivity() {
                                 Contants.CONSENT_FORM_CODE,
                                 false,
                                 error.optString("message")
+                            )
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+    fun rejectCollect() {
+
+        var appKey = Contants.APP_KEY
+        var androidID = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+
+        var call = HttpClient.rejectCollectionData(this, appKey, androidID)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
+                Log.d("cancel status", "network failure")
+
+                UploadLogUtil.uploadLogData(this@DataCollectionActivity, t.message.toString())
+            }
+
+            override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
+                if (response.isSuccessful) {
+                    val responseObject: JSONObject = JSONObject(response.body().toString())
+
+                    UploadLogUtil.uploadLogData(this@DataCollectionActivity, "cancel:" + responseObject.optString("message"))
+                    Log.d("cancel status", "success")
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true,
+                                responseObject.optString("message")
+                            )
+                        )
+                    }
+                } else {
+                    var errorObject = JSONObject(response.errorBody()!!.string())
+
+                    UploadLogUtil.uploadLogData(this@DataCollectionActivity, "cancel:" + errorObject.optString("message"))
+                    Log.d("cancel status", "failure")
+                    if (Contants.onLogListener != null) {
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true,
+                                errorObject.optString("message")
                             )
                         )
                     }

@@ -123,16 +123,26 @@ object MotrixiSDK {
                 if (response.isSuccessful) {
                     Log.d("verify success", response.body().toString())
                     var responseObject:JSONObject = JSONObject(response.body().toString())
-                    var resultObject:JSONObject = responseObject.optJSONObject("result")
+                    var resultObject: JSONObject = responseObject.optJSONObject("result")
                     var appID = resultObject.optString("id")
 //                    Contants.APP_ID = appID
                     mSession!!.appID = appID
                     Log.d("app_id", appID)
 
                     if (Contants.onLogListener != null) {
-                        Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, true, responseObject.optString("message")))
+                        Contants.onLogListener!!.onLogListener(
+                            MessageUtil.logMessage(
+                                Contants.APP_KEY_CODE,
+                                true,
+                                responseObject.optString("message")
+                            )
+                        )
                     }
-                    checkIsAgree(context)
+                    if (responseObject.optBoolean("success")) {
+
+                        checkIsAgree(context)
+                    }
+
                 } else {
                     var error = JSONObject(response.errorBody()!!.string())
                     Log.d("verify failure", error.optString("message"))

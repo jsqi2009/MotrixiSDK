@@ -263,6 +263,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvCancel.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 mSession!!.agreeFlag = true
+                parentActivity!!.rejectCollect()
                 activity!!.finish()
             }
         })
