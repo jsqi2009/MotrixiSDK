@@ -131,7 +131,9 @@ object MotrixiSDK {
                     Log.d("app_id", appID)
 
                     if (Contants.onLogListener != null) {
-                        Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, true, responseObject.optString("message")))
+                        var flag = responseObject.optBoolean("success")
+                        
+                        Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, flag, responseObject.optString("message")))
                     }
 
                     if (responseObject.optBoolean("success")) {
