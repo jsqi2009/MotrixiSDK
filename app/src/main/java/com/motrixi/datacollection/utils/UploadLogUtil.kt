@@ -3,6 +3,7 @@ package com.motrixi.datacollection.utils
 import android.content.Context
 import android.provider.Settings
 import android.util.Log
+import com.adobe.fre.FREContext
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
@@ -18,11 +19,11 @@ import retrofit2.Response
  */
 object UploadLogUtil {
 
-    fun uploadLogData(context: Context, value: String) {
+    fun uploadLogData(context: FREContext, value: String) {
 
         var value = MessageUtil.uploadLog(value)
         var appKey = Contants.APP_KEY
-        var androidID = Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        var androidID = Settings.System.getString(context.activity.contentResolver, Settings.Secure.ANDROID_ID)
 
         var call = HttpClient.uploadLog(context, value, appKey, androidID)
         call.enqueue(object : Callback<JsonObject> {

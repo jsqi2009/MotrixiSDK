@@ -13,6 +13,7 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import com.adobe.fre.FREContext
 import com.motrixi.datacollection.feature.SystemInfoActivity
 import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.ManifestMetaReader
@@ -34,8 +35,10 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private fun initView() {
 
+        //var freContext: FREContext = FREContext()
+
 //初始化
-        MotrixiSDK.init(this, "7536f220-27b5-11eb-96a9-6d9cb391fb34")
+        //MotrixiSDK.init(this, "7536f220-27b5-11eb-96a9-6d9cb391fb34")
 
         //MotrixiSDK.init(上下文对象, "appKey")
 

@@ -5,12 +5,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.text.TextUtils
+import com.adobe.fre.FREContext
 
 import java.util.HashMap
 import java.util.HashSet
 import kotlin.collections.Map.Entry
 
-class BufferedSharedPreferences(paramContext: Context, paramString: String) {
+class BufferedSharedPreferences(paramContext: FREContext, paramString: String) {
     private var mRemoveBuffer: MutableSet<String>? = null
     private var mSharedPreferences: SharedPreferences? = null
     private var mWriteBuffer: MutableMap<String, Any>? = null
@@ -19,7 +20,7 @@ class BufferedSharedPreferences(paramContext: Context, paramString: String) {
         if (!TextUtils.isEmpty(paramString)) {
             this.mWriteBuffer = HashMap()
             this.mRemoveBuffer = HashSet()
-            this.mSharedPreferences = paramContext.getSharedPreferences(paramString, 0)
+            this.mSharedPreferences = paramContext.activity.getSharedPreferences(paramString, 0)
         }
     }
 

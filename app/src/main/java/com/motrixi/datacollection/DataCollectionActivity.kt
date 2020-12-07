@@ -151,7 +151,7 @@ class DataCollectionActivity : FragmentActivity() {
 
     @SuppressLint("ResourceType")
     private fun initView() {
-        mSession = Session(this)
+        mSession = Session(Contants.mFREContext!!)
 
         info = mSession!!.consentDataInfo
         optionArray = info!!.value!!.options!!.split("|") as ArrayList<String>
@@ -173,7 +173,7 @@ class DataCollectionActivity : FragmentActivity() {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
                 Log.d("submit status", "failure")
 
-                UploadLogUtil.uploadLogData(this@DataCollectionActivity, t.message.toString())
+                UploadLogUtil.uploadLogData(Contants.mFREContext!!, t.message.toString())
             }
 
             override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
@@ -221,14 +221,14 @@ class DataCollectionActivity : FragmentActivity() {
             override fun onFailure(call:retrofit2.Call<JsonObject>,t:Throwable){
                 Log.d("cancel status","network failure")
 
-                UploadLogUtil.uploadLogData(this@DataCollectionActivity,t.message.toString())
+                UploadLogUtil.uploadLogData(Contants.mFREContext!!,t.message.toString())
             }
 
             override fun onResponse(call:retrofit2.Call<JsonObject>,response:Response<JsonObject>){
                 if(response.isSuccessful){
                     val responseObject:JSONObject=JSONObject(response.body().toString())
 
-                    UploadLogUtil.uploadLogData(this@DataCollectionActivity,"cancel:"+responseObject.optString("message"))
+                    UploadLogUtil.uploadLogData(Contants.mFREContext!!,"cancel:"+responseObject.optString("message"))
                     Log.d("cancel status","success")
                     if (Contants.onLogListener != null) {
                         Contants.onLogListener!!.onLogListener(
@@ -238,7 +238,7 @@ class DataCollectionActivity : FragmentActivity() {
                 }else{
                     var errorObject=JSONObject(response.errorBody()!!.string())
 
-                    UploadLogUtil.uploadLogData(this@DataCollectionActivity,"cancel:"+errorObject.optString("message"))
+                    UploadLogUtil.uploadLogData(Contants.mFREContext!!,"cancel:"+errorObject.optString("message"))
                     Log.d("cancel status","failure")
                     if (Contants.onLogListener != null) {
                         Contants.onLogListener!!.onLogListener(

@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import com.adobe.fre.FREContext
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
@@ -33,17 +34,19 @@ object MotrixiSDK {
 
     fun init(context: Context){
 
-        HttpClient.init(context)
-        mSession = Session(context)
+        //HttpClient.init(context)
+        //mSession = Session(context)
 
-        startService(context)
+        //startService(context)
         //init ad id
-        getAdvertisingId(context)
+        //getAdvertisingId(context)
 
-        fetchAppkey(context)
+        //fetchAppkey(context)
     }
 
-    fun init(context: Context, appKey: String){
+    fun init(context: FREContext, appKey: String){
+
+        Contants.mFREContext = context
 
         HttpClient.init(context)
         mSession = Session(context)
@@ -71,13 +74,13 @@ object MotrixiSDK {
     /**
      * start the foreground service
      */
-    private fun startService(context: Context) {
-        val startService = Intent(context, MotrixiService::class.java)
+    private fun startService(context: FREContext) {
+        val startService = Intent(context.activity, MotrixiService::class.java)
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(startService)
+            context.activity.startForegroundService(startService)
             UploadLogUtil.uploadLogData(context, "startForegroundService ")
         } else {
-            context.startService(startService)
+            context.activity.startService(startService)
             UploadLogUtil.uploadLogData(context, "startService")
         }
     }
@@ -85,18 +88,18 @@ object MotrixiSDK {
     /**
      * verify the app key
      */
-    private fun fetchAppkey(context: Context) {
-        var key = getAppkey(context)
+    /*private fun fetchAppkey(context: FREContext) {
+        //var key = getAppkey(context)
         if (TextUtils.isEmpty(key)) {
-            Toast.makeText(context, "Please configure app key", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Please configure app key", Toast.LENGTH_SHORT).show()
             Log.d("app_key","null")
         } else {
             verifyAppkey(context, key)
 //            verifyAppkey(context, "123")
         }
-    }
+    }*/
 
-    private fun getAppkey(context: Context): String? {
+    /*private fun getAppkey(context: FREContext): String? {
 
         try {
             val value = ManifestMetaReader.getMetaValue(context, "MOTRIXI_SDK_APPID")
@@ -104,12 +107,12 @@ object MotrixiSDK {
         } catch (e: Exception) {
             return ""
         }
-    }
+    }*/
 
     /**
      * verify the app key via API
      */
-    private fun verifyAppkey(context: Context, key: String?) {
+    private fun verifyAppkey(context: FREContext, key: String?) {
 
         Log.d("app_key", key!!)
         UploadLogUtil.uploadLogData(context, key)
@@ -154,11 +157,11 @@ object MotrixiSDK {
     /**
      * get the AdvertisingId
      */
-    private fun getAdvertisingId(context: Context) {
+    private fun getAdvertisingId(context: FREContext) {
         try {
             Executors.newSingleThreadExecutor().execute(object : Runnable{
                 override fun run() {
-                    val googleId: String = AdvertisingIdUtil.getGoogleAdId(context.applicationContext)!!
+                    val googleId: String = AdvertisingIdUtil.getGoogleAdId(context.activity.applicationContext)!!
                     Log.d("google Id:", googleId)
                     Contants.advertisingID = googleId
                 }
@@ -167,16 +170,16 @@ object MotrixiSDK {
         }
     }
 
-    private fun checkIsAgree(context: Context) {
+    private fun checkIsAgree(context: FREContext) {
 
         try {
             var flag = mSession!!.agreeFlag
             if (!flag) {
                 val intent: Intent = Intent()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.setClass(context, DataCollectionActivity::class.java)
+                intent.setClass(context.activity, DataCollectionActivity::class.java)
 //                intent.setClass(context, JumpActivity::class.java)
-                context.startActivity(intent)
+                context.activity.startActivity(intent)
             } else {
                 Log.d("is agree:", "already agree")
                 //UploadCollectedData.formatData(context)
@@ -190,16 +193,16 @@ object MotrixiSDK {
     /**
      * reset the consent form data
      */
-    fun resetConsentForm(mContext: Context) {
+    fun resetConsentForm(mContext: FREContext) {
         UploadLogUtil.uploadLogData(mContext, "call reset consent form API")
 
         val intent: Intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.setClass(mContext, DataCollectionActivity::class.java)
-        mContext.startActivity(intent)
+        intent.setClass(mContext.activity, DataCollectionActivity::class.java)
+        mContext.activity.startActivity(intent)
     }
 
-    private fun getConsentDataList(context: Context, appKey: String) {
+    private fun getConsentDataList(context: FREContext, appKey: String) {
 
         var call = HttpClient.fetchConsentData(context)
         call.enqueue(object : Callback<ConsentDetailInfo> {

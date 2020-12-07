@@ -3,6 +3,7 @@ package com.motrixi.datacollection.network
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
+import com.adobe.fre.FREContext
 import com.google.gson.JsonObject
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
@@ -44,7 +45,7 @@ object HttpClient {
     var severRootUrl: String? = null
 
 
-    fun init(context: Context) {
+    fun init(context: FREContext) {
         //severRootUrl = ManifestMetaReader.getMetaValue(context, "SERVER_ROOT_URL")
         mSession = Session(context)
         if (mSession!!.hasToken()) {
@@ -58,12 +59,12 @@ object HttpClient {
     /**
      * init OKHttp
      */
-    private fun initOkHTTP(context: Context) {
+    private fun initOkHTTP(context: FREContext) {
         httpClient = provideOkHttpClient(context)
         initHttpClientApi()
     }
 
-    private fun provideOkHttpClient(context: Context): OkHttpClient {
+    private fun provideOkHttpClient(context: FREContext): OkHttpClient {
 
         // Log information
         val loggingInterceptor = HttpLoggingInterceptor()
@@ -125,7 +126,7 @@ object HttpClient {
 
     }
 
-    private fun getHeaders(context: Context): HashMap<String, String> {
+    private fun getHeaders(): HashMap<String, String> {
         var headerMap: HashMap<String, String> = HashMap<String, String>()
         headerMap.put("Authorization", "Bearer " + "")
         headerMap.put("Accept", "application/json")
@@ -133,12 +134,12 @@ object HttpClient {
         return headerMap
     }
 
-    fun verifyAppkey(context: Context, key: String): Call<JsonObject>  {
+    fun verifyAppkey(context: FREContext, key: String): Call<JsonObject>  {
 
         var map: HashMap<String, Any> = HashMap()
         map.put("app_key", key)
 
-        val call = mHttpApi!!.requestAuthPost(getHeaders(context),
+        val call = mHttpApi!!.requestAuthPost(getHeaders(),
             "api","app","check", map)
 
         return call
@@ -178,7 +179,7 @@ object HttpClient {
         }
 
         var authorization = "JWT " + mSession!!.token
-        val call = mHttpApi!!.requestAuthPost(getHeaders(context),
+        val call = mHttpApi!!.requestAuthPost(getHeaders(),
             "api","sdk_information","add", map)
         return call
     }
@@ -189,27 +190,27 @@ object HttpClient {
         map.put("value", value!!)
         map.put("app_id", appID)
 
-        val call = mHttpApi!!.requestAuthPost(getHeaders(context),
+        val call = mHttpApi!!.requestAuthPost(getHeaders(),
             "api","consent_form","submit", map)
 
         return call
     }
 
-    fun uploadLog(context: Context, value: String, appKey: String, androidID: String): Call<JsonObject>  {
+    fun uploadLog(context: FREContext, value: String, appKey: String, androidID: String): Call<JsonObject>  {
 
         var map: HashMap<String, Any> = HashMap()
         map.put("value", value!!)
         map.put("app_key", appKey)
         map.put("android_id", androidID)
 
-        val call = mHttpApi!!.requestAuthPost2(getHeaders(context),
+        val call = mHttpApi!!.requestAuthPost2(getHeaders(),
             "api","sdk","log","create", map)
 
         return call
     }
 
 
-    fun fetchConsentData(context: Context) : Call<ConsentDetailInfo> {
+    fun fetchConsentData(context: FREContext) : Call<ConsentDetailInfo> {
 
         val locale: Locale = Locale.getDefault()
         val lan: String = locale.language.toLowerCase() + "-" + locale.country.toLowerCase()
@@ -218,7 +219,7 @@ object HttpClient {
         var map: HashMap<String, Any> = HashMap()
         map.put("language", lan)
 
-        val call = mHttpApi!!.requestAuthConsent(getHeaders(context),
+        val call = mHttpApi!!.requestAuthConsent(getHeaders(),
             "api","consent","detail", map)
 
         return call
@@ -230,7 +231,7 @@ object HttpClient {
         map.put("app_key",appKey)
         map.put("android_id",androidID)
 
-        val call=mHttpApi!!.requestAuthPost(getHeaders(context),
+        val call=mHttpApi!!.requestAuthPost(getHeaders(),
             "api","cancel_consent","add",map)
 
         return call

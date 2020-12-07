@@ -2,9 +2,10 @@ package com.motrixi.datacollection.content
 
 
 import android.content.Context
+import com.adobe.fre.FREContext
 
 
-class SafeSharedPreferences(paramContext: Context, paramString: String) {
+class SafeSharedPreferences(paramContext: FREContext, paramString: String) {
     private val mBufferedSharedPreferences: BufferedSharedPreferences
 
     init {

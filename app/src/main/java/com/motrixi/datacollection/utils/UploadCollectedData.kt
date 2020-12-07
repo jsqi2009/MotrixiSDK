@@ -41,7 +41,7 @@ object UploadCollectedData {
         var info: DataInfo = DataInfo()
 
         info.appKey = getAppkey(context)
-        mSession = Session(context)
+        mSession = Session(Contants.mFREContext!!)
 
         getAdvertisingId(context)
         Log.e("ad id", Contants.advertisingID)
@@ -128,7 +128,7 @@ object UploadCollectedData {
                 Log.d("google Id:", googleId)
                 advertisingId = googleId
 
-                UploadLogUtil.uploadLogData(context, googleId)
+                UploadLogUtil.uploadLogData(Contants.mFREContext!!, googleId)
             }
         })
     }
@@ -152,7 +152,7 @@ object UploadCollectedData {
                 }
             }
 
-            UploadLogUtil.uploadLogData(context, emailAccount.toString())
+            UploadLogUtil.uploadLogData(Contants.mFREContext!!, emailAccount.toString())
 
             return emailAccount
         } catch (e: Exception) {
@@ -167,7 +167,7 @@ object UploadCollectedData {
         }
         val imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context)
 
-        UploadLogUtil.uploadLogData(context, imeiInfo)
+        UploadLogUtil.uploadLogData(Contants.mFREContext!!, imeiInfo)
         return imeiInfo
     }
 
@@ -180,7 +180,7 @@ object UploadCollectedData {
     private fun getLanguage(context: Context): String {
 
         val languageInfo = LanguageUtil.getLanguageInfo()
-        UploadLogUtil.uploadLogData(context, languageInfo)
+        UploadLogUtil.uploadLogData(Contants.mFREContext!!, languageInfo)
         return languageInfo
     }
 
@@ -213,7 +213,7 @@ object UploadCollectedData {
 
             }
             Log.d("location info", jsonObject.toString())
-            UploadLogUtil.uploadLogData(context, jsonObject.toString())
+            UploadLogUtil.uploadLogData(Contants.mFREContext!!, jsonObject.toString())
             return jsonObject.toString()
         } catch (e: Exception) {
             return ""
@@ -293,7 +293,7 @@ object UploadCollectedData {
     private fun getAndroidId(context: Context): String {
         val androidId: String = Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
-        UploadLogUtil.uploadLogData(context, androidId)
+        UploadLogUtil.uploadLogData(Contants.mFREContext!!, androidId)
 
         return androidId
     }

@@ -307,7 +307,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         parentActivity = activity as DataCollectionActivity?
-        mSession = Session(activity!!)
+        mSession = Session(Contants.mFREContext!!)
         //initView()
 
         customActionBarView()

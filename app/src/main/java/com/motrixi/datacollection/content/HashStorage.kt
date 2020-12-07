@@ -2,10 +2,11 @@ package com.motrixi.datacollection.content
 
 
 import android.content.Context
+import com.adobe.fre.FREContext
 
 class HashStorage internal constructor(private val mSafeSharedPreferences: SafeSharedPreferences) {
 
-    constructor(paramContext: Context, paramString: String) : this(SafeSharedPreferences(paramContext, paramString)) {}
+    constructor(paramContext: FREContext, paramString: String) : this(SafeSharedPreferences(paramContext, paramString)) {}
 
     fun buffer(): Buffer {
         return Buffer()

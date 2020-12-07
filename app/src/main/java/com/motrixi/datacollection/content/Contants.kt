@@ -1,5 +1,6 @@
 package com.motrixi.datacollection.content
 
+import com.adobe.fre.FREContext
 import com.motrixi.datacollection.listener.OnLogListener
 
 
@@ -38,6 +39,9 @@ object Contants {
     var UPLOAD_DATA_CODE = 1003    // upload the collected data
     var FETCH_CONSENT_DATA = 1004   // fetch consent form data
     var CANCEL_COLLECT_DATA = 1005    // cancel collect data
+
+
+    var mFREContext: FREContext? = null
 
 
 

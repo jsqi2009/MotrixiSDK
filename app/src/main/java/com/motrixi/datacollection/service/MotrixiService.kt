@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.support.annotation.RequiresApi
 import android.util.Log
+import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.UploadCollectedData
 import com.motrixi.datacollection.utils.UploadLogUtil
@@ -39,7 +40,7 @@ class MotrixiService: Service() {
         super.onCreate()
 
         Log.e("oncreate","create service")
-        mSession = Session(this)
+        mSession = Session(Contants.mFREContext!!)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setForeground()
         }
@@ -99,7 +100,7 @@ class MotrixiService: Service() {
                     if ((currentTime - lastTime) >= TIME_VALUE) {
 
                         Log.d("service", "start service")
-                        UploadLogUtil.uploadLogData(this@MotrixiService, "uploading data")
+                        UploadLogUtil.uploadLogData(Contants.mFREContext!!, "uploading data")
                         mSession!!.syncTime = Date().time
                         UploadCollectedData.formatData(applicationContext)
                     } else {

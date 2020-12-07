@@ -2,12 +2,13 @@ package com.motrixi.datacollection.content
 
 import android.content.Context
 import android.text.TextUtils
+import com.adobe.fre.FREContext
 
 import com.google.gson.Gson
 import com.motrixi.datacollection.network.models.ConsentDetailInfo
 
 
-class Session(c: Context) {
+class Session(c: FREContext) {
 
     private val mHashStorage: HashStorage
 
