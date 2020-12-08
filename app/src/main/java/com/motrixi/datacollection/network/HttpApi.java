@@ -21,36 +21,36 @@ public interface HttpApi {
 
     @POST("{key}/{key1}/{key2}/")
     @FormUrlEncoded
-    Call<JsonObject> request(@Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
+    public Call<JsonObject> request(@Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
 
     @GET("{key}/{key1}/{key2}/")
-    Call<JsonObject> requestAuth2(@HeaderMap Map<String, String> map, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2);
+    public Call<JsonObject> requestAuth2(@HeaderMap Map<String, String> map, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2);
 
     @GET("{key}/{key1}/{key2}/{key3}/")
-    Call<JsonObject> requestAuth3(@HeaderMap Map<String, String> map, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @Path("key3") String key3);
+    public Call<JsonObject> requestAuth3(@HeaderMap Map<String, String> map, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @Path("key3") String key3);
 
 
     @GET("{key}/{key1}/{key2}/")
-    Call<JsonObject> requestAuth(@Header("Authorization") String authorization, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2);
+    public Call<JsonObject> requestAuth(@Header("Authorization") String authorization, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2);
 
 
     @GET("{key}/{key1}/{key2}/")
-    Call<ConsentDetailInfo> requestAuthConsent(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);
+    public Call<ConsentDetailInfo> requestAuthConsent(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);
 
 
     @GET("{key}/{key1}/{key2}/")
-    Call<JsonObject> requestAuth(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);
+    public Call<JsonObject> requestAuth(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @QueryMap Map<String, Object> map);
 
     @PUT("{key}/{key1}/{key2}/")
     @FormUrlEncoded
-    Call<JsonObject> requestAuthPut(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
+    public Call<JsonObject> requestAuthPut(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
 
     @POST("{key}/{key1}/{key2}/")
     @FormUrlEncoded
-    Call<JsonObject> requestAuthPost(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
+    public Call<JsonObject> requestAuthPost(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @FieldMap Map<String, Object> map);
 
     @POST("{key}/{key1}/{key2}/{key3}/")
     @FormUrlEncoded
-    Call<JsonObject> requestAuthPost2(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @Path("key3") String key3, @FieldMap Map<String, Object> map);
+    public Call<JsonObject> requestAuthPost2(@HeaderMap Map<String, String> headerMap, @Path("key") String key, @Path("key1") String key1, @Path("key2") String key2, @Path("key3") String key3, @FieldMap Map<String, Object> map);
 
 }

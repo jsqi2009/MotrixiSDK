@@ -74,6 +74,8 @@ dependencies {
 
 
     implementation files('libs/FlashRuntimeExtensions.jar')
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
 }
 
