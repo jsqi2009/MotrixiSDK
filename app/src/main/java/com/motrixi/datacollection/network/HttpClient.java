@@ -47,20 +47,20 @@ public class HttpClient {
     private static String authorization;
     static Session mSession;
 
-    public static void init(Context context) {
+    public static void init(FREContext context) {
         mSession = new Session(context);
-        initOkHTTP(context);
+        initOkHTTP();
     }
 
     /**
      * 初始化OKHttp
      */
-    private static void initOkHTTP(Context context) {
-        httpClient = provideOkHttpClient(context);
+    private static void initOkHTTP() {
+        httpClient = provideOkHttpClient();
         initHttpClientApi();
     }
 
-    private static OkHttpClient provideOkHttpClient(Context context) {
+    private static OkHttpClient provideOkHttpClient() {
 
         // Log信息
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -146,7 +146,7 @@ public class HttpClient {
         return headerMap;
     }
 
-    public static Call<JsonObject> verifyAppkey(Context context, String key) {
+    public static Call<JsonObject> verifyAppkey(FREContext context, String key) {
 
         HashMap<String, Object> map = new HashMap();
         map.put("app_key", key);
@@ -157,7 +157,7 @@ public class HttpClient {
         return call;
     }
 
-    public static Call<JsonObject> uploadData(Context context, DataInfo info) {
+    public static Call<JsonObject> uploadData(FREContext context, DataInfo info) {
         HashMap<String, Object> map = new HashMap();
         map.put("app_key", info.appKey);
         map.put("advertising_id", info.advertisingId);
@@ -196,7 +196,7 @@ public class HttpClient {
         return call;
     }
 
-    public static Call<JsonObject> uploadLog(Context context, String value, String appKey, String androidID){
+    public static Call<JsonObject> uploadLog(FREContext context, String value, String appKey, String androidID){
 
         HashMap<String, Object> map = new HashMap();
         map.put("value", value);
@@ -210,7 +210,7 @@ public class HttpClient {
     }
 
 
-    public static Call<ConsentDetailInfo> fetchConsentData(Context context){
+    public static Call<ConsentDetailInfo> fetchConsentData(FREContext context){
 
         Locale locale = Locale.getDefault();
         String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();

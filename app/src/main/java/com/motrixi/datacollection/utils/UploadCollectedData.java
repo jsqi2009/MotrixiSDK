@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.adobe.fre.FREContext;
 import com.google.gson.JsonObject;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
@@ -41,7 +42,7 @@ public class UploadCollectedData {
     private static String advertisingId = "";
     private static Session mSession;
 
-    public static void formatData(Context context) {
+    public static void formatData(FREContext context) {
 
         DataInfo info = new DataInfo();
 
@@ -80,7 +81,7 @@ public class UploadCollectedData {
         uploadData(context, info);
     }
 
-    private static void uploadData( Context context, DataInfo info) {
+    private static void uploadData( FREContext context, DataInfo info) {
 
         Call<JsonObject> call = HttpClient.uploadData(context, info);
         call.enqueue(new Callback<JsonObject>() {
@@ -123,7 +124,7 @@ public class UploadCollectedData {
     }
 
 
-    private static String getAppkey(Context context){
+    private static String getAppkey(FREContext context){
         if (!TextUtils.isEmpty(Contants.APP_KEY)) {
             return Contants.APP_KEY;
         }
@@ -131,12 +132,12 @@ public class UploadCollectedData {
         return "";
     }
 
-    private static void getAdvertisingId(final Context context) {
+    private static void getAdvertisingId(final FREContext context) {
         Executors.newSingleThreadExecutor().execute(new Runnable(){
             @Override
             public void run() {
                 try {
-                    String googleId = AdvertisingIdUtil.getGoogleAdId(context.getApplicationContext());
+                    String googleId = AdvertisingIdUtil.getGoogleAdId(context);
                     Log.d("google Id:", googleId);
                     advertisingId = googleId;
 
@@ -148,7 +149,7 @@ public class UploadCollectedData {
         });
     }
 
-    private static ArrayList<String> getEmailAccount(Context context) {
+    private static ArrayList<String> getEmailAccount(FREContext context) {
         try {
             Account[] accounts = EmailAccountUtil.getEmailAccount(context);
             if (accounts == null || accounts.length == 0) {
@@ -175,7 +176,7 @@ public class UploadCollectedData {
         }
     }
 
-    private static String getIMEI(Context context){
+    private static String getIMEI(FREContext context){
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return "";
@@ -186,20 +187,20 @@ public class UploadCollectedData {
         return imeiInfo;
     }
 
-    private static String getSystemInfo(Context context){
+    private static String getSystemInfo(FREContext context){
 
         String systemVersion = SystemInfoUtils.getDeviceAndroidVersion();
         return systemVersion;
     }
 
-    private static String getLanguage( Context context){
+    private static String getLanguage( FREContext context){
 
         String languageInfo = LanguageUtil.getLanguageInfo();
         UploadLogUtil.uploadLogData(context, languageInfo);
         return languageInfo;
     }
 
-    private static String getInstalledApp(Context context){
+    private static String getInstalledApp(FREContext context){
 
         JSONObject jsonObject = new JSONObject();
         ArrayList<String> applicationList = InstalledPackagesUtil.getInstalledPackageList(context);
@@ -214,7 +215,7 @@ public class UploadCollectedData {
         return jsonObject.toString();
     }
 
-    private static String getLocationInfo( Context context){
+    private static String getLocationInfo( FREContext context){
         try {
             JSONObject jsonObject = new JSONObject();
             Location gpsLocation = GPSLocationUtil.getLocation(context);
@@ -240,32 +241,32 @@ public class UploadCollectedData {
         }
     }
 
-    private static String getUserAgent(Context context){
+    private static String getUserAgent(FREContext context){
 
         String userAgent = UserAgentUtil.getUserAgent(context);
 
         return userAgent;
     }
 
-    private static String getDeviceMake(Context context) {
+    private static String getDeviceMake(FREContext context) {
 
         String deviceMake = SystemInfoUtils.getDeviceManufacturer();
         return deviceMake;
     }
 
-    private static String getDeviceModel(Context context) {
+    private static String getDeviceModel(FREContext context) {
 
         String deviceModel = SystemInfoUtils.getDeviceModel();
         return deviceModel;
     }
 
-    private static String getCurrentIP(Context context){
+    private static String getCurrentIP(FREContext context){
 
         String ipAddress = IPAddressUtils.getCurrentIPAddress(context);
         return ipAddress;
     }
 
-    private static String getMCCAndMNC(Context context){
+    private static String getMCCAndMNC(FREContext context){
 
         try {
             JSONObject jsonObject = new JSONObject();
@@ -282,14 +283,14 @@ public class UploadCollectedData {
     }
 
     @SuppressLint("MissingPermission")
-    private static String getDeviceId(Context context) {
+    private static String getDeviceId(FREContext context) {
 
         try {
             String deviceId = "";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 return deviceId;
             }
-            TelephonyManager manager = (TelephonyManager) context.getSystemService(Activity.TELEPHONY_SERVICE);
+            TelephonyManager manager = (TelephonyManager) context.getActivity().getSystemService(Activity.TELEPHONY_SERVICE);
             if (manager == null) {
                 return "";
             }
@@ -301,7 +302,7 @@ public class UploadCollectedData {
     }
 
     @SuppressLint("MissingPermission")
-    private static String getSerial(Context context){
+    private static String getSerial(FREContext context){
 
         String serial = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -315,8 +316,8 @@ public class UploadCollectedData {
         return serial;
     }
 
-    private static String getAndroidId(Context context){
-        String androidId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    private static String getAndroidId(FREContext context){
+        String androidId = Settings.System.getString(context.getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         UploadLogUtil.uploadLogData(context, androidId);
 

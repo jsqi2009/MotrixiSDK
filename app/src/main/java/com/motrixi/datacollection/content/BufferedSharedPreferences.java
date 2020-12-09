@@ -20,11 +20,11 @@ public final class BufferedSharedPreferences {
     private SharedPreferences mSharedPreferences;
     private Map<String, Object> mWriteBuffer;
 
-    public BufferedSharedPreferences(Context paramContext, String paramString) {
+    public BufferedSharedPreferences(FREContext paramContext, String paramString) {
         if (!TextUtils.isEmpty(paramString)) {
             this.mWriteBuffer = new HashMap();
             this.mRemoveBuffer = new HashSet<>();
-            this.mSharedPreferences = paramContext.getSharedPreferences(paramString, 0);
+            this.mSharedPreferences = paramContext.getActivity().getSharedPreferences(paramString, 0);
         }
     }
 

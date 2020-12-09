@@ -34,9 +34,9 @@ public class MotrixiSDK {
     private static Session mSession;
     //private var onAppkeyListener: OnAppkeyListener? = null
 
-    public static void init(Context context, String appKey){
+    public static void init(FREContext context, String appKey){
 
-        //Contants.mFREContext = context;
+        Contants.mFREContext = context;
 
         HttpClient.init(context);
         mSession = new Session(context);
@@ -64,13 +64,13 @@ public class MotrixiSDK {
     /**
      * start the foreground service
      */
-    private static void startService(Context context) {
-        Intent startService = new Intent(context, MotrixiService.class);
+    private static void startService(FREContext context) {
+        Intent startService = new Intent(context.getActivity(), MotrixiService.class);
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(startService);
+            context.getActivity().startForegroundService(startService);
             UploadLogUtil.uploadLogData(context, "startForegroundService ");
         } else {
-            context.startService(startService);
+            context.getActivity().startService(startService);
             UploadLogUtil.uploadLogData(context, "startService");
         }
     }
@@ -78,7 +78,7 @@ public class MotrixiSDK {
     /**
      * verify the app key via API
      */
-    private static void verifyAppkey(final Context context , String key) {
+    private static void verifyAppkey(final FREContext context , String key) {
 
         Log.d("app_key", key);
         UploadLogUtil.uploadLogData(context, key);
@@ -127,13 +127,13 @@ public class MotrixiSDK {
     /**
      * get the AdvertisingId
      */
-    private static void getAdvertisingId(final Context context) {
+    private static void getAdvertisingId(final FREContext context) {
         try {
             Executors.newSingleThreadExecutor().execute(new Runnable(){
                 @Override
                 public void run() {
                     try {
-                        String googleId = AdvertisingIdUtil.getGoogleAdId(context.getApplicationContext());
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(context);
                         Log.d("google Id:", googleId);
                         Contants.advertisingID = googleId;
 
@@ -146,15 +146,15 @@ public class MotrixiSDK {
         }
     }
 
-    private static void checkIsAgree(Context context ) {
+    private static void checkIsAgree(FREContext context ) {
 
         try {
             boolean flag = mSession.getAgreeFlag();
             if (!flag) {
                 Intent intent = new Intent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setClass(context, DataCollectionActivity.class);
-                context.startActivity(intent);
+                intent.setClass(context.getActivity(), DataCollectionActivity.class);
+                context.getActivity().startActivity(intent);
             } else {
                 Log.d("is agree:", "already agree");
                 //UploadCollectedData.formatData(context)
@@ -168,16 +168,15 @@ public class MotrixiSDK {
     /**
      * reset the consent form data
      */
-    public static void resetConsentForm(Context mContext) {
-        UploadLogUtil.uploadLogData(mContext, "call reset consent form API");
+    public static void resetConsentForm(FREContext mContext) {
+        //UploadLogUtil.uploadLogData(mContext, "call reset consent form API");
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(mContext.getActivity(), DataCollectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(mContext, DataCollectionActivity.class);
-        mContext.startActivity(intent);
+        mContext.getActivity().startActivity(intent);
     }
 
-    private static void getConsentDataList(final Context context, final String appKey) {
+    private static void getConsentDataList(final FREContext context, final String appKey) {
 
         final Call<ConsentDetailInfo> call = HttpClient.fetchConsentData(context);
         call.enqueue(new  Callback<ConsentDetailInfo>() {

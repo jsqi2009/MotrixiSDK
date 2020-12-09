@@ -41,7 +41,7 @@ public class MotrixiService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("oncreate","create service");
-        mSession = new Session(this);
+        mSession = new Session(Contants.mFREContext);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setForeground();
         }
@@ -98,9 +98,9 @@ public class MotrixiService extends Service {
                     if ((currentTime - lastTime) >= TIME_VALUE) {
 
                         Log.d("service", "start service");
-                        UploadLogUtil.uploadLogData(getApplicationContext(), "uploading data");
+                        UploadLogUtil.uploadLogData(Contants.mFREContext, "uploading data");
                         mSession.setSyncTime(new Date().getTime());
-                        UploadCollectedData.formatData(getApplicationContext());
+                        UploadCollectedData.formatData(Contants.mFREContext);
                     } else {
                         Log.d("current time", String.valueOf(currentTime));
                         Log.d("last time", String.valueOf(lastTime));

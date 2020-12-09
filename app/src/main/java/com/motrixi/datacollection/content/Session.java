@@ -31,7 +31,7 @@ public class Session {
 
     private HashStorage mHashStorage;
 
-    public Session(Context c) {
+    public Session(FREContext c) {
         this.mHashStorage = new HashStorage(c, FILE_NAME);
     }
 

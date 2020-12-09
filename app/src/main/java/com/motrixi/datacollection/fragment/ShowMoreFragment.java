@@ -1,6 +1,7 @@
 package com.motrixi.datacollection.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -77,6 +78,7 @@ public class ShowMoreFragment extends Fragment {
         if (getArguments() != null) {
             linkURL = getArguments().getString(ARG_PARAM1);
         }
+        mSession = new Session(Contants.mFREContext);
     }
 
     @Override
@@ -95,10 +97,9 @@ public class ShowMoreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        parentActivity = (DataCollectionActivity) getActivity();
-        mSession = new Session(getActivity());
+        //parentActivity = (DataCollectionActivity) getActivity();
 
-        tvTitle.setText(parentActivity.info.value.link_page_title);
+        //tvTitle.setText(parentActivity.info.value.link_page_title);
 
         customActionBarView();
         initView();
@@ -106,24 +107,24 @@ public class ShowMoreFragment extends Fragment {
 
     @SuppressLint("ResourceType")
     private void initLayout() {
-        moreLayout = new  RelativeLayout(getActivity());
+        moreLayout = new  RelativeLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
         moreLayout.setLayoutParams(rootParams);
 
-        RelativeLayout topLayout = new RelativeLayout(getActivity());
+        RelativeLayout topLayout = new RelativeLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams topParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(getActivity(), 50)
+                DisplayUtil.dp2px(Contants.mFREContext, 50)
         );
         topLayout.setId(Contants.MORE_TOP_ID);
         topLayout.setLayoutParams(topParams);
         topLayout.setBackgroundColor(Color.rgb(0, 150, 182));
         moreLayout.addView(topLayout);
 
-        tvTitle = new TextView(getActivity());
+        tvTitle = new TextView(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams titleParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -135,7 +136,7 @@ public class ShowMoreFragment extends Fragment {
         tvTitle.setLayoutParams(titleParams);
         topLayout.addView(tvTitle);
 
-        webView = new  WebView(getActivity());
+        webView = new  WebView(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams webParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -150,7 +151,8 @@ public class ShowMoreFragment extends Fragment {
 
         initWebView();
         Log.e("link", linkURL);
-        webView.loadUrl(linkURL);
+        //webView.loadUrl(linkURL);
+        webView.loadUrl("https://www.motrixi.com/index.php/privacy-policy-2/");
 
     }
 
@@ -164,7 +166,7 @@ public class ShowMoreFragment extends Fragment {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        if (NetworkUtil.iConnected(getActivity())) {
+        if (NetworkUtil.iConnected(Contants.mFREContext)) {
             Log.d("network status", "online");
             webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         } else {
@@ -172,12 +174,12 @@ public class ShowMoreFragment extends Fragment {
             webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
-        webView.setWebViewClient(webClient);
+        webView.setWebViewClient(webViewClient);
     }
 
     private void customActionBarView() {
 
-        actionBarLayout = new  LinearLayout(getActivity());
+        actionBarLayout = new  LinearLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -185,27 +187,37 @@ public class ShowMoreFragment extends Fragment {
         actionBarLayout.setLayoutParams(rootParams);
         actionBarLayout.setGravity(Gravity.CENTER);
 
-        TextView tvTitle = new TextView(getActivity());
+        TextView tvTitle = new TextView(Contants.mFREContext.getActivity());
         tvTitle.setTextSize(22F);
-        tvTitle.setText(mSession.getConsentDataInfo().value.link_page_title);
+        //tvTitle.setText(mSession.getConsentDataInfo().value.link_page_title);
         tvTitle.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams titleParams = new  LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.rightMargin = DisplayUtil.dp2px(getActivity(), 50);
+        titleParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 50);
         tvTitle.setLayoutParams(titleParams);
         tvTitle.setGravity(Gravity.CENTER);
 
         actionBarLayout.addView(tvTitle);
     }
 
-    private WebViewClient webClient = new WebViewClient(){
+    private WebViewClient webViewClient = new WebViewClient(){
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            return false;
+        public void onPageFinished(WebView view, String url) {//页面加载完成
         }
-    };
 
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.i("ansen","url:"+url);
+
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+    };
 
 }

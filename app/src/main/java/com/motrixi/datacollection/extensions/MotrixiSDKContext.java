@@ -18,6 +18,7 @@ public class MotrixiSDKContext extends FREContext {
         Map<String, FREFunction> functions = new HashMap<String, FREFunction> ();
         functions.put("init", new MotrixiSDKInit());
         functions.put("reset", new MotrixiSDKReset());
+        functions.put("test", new MotrixiSDKTest());
 
         return functions;
     }

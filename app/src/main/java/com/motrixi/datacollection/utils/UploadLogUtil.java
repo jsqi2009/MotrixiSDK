@@ -19,11 +19,11 @@ import retrofit2.Response;
  */
 public class UploadLogUtil {
 
-    public static void uploadLogData(Context context, String value) {
+    public static void uploadLogData(FREContext context, String value) {
 
         String val = MessageUtil.uploadLog(value);
         String appKey = Contants.APP_KEY;
-        String androidID = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidID = Settings.System.getString(context.getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Call<JsonObject> call = HttpClient.uploadLog(context, val, appKey, androidID);
         call.enqueue(new Callback<JsonObject>() {

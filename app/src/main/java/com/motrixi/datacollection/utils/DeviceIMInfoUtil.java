@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
+import com.adobe.fre.FREContext;
+
 /**
  * author : Jason
  * date   : 2020/12/8 1:23 PM
@@ -11,10 +13,10 @@ import android.telephony.TelephonyManager;
  */
  public class DeviceIMInfoUtil {
 
-    public static String getDeviceIMEI(Context context) {
+    public static String getDeviceIMEI(FREContext context) {
 
         try {
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager telephonyManager = (TelephonyManager) context.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
             @SuppressLint("MissingPermission") String imei = telephonyManager.getDeviceId();
             if (imei == null) {
                 imei = "";
@@ -29,10 +31,10 @@ import android.telephony.TelephonyManager;
     /**
      * fetch device IMSI
      */
-    public static String getDeviceIMSI(Context context) {
+    public static String getDeviceIMSI(FREContext context) {
 
         try {
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager telephonyManager = (TelephonyManager) context.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
             @SuppressLint("MissingPermission") String imsi = telephonyManager.getSubscriberId();
             if (null == imsi) {
                 imsi = "";

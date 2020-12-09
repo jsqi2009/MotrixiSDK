@@ -3,6 +3,9 @@ package com.motrixi.datacollection.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.icu.util.Freezable;
+
+import com.adobe.fre.FREContext;
 
 /**
  * author : Jason
@@ -14,7 +17,7 @@ public class CustomStyle {
     /**
      * custom the style of the view
      */
-    public static GradientDrawable getGradientDrawable(Context context){
+    public static GradientDrawable getGradientDrawable(FREContext context){
 
         int strokeWidth = DisplayUtil.dp2px(context, 3); // 3dp width
         int roundRadius = DisplayUtil.dp2px(context, 15); // 15dp radius

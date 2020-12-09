@@ -8,24 +8,21 @@ import com.adobe.fre.FREInvalidObjectException;
 import com.adobe.fre.FREObject;
 import com.adobe.fre.FRETypeMismatchException;
 import com.adobe.fre.FREWrongThreadException;
-import com.motrixi.datacollection.DataCollectionActivity;
-import com.motrixi.datacollection.utils.MotrixiSDK;
+import com.motrixi.datacollection.TestActivity;
 
 /**
  * author : Jason
- * date   : 2020/12/8 6:42 PM
+ * date   : 2020/12/8 6:34 PM
  * desc   :
  */
-public class MotrixiSDKReset implements FREFunction {
+public class MotrixiSDKTest implements FREFunction {
     @Override
     public FREObject call(FREContext mContext, FREObject[] objectAry) {
         FREObject result = null;
         try {
             String msg = String.valueOf(objectAry[0]);
 
-            //MotrixiSDK.resetConsentForm(mContext);
-
-            Intent intent = new Intent(mContext.getActivity(), DataCollectionActivity.class);
+            Intent intent = new Intent(mContext.getActivity(), TestActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.getActivity().startActivity(intent);
 

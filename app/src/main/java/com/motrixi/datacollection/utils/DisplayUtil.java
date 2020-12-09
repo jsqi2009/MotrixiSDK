@@ -3,6 +3,8 @@ package com.motrixi.datacollection.utils;
 import android.content.Context;
 import android.content.Intent;
 
+import com.adobe.fre.FREContext;
+
 /**
  * author : Jason
  * date   : 2020/12/8 10:03 AM
@@ -16,8 +18,8 @@ public class DisplayUtil {
      * @param pxValue
      * @return
      */
-    public static int px2dp(Context context, Float pxValue){
-        Float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dp(FREContext context, Float pxValue){
+        Float scale = context.getActivity().getResources().getDisplayMetrics().density;
         return (int)(pxValue / scale + 0.5f);
     }
 
@@ -27,8 +29,8 @@ public class DisplayUtil {
      * @param dipValue
      * @return
      */
-    public static int dp2px(Context context, int dipValue) {
-        Float scale = context.getResources().getDisplayMetrics().density;
+    public static int dp2px(FREContext context, int dipValue) {
+        Float scale = context.getActivity().getResources().getDisplayMetrics().density;
         return (int)(dipValue * scale + 0.5f);
     }
 
@@ -38,8 +40,8 @@ public class DisplayUtil {
      * @param pxValue
      * @return
      */
-    public static int px2sp(Context context, Float pxValue){
-        Float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+    public static int px2sp(FREContext context, Float pxValue){
+        Float fontScale = context.getActivity().getResources().getDisplayMetrics().scaledDensity;
         return (int)(pxValue / fontScale + 0.5f);
     }
 
@@ -49,8 +51,8 @@ public class DisplayUtil {
      * @param spValue
      * @return
      */
-    public static int sp2px(Context context, Float spValue){
-        Float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+    public static int sp2px(FREContext context, Float spValue){
+        Float fontScale = context.getActivity().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
 

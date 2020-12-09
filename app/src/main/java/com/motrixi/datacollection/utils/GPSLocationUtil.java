@@ -19,6 +19,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.adobe.fre.FREContext;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -32,13 +34,13 @@ public class GPSLocationUtil {
     private static LocationManager mLocationManager;
     private static final String TAG = "GPSLocationUtil";
     private static Location mLocation = null;
-    private static Context mContext;
+    private static FREContext mContext;
 
 
-    public static void init(Context context) {
+    public static void init(FREContext context) {
 
         mContext = context;
-        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) context.getActivity().getSystemService(Context.LOCATION_SERVICE);
         // check the gps whether on
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             //Toast.makeText(context, "Please set the GPS on...", Toast.LENGTH_SHORT).show();
@@ -47,8 +49,8 @@ public class GPSLocationUtil {
 
         String bestProvider = mLocationManager.getBestProvider(getCriteria(), true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (mContext.getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && mContext.getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 return;
             }
@@ -111,7 +113,7 @@ public class GPSLocationUtil {
     /**
      * @return Location--->getLongitude()/getLatitude()
      */
-    public static Location getLocation(Context context) {
+    public static Location getLocation(FREContext context) {
         init(context);
         if (mLocation == null) {
             Log.e("GPSLocationUtil", "setLocationData: current location is null");
@@ -125,7 +127,7 @@ public class GPSLocationUtil {
         List<Address> result = null;
         try {
             if (location != null) {
-                Geocoder gc = new Geocoder(mContext, Locale.getDefault());
+                Geocoder gc = new Geocoder(mContext.getActivity(), Locale.getDefault());
                 result = gc.getFromLocation(location.getLatitude(),
                         location.getLongitude(), 1);
             }

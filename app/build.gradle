@@ -1,10 +1,11 @@
-apply plugin: 'com.android.application'
-//apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
+/*apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.jfrog.bintray'*/
 
 
 
@@ -16,7 +17,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.motrixi.datacollection"
+//        applicationId "com.motrixi.datacollection"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 6
@@ -40,31 +41,14 @@ android {
         javaMaxHeapSize "1g"
     }
 
-    /*task makeJar(type: Copy) {
-        //删除存在的
-        delete 'build/libs/MotrixiSDK.jar'
-        //设置拷贝的文件
-        from('build/intermediates/bundles/release/')
-        //打进jar包后的文件目录
-        into('build/libs/')
-        //将classes.jar放入build/libs/目录下
-        //include ,exclude参数来设置过滤
-        //（我们只关心classes.jar这个文件）
-        include('classes.jar')
-        //重命名
-        rename ('classes.jar', 'MotrixiSDK.jar')
-    }
-    makeJar.dependsOn(build)*/
-
-
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+     implementation 'com.android.support:appcompat-v7:26.1.0'
     //pending dependencies for Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
@@ -74,96 +58,7 @@ dependencies {
 
 
     implementation files('libs/FlashRuntimeExtensions.jar')
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
-}
-
-//添加发布到jitpack脚本
-//apply from : '../publishAndroidLib.gradle'
-
-version = "1.0.0"
-def siteUrl = 'https://github.com/jsqi2009/MotrixiSDK.git'                        // #修改# // 项目的主页地址，我这里是我的SDK项目在github的链接地址
-def gitUrl = 'https://github.com/jsqi2009/MotrixiSDK.git'                     // #修改# // 项目 git 地址，我这里同样是用Github上的git地址
-group = "com.github.jsqi2009"             // #修改# // 组名称，这个相当于依赖的时候“:”号前面的前缀
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                name 'MotrixiSDK For Android'                                   // #修改# // 标题
-                url siteUrl
-                // Set your license
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'Jason'                                           // #修改# // 你的userid，昵称
-                        name 'jsqi'                                       // #修改# // 用户名
-                        email 'qijs@shinetechsoftware.com'                               // #修改# // 邮箱
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-//指定生成的javadoc文档编码格式，防止javadoc中文乱码
-tasks.withType(Javadoc) {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        links "http://docs.oracle.com/javase/7/docs/api"
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    // 上面两个 user和key 需要留意一下，在local.properites 里面配置的
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "MotrixiSDK"                                                 // #修改# //  在 jcenter 上面的项目名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
 }

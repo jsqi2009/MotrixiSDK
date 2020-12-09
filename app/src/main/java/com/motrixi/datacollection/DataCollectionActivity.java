@@ -3,7 +3,6 @@ package com.motrixi.datacollection;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -18,25 +17,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.gson.JsonObject;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment;
-import com.motrixi.datacollection.network.HttpClient;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
-import com.motrixi.datacollection.utils.MessageUtil;
 import com.motrixi.datacollection.utils.UploadCollectedData;
-import com.motrixi.datacollection.utils.UploadLogUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DataCollectionActivity extends FragmentActivity {
 
@@ -87,19 +75,20 @@ public class DataCollectionActivity extends FragmentActivity {
     }
 
     private void initView() {
-        mSession = new Session(this);
+        mSession = new Session(Contants.mFREContext);
+        //info = mSession.getConsentDataInfo();
 
-        info = mSession.getConsentDataInfo();
-
-        optionArray = info.value.options.replace("|","=").split("=");
-        Log.d("option array", optionArray.length + "");
+        /*if (info != null) {
+            optionArray = info.value.options.replace("|","=").split("=");
+            Log.d("option array", optionArray.length + "");
+        }*/
 
         // 获取碎片管理器
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, new PrivacyStatementFragment()).commit();
+        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("","")).commit();
     }
 
-    public void submitConsentFormData(String value) {
+    /*public void submitConsentFormData(String value) {
 
         Log.d("consent form value", value);
         Call<JsonObject> call = HttpClient.submitConsentForm(this, value, mSession.getAppID());
@@ -148,12 +137,12 @@ public class DataCollectionActivity extends FragmentActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                UploadLogUtil.uploadLogData(getApplicationContext(), t.getMessage().toString());
+                UploadLogUtil.uploadLogData(Contants.mFREContext, t.getMessage().toString());
             }
         });
-    }
+    }*/
 
-    public void rejectCollect(){
+    /*public void rejectCollect(){
 
         String appKey=Contants.APP_KEY;
         String androidID = Settings.System.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
@@ -166,7 +155,7 @@ public class DataCollectionActivity extends FragmentActivity {
                     try {
                         JSONObject responseObject= new JSONObject(response.body().toString());
 
-                        UploadLogUtil.uploadLogData(getApplicationContext(),"cancel:"+responseObject.optString("message"));
+                        UploadLogUtil.uploadLogData(Contants.mFREContext,"cancel:"+responseObject.optString("message"));
                         Log.d("cancel status","success");
                         if (Contants.onLogListener != null) {
                             Contants.onLogListener.onLogListener(
@@ -180,7 +169,7 @@ public class DataCollectionActivity extends FragmentActivity {
                     try {
                         JSONObject errorObject= new JSONObject(String.valueOf(response.errorBody()));
 
-                        UploadLogUtil.uploadLogData(getApplicationContext(),"cancel:"+errorObject.optString("message"));
+                        UploadLogUtil.uploadLogData(Contants.mFREContext,"cancel:"+errorObject.optString("message"));
                         Log.d("cancel status","failure");
                         if (Contants.onLogListener != null) {
                             Contants.onLogListener.onLogListener(
@@ -196,11 +185,11 @@ public class DataCollectionActivity extends FragmentActivity {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 Log.d("cancel status","network failure");
-                UploadLogUtil.uploadLogData(getApplicationContext(),t.getMessage());
+                UploadLogUtil.uploadLogData(Contants.mFREContext,t.getMessage());
             }
 
         });
-    }
+    }*/
 
 
     private void initPermission() {
@@ -211,7 +200,7 @@ public class DataCollectionActivity extends FragmentActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
         } else {
-            UploadCollectedData.formatData(this);
+            UploadCollectedData.formatData(Contants.mFREContext);
             finish();
         }
     }
@@ -232,7 +221,7 @@ public class DataCollectionActivity extends FragmentActivity {
             /*var service: Intent = Intent(this, UploadService::class.java)
             startService(service)*/
             //upload data
-            UploadCollectedData.formatData(this);
+            UploadCollectedData.formatData(Contants.mFREContext);
             finish();
         }
     }
@@ -254,7 +243,7 @@ public class DataCollectionActivity extends FragmentActivity {
 
         }
 
-        UploadCollectedData.formatData(this);
+        UploadCollectedData.formatData(Contants.mFREContext);
         finish();
     }
 

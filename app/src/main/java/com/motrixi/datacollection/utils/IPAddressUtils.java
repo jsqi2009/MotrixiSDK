@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
+import com.adobe.fre.FREContext;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -19,10 +21,10 @@ import java.util.Enumeration;
  */
 public class IPAddressUtils {
 
-    public static String getCurrentIPAddress(Context context) {
+    public static String getCurrentIPAddress(FREContext context) {
         try {
             String ipAddress = "";
-            NetworkInfo info = ((ConnectivityManager) context
+            NetworkInfo info = ((ConnectivityManager) context.getActivity()
                     .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
             if (info != null && info.isConnected()) {
@@ -30,7 +32,7 @@ public class IPAddressUtils {
 
                     ipAddress = currentIpAddress();
                 } else if (info.getType() == ConnectivityManager.TYPE_WIFI){
-                    WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    WifiManager wifiManager = (WifiManager) context.getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     ipAddress = intIP2StringIP(wifiInfo.getIpAddress());
                 }

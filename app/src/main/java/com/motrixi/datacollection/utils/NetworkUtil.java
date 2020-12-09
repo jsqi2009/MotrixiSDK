@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 
+import com.adobe.fre.FREContext;
+
 /**
  * author : Jason
  * date   : 2020/12/8 3:32 PM
@@ -14,8 +16,8 @@ import android.os.Build;
 public class NetworkUtil {
 
     @SuppressWarnings("deprecation")
-    public static boolean iConnected(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean iConnected(FREContext context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());
@@ -38,8 +40,8 @@ public class NetworkUtil {
      * @return true:已连接 false:未连接
      */
     @SuppressWarnings("deprecation")
-    public static boolean isWifiConnected(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isWifiConnected(FREContext context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());
@@ -58,8 +60,8 @@ public class NetworkUtil {
      * 是否为流量
      */
     @SuppressWarnings("deprecation")
-    public static boolean isMobileData(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isMobileData(FREContext context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());

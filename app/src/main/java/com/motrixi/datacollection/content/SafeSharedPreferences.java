@@ -8,7 +8,7 @@ import com.adobe.fre.FREContext;
 public final class SafeSharedPreferences {
     private BufferedSharedPreferences mBufferedSharedPreferences;
 
-    public SafeSharedPreferences(Context paramContext, String paramString) {
+    public SafeSharedPreferences(FREContext paramContext, String paramString) {
         this.mBufferedSharedPreferences = new BufferedSharedPreferences(paramContext, paramString);
     }
 

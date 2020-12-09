@@ -8,7 +8,7 @@ import com.adobe.fre.FREContext;
 public class HashStorage {
     private SafeSharedPreferences mSafeSharedPreferences;
 
-    public HashStorage(Context paramContext, String paramString) {
+    public HashStorage(FREContext paramContext, String paramString) {
         this(new SafeSharedPreferences(paramContext, paramString));
     }
 

@@ -2,8 +2,11 @@ package com.motrixi.datacollection.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.icu.util.Freezable;
 import android.os.Build;
 import android.util.Log;
+
+import com.adobe.fre.FREContext;
 
 import java.util.Locale;
 
@@ -18,15 +21,15 @@ public class SystemInfoUtils {
      * 获取设备宽度（px）
      *
      */
-    public static int getDeviceWidth(Context context){
-        return context.getResources().getDisplayMetrics().widthPixels;
+    public static int getDeviceWidth(FREContext context){
+        return context.getActivity().getResources().getDisplayMetrics().widthPixels;
     }
 
     /**
      * 获取设备高度（px）
      */
-    public static int getDeviceHeight(Context context){
-        return context.getResources().getDisplayMetrics().heightPixels;
+    public static int getDeviceHeight(FREContext context){
+        return context.getActivity().getResources().getDisplayMetrics().heightPixels;
     }
 
     /**
@@ -161,7 +164,7 @@ public class SystemInfoUtils {
         return Locale.getAvailableLocales().toString();
     }
 
-    public static String getDeviceAllInfo(Context context){
+    public static String getDeviceAllInfo(FREContext context){
         return "" +
                 "\n1. Device Width:\n\t\t" + getDeviceWidth(context) +
                 "\n\n2. Device Height:\n\t\t" + getDeviceHeight(context) +

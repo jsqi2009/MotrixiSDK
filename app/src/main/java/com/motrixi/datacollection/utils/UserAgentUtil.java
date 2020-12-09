@@ -2,6 +2,8 @@ package com.motrixi.datacollection.utils;
 
 import android.content.Context;
 
+import com.adobe.fre.FREContext;
+
 /**
  * author : Jason
  * date   : 2020/12/8 3:00 PM
@@ -9,7 +11,7 @@ import android.content.Context;
  */
 public class UserAgentUtil {
 
-    public static String getUserAgent( Context context) {
+    public static String getUserAgent( FREContext context) {
 
         try {
             //        val userAgent = WebView(context).settings.userAgentString

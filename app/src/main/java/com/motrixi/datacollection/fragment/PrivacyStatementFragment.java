@@ -76,6 +76,8 @@ public class PrivacyStatementFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mSession = new Session(Contants.mFREContext);
     }
 
     @Override
@@ -94,33 +96,33 @@ public class PrivacyStatementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        parentActivity = (DataCollectionActivity) getActivity();
-        mSession = new Session(getActivity());
+        //parentActivity = (DataCollectionActivity) Contants.mFREContext.getActivity();
+        //mSession = new Session(Contants.mFREContext);
 
         customActionBarView();
 
-        Log.d("fragment", mSession.getConsentDataInfo().toString());
+        //Log.d("fragment", mSession.getConsentDataInfo().toString());
         setData();
     }
 
     private void initLayout() {
-        privateLayout = new  RelativeLayout(getActivity());
+        privateLayout = new  RelativeLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
-        RelativeLayout topLayout = new RelativeLayout(getActivity());
+        RelativeLayout topLayout = new RelativeLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams topParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(getActivity(), 50)
+                DisplayUtil.dp2px(Contants.mFREContext, 50)
         );
         topLayout.setId(Contants.PRIVACY_TOP_ID);
         topLayout.setLayoutParams(topParams);
         topLayout.setBackgroundColor(Color.rgb(0, 150, 182));
         privateLayout.addView(topLayout);
 
-        tvTitle = new TextView(getActivity());
+        tvTitle = new TextView(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams titleParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -133,81 +135,81 @@ public class PrivacyStatementFragment extends Fragment {
         topLayout.addView(tvTitle);
 
 
-        ScrollView scrollView= new ScrollView(getActivity());
+        ScrollView scrollView= new ScrollView(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams scrollParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
+        scrollParams.bottomMargin = DisplayUtil.dp2px(Contants.mFREContext, 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
         privateLayout.addView(scrollView);
 
-        LinearLayout contentLayout = new LinearLayout(getActivity());
+        LinearLayout contentLayout = new LinearLayout(Contants.mFREContext.getActivity());
         contentLayout.setOrientation(LinearLayout.VERTICAL);
         RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        contentParams.setMargins(DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15),
-                DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15));
+        contentParams.setMargins(DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15),
+                DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15));
         contentLayout.setLayoutParams(contentParams);
         scrollView.addView(contentLayout);
 
-        tvContent1 = new TextView(getActivity());
+        tvContent1 = new TextView(Contants.mFREContext.getActivity());
         //tvContent1.text = style
         tvContent1.setTextSize(18F);
         tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         contentLayout.addView(tvContent1);
 
-        LinearLayout bottomLayout = new LinearLayout(getActivity());
+        LinearLayout bottomLayout = new LinearLayout(Contants.mFREContext.getActivity());
         bottomLayout.setOrientation(LinearLayout.HORIZONTAL);
         RelativeLayout.LayoutParams bottomParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(getActivity(), 70)
+                DisplayUtil.dp2px(Contants.mFREContext, 70)
         );
         bottomParams.addRule(ALIGN_PARENT_BOTTOM);
         bottomLayout.setLayoutParams(bottomParams);
         bottomLayout.setGravity(CENTER);
 
-        tvCancel = new TextView(getActivity());
+        tvCancel = new TextView(Contants.mFREContext.getActivity());
         tvCancel.setTextSize(18F);
         //tvCancel.text = "Cancel"
         tvCancel.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams cancelParams = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(getActivity(), 50), 1F
+                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
         );
-        cancelParams.leftMargin = DisplayUtil.dp2px(getActivity(), 20);
-        cancelParams.rightMargin = DisplayUtil.dp2px(getActivity(), 20);
+        cancelParams.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
+        cancelParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
         tvCancel.setLayoutParams(cancelParams);
         tvCancel.setGravity(Gravity.CENTER);
-        tvCancel.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        tvCancel.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
 
-        tvOption = new TextView(getActivity());
+        tvOption = new TextView(Contants.mFREContext.getActivity());
         tvOption.setTextSize(18F);
         tvOption.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams confirmParams = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(getActivity(), 50), 1F
+                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
         );
         tvOption.setLayoutParams(confirmParams);
         tvOption.setGravity(Gravity.CENTER);
-        tvOption.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        tvOption.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
 
-        tvConfirm = new TextView(getActivity());
+        tvConfirm = new TextView(Contants.mFREContext.getActivity());
         tvConfirm.setTextSize(18F);
         //tvConfirm.text = "Confirm"
         tvConfirm.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams more = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(getActivity(), 50), 1F
+                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
         );
-        more.leftMargin = DisplayUtil.dp2px(getActivity(), 20);
-        more.rightMargin = DisplayUtil.dp2px(getActivity(), 20);
+        more.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
+        more.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
         tvConfirm.setLayoutParams(more);
         tvConfirm.setGravity(Gravity.CENTER);
-        tvConfirm.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        tvConfirm.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
 
         bottomLayout.addView(tvCancel);
         bottomLayout.addView(tvOption);
@@ -220,7 +222,7 @@ public class PrivacyStatementFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mSession.setAgreeFlag(true);
-                parentActivity.rejectCollect();
+                //parentActivity.rejectCollect();
                 getActivity().finish();
             }
         });
@@ -231,7 +233,7 @@ public class PrivacyStatementFragment extends Fragment {
                 mSession.setAgreeFlag(true);
                 String formValue = "";
 
-                if (parentActivity.optionArray.length > 0) {
+                if (parentActivity.optionArray != null && parentActivity.optionArray.length > 0) {
 
                     for (int i = 0; i < parentActivity.optionArray.length; i++) {
                         if (i == parentActivity.optionArray.length -1) {
@@ -241,7 +243,7 @@ public class PrivacyStatementFragment extends Fragment {
                         }
                     }
 
-                    parentActivity.submitConsentFormData(formValue);
+                    //parentActivity.submitConsentFormData(formValue);
                 }
 
             }
@@ -262,7 +264,7 @@ public class PrivacyStatementFragment extends Fragment {
 
     private void customActionBarView() {
 
-        actionBarLayout = new  LinearLayout(getActivity());
+        actionBarLayout = new  LinearLayout(Contants.mFREContext.getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -271,16 +273,17 @@ public class PrivacyStatementFragment extends Fragment {
         actionBarLayout.setLayoutParams(rootParams);
         actionBarLayout.setGravity(Gravity.CENTER);
 
-        TextView tvTitle = new TextView(getActivity());
+        TextView tvTitle = new TextView(Contants.mFREContext.getActivity());
         tvTitle.setTextSize(22F);
 //        tvTitle.text = "Consent"
-        tvTitle.setText(parentActivity.info.value.terms_page_title);
+        tvTitle.setText("test");
+//        tvTitle.setText(parentActivity.info.value.terms_page_title);
         tvTitle.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams titleParams = new  LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.rightMargin = DisplayUtil.dp2px(getActivity(), 50);
+        titleParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 50);
         tvTitle.setLayoutParams(titleParams);
         tvTitle.setGravity(Gravity.CENTER);
 
@@ -289,12 +292,15 @@ public class PrivacyStatementFragment extends Fragment {
 
     private void setData() {
 
-        tvTitle.setText(parentActivity.info.value.terms_page_title);
-        tvCancel.setText(parentActivity.info.value.cancel_button_text);
-        tvOption.setText(parentActivity.info.value.option_button_text);
-        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
+//        tvTitle.setText(parentActivity.info.value.terms_page_title);
+//        tvCancel.setText(parentActivity.info.value.cancel_button_text);
+//        tvOption.setText(parentActivity.info.value.option_button_text);
+//        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
 
-        tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));
+        //tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));
+        String content = "<p>By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics: Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process information to create and/or enhance the quality of products (f) Data Management Platform: to create better audiences to target specific users to increase performance When you confirm, you not only grant your consent, you acknowledge you are of 16 years of age and older. Please note, if you choose to click cancel, no information will be collected from you. To learn more about the terms in its entirety, please click <a href=\\\"https://www.motrixi.com/index.php/privacy-policy-2/\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\">here</a>.</p>\\n<p>We thank you for installing our app and helping us improve the user experience by clicking 'Confirm'.</p>";
+        tvContent1.setText(Html.fromHtml(content));
+        //tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));
         //tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         CharSequence str = tvContent1.getText();
         if (str instanceof Spannable) {
