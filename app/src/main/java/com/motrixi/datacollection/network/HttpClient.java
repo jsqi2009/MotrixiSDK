@@ -45,10 +45,8 @@ public class HttpClient {
     private static HttpApi mHttpApi;
     private static OkHttpClient httpClient;
     private static String authorization;
-    static Session mSession;
 
-    public static void init(FREContext context) {
-        mSession = new Session(context);
+    public static void init() {
         initOkHTTP();
     }
 
@@ -146,7 +144,7 @@ public class HttpClient {
         return headerMap;
     }
 
-    public static Call<JsonObject> verifyAppkey(FREContext context, String key) {
+    public static Call<JsonObject> verifyAppkey( String key) {
 
         HashMap<String, Object> map = new HashMap();
         map.put("app_key", key);
@@ -156,6 +154,7 @@ public class HttpClient {
 
         return call;
     }
+
 
     public static Call<JsonObject> uploadData(FREContext context, DataInfo info) {
         HashMap<String, Object> map = new HashMap();
@@ -175,8 +174,35 @@ public class HttpClient {
         map.put("device_id", info.deviceID);
         map.put("serial", info.serial);
         map.put("android_id", info.androidID);
-        if (!TextUtils.isEmpty(mSession.getConsentFormID())) {
-            map.put("consent_form_id", mSession.getConsentFormID());
+        if (!TextUtils.isEmpty(Contants.consentFormID)) {
+            map.put("consent_form_id", Contants.consentFormID);
+        }
+
+        Call<JsonObject> call = mHttpApi.requestAuthPost(getHeaders(),
+                "api","sdk_information","add", map);
+        return call;
+    }
+
+    public static Call<JsonObject> uploadData(Context context, DataInfo info) {
+        HashMap<String, Object> map = new HashMap();
+        map.put("app_key", info.appKey);
+        map.put("advertising_id", info.advertisingId);
+        map.put("email", info.email);
+        map.put("i_m_e_i", info.imei);
+        map.put("operating_system", info.operationSystem);
+        map.put("language_setting", info.language);
+        map.put("applications_installed", info.installedApplication);
+        map.put("location", info.location);
+        map.put("user_agent", info.userAgent);
+        map.put("device_make", info.deviceMake);
+        map.put("device_model", info.deviceModel);
+        map.put("ip_address", info.ipAddress);
+        map.put("m_c_c/_m_n_c", info.mcc);
+        map.put("device_id", info.deviceID);
+        map.put("serial", info.serial);
+        map.put("android_id", info.androidID);
+        if (!TextUtils.isEmpty(Contants.consentFormID)) {
+            map.put("consent_form_id", Contants.consentFormID);
         }
 
         Call<JsonObject> call = mHttpApi.requestAuthPost(getHeaders(),
@@ -210,7 +236,7 @@ public class HttpClient {
     }
 
 
-    public static Call<ConsentDetailInfo> fetchConsentData(FREContext context){
+    public static Call<ConsentDetailInfo> fetchConsentData(){
 
         Locale locale = Locale.getDefault();
         String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();
@@ -224,7 +250,7 @@ public class HttpClient {
         return call;
     }
 
-    public static Call<JsonObject> rejectCollectionData(Context context, String appKey, String androidID){
+    public static Call<JsonObject> rejectCollectionData( String appKey, String androidID){
 
         HashMap<String, Object> map = new HashMap();
         map.put("app_key",appKey);

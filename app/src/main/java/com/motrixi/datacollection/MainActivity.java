@@ -27,13 +27,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void init() {
 
-       //MotrixiSDK.init(this, "7536f220-27b5-11eb-96a9-6d9cb391fb34");
+       MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
 
         textView = findViewById(R.id.tv_reset);
         textView.setOnClickListener(this);
 
-        Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);*/
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View view) {
 
         if (view.getId() == R.id.tv_reset) {
-            MotrixiSDK.resetConsentForm(new MotrixiSDKExtension().createContext(""));
+            MotrixiSDK.resetConsentForm(this);
         }
     }
 }

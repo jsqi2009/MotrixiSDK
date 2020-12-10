@@ -43,6 +43,28 @@ public class IPAddressUtils {
         }
     }
 
+    public static String getCurrentIPAddress(Context context) {
+        try {
+            String ipAddress = "";
+            NetworkInfo info = ((ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+            if (info != null && info.isConnected()) {
+                if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+
+                    ipAddress = currentIpAddress();
+                } else if (info.getType() == ConnectivityManager.TYPE_WIFI){
+                    WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    ipAddress = intIP2StringIP(wifiInfo.getIpAddress());
+                }
+            }
+            return ipAddress;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private static String currentIpAddress(){
 
         try {

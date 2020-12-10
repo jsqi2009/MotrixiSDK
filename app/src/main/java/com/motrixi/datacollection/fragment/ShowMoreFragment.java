@@ -49,11 +49,12 @@ public class ShowMoreFragment extends Fragment {
     private RelativeLayout moreLayout;
     private WebView webView;
     private LinearLayout actionBarLayout;
-    private Session mSession;
     private TextView tvTitle;
 
     public ShowMoreFragment() {
         // Required empty public constructor
+
+        parentActivity = DataCollectionActivity.getSharedMainActivity();
     }
 
     /**
@@ -78,7 +79,6 @@ public class ShowMoreFragment extends Fragment {
         if (getArguments() != null) {
             linkURL = getArguments().getString(ARG_PARAM1);
         }
-        mSession = new Session(Contants.mFREContext);
     }
 
     @Override
@@ -100,6 +100,7 @@ public class ShowMoreFragment extends Fragment {
         //parentActivity = (DataCollectionActivity) getActivity();
 
         //tvTitle.setText(parentActivity.info.value.link_page_title);
+        tvTitle.setText(Contants.link_page_title);
 
         customActionBarView();
         initView();
@@ -107,24 +108,24 @@ public class ShowMoreFragment extends Fragment {
 
     @SuppressLint("ResourceType")
     private void initLayout() {
-        moreLayout = new  RelativeLayout(Contants.mFREContext.getActivity());
+        moreLayout = new  RelativeLayout(getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
         moreLayout.setLayoutParams(rootParams);
 
-        RelativeLayout topLayout = new RelativeLayout(Contants.mFREContext.getActivity());
+        RelativeLayout topLayout = new RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(Contants.mFREContext, 50)
+                DisplayUtil.dp2px(getActivity(), 50)
         );
         topLayout.setId(Contants.MORE_TOP_ID);
         topLayout.setLayoutParams(topParams);
         topLayout.setBackgroundColor(Color.rgb(0, 150, 182));
         moreLayout.addView(topLayout);
 
-        tvTitle = new TextView(Contants.mFREContext.getActivity());
+        tvTitle = new TextView(getActivity());
         RelativeLayout.LayoutParams titleParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -136,7 +137,7 @@ public class ShowMoreFragment extends Fragment {
         tvTitle.setLayoutParams(titleParams);
         topLayout.addView(tvTitle);
 
-        webView = new  WebView(Contants.mFREContext.getActivity());
+        webView = new  WebView(getActivity());
         RelativeLayout.LayoutParams webParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -151,8 +152,8 @@ public class ShowMoreFragment extends Fragment {
 
         initWebView();
         Log.e("link", linkURL);
-        //webView.loadUrl(linkURL);
-        webView.loadUrl("https://www.motrixi.com/index.php/privacy-policy-2/");
+        webView.loadUrl(linkURL);
+        //webView.loadUrl("https://www.motrixi.com/index.php/privacy-policy-2/");
 
     }
 
@@ -166,7 +167,7 @@ public class ShowMoreFragment extends Fragment {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        if (NetworkUtil.iConnected(Contants.mFREContext)) {
+        if (NetworkUtil.iConnected(parentActivity)) {
             Log.d("network status", "online");
             webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         } else {
@@ -179,7 +180,7 @@ public class ShowMoreFragment extends Fragment {
 
     private void customActionBarView() {
 
-        actionBarLayout = new  LinearLayout(Contants.mFREContext.getActivity());
+        actionBarLayout = new  LinearLayout(getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -187,7 +188,7 @@ public class ShowMoreFragment extends Fragment {
         actionBarLayout.setLayoutParams(rootParams);
         actionBarLayout.setGravity(Gravity.CENTER);
 
-        TextView tvTitle = new TextView(Contants.mFREContext.getActivity());
+        TextView tvTitle = new TextView(getActivity());
         tvTitle.setTextSize(22F);
         //tvTitle.setText(mSession.getConsentDataInfo().value.link_page_title);
         tvTitle.setTextColor(Color.WHITE);
@@ -195,7 +196,7 @@ public class ShowMoreFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 50);
+        titleParams.rightMargin = DisplayUtil.dp2px(getActivity(), 50);
         tvTitle.setLayoutParams(titleParams);
         tvTitle.setGravity(Gravity.CENTER);
 

@@ -12,6 +12,10 @@ public class HashStorage {
         this(new SafeSharedPreferences(paramContext, paramString));
     }
 
+    public HashStorage(Context paramContext, String paramString) {
+        this(new SafeSharedPreferences(paramContext, paramString));
+    }
+
     HashStorage(SafeSharedPreferences paramSafeSharedPreferences) {
         this.mSafeSharedPreferences = paramSafeSharedPreferences;
     }

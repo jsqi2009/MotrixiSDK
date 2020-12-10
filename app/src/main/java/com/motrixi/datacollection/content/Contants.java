@@ -2,6 +2,7 @@ package com.motrixi.datacollection.content;
 
 import com.adobe.fre.FREContext;
 import com.motrixi.datacollection.listener.OnLogListener;
+import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 
 /**
  * author : Jason
@@ -12,6 +13,14 @@ public class Contants {
 
     public static final String BASE_SERVER_URL = "https://api.motrixi.osvlabs.com";
     public static final String WEB_URL = "https://www.motrixi.com/index.php/privacy-policy-2/";
+    public static final String RESPONSE_ERROR = "error";
+
+    public static final String CONSENT_DETAIL_API = "/api/consent/detail";
+    public static final String VERIFY_KEY_API = "/api/app/check";
+    public static final String CANCEL_CONSENT_API = "/api/cancel_consent/add";
+    public static final String SUBMIT_FORM_API = "/api/consent_form/submit";
+    public static final String SUBMIT_INFO_API = "/api/sdk_information/add";
+
     public static String advertisingID = "";
     public static String APP_ID = "";
     public static String APP_KEY = "";
@@ -29,5 +38,20 @@ public class Contants {
     public static int FETCH_CONSENT_DATA = 1004;   // fetch consent form data
     public static int CANCEL_COLLECT_DATA = 1005;    // cancel collect data
 
-    public static FREContext mFREContext;
+    public static FREContext mFREContext = null;
+
+    public static String terms_content = "";
+    public static String options = "";
+    public static String cancel_button_text = "";
+    public static String confirm_button_text = "";
+    public static String option_button_text = "";
+    public static String back_button_text = "";
+    public static String terms_page_title = "";
+    public static String link_page_title = "";
+    public static String option_page_title = "";
+
+    public static boolean agreeFlag = false;
+    public static ConsentDetailInfo.ResultInfo formInfo = null;
+    public static String consentFormID = "";
+    public static long lastSyncTime = 0;
 }

@@ -12,6 +12,10 @@ public final class SafeSharedPreferences {
         this.mBufferedSharedPreferences = new BufferedSharedPreferences(paramContext, paramString);
     }
 
+    public SafeSharedPreferences(Context paramContext, String paramString) {
+        this.mBufferedSharedPreferences = new BufferedSharedPreferences(paramContext, paramString);
+    }
+
     public void apply() {
         this.mBufferedSharedPreferences.apply();
     }

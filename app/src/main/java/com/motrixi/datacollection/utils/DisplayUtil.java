@@ -34,6 +34,11 @@ public class DisplayUtil {
         return (int)(dipValue * scale + 0.5f);
     }
 
+    public static int dp2px(Context context, int dipValue) {
+        Float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dipValue * scale + 0.5f);
+    }
+
     /**
      * Convert px value to sp value
      *

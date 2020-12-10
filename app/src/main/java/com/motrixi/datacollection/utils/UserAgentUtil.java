@@ -21,4 +21,15 @@ public class UserAgentUtil {
             return "";
         }
     }
+
+    public static String getUserAgent( Context context) {
+
+        try {
+            //        val userAgent = WebView(context).settings.userAgentString
+            String userAgent = System.getProperty("http.agent");
+            return userAgent;
+        } catch ( Exception e) {
+            return "";
+        }
+    }
 }

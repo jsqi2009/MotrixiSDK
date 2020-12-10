@@ -25,4 +25,17 @@ public class EmailAccountUtil {
         }
 
     }
+
+    public static Account[] getEmailAccount(Context context) {
+
+        try {
+            Account[] accounts = AccountManager.get(context).getAccounts();
+
+            return accounts;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 }

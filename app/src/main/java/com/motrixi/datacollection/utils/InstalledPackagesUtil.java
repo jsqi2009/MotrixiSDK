@@ -38,4 +38,26 @@ public class InstalledPackagesUtil {
         }
         return packages;
     }
+
+    public static ArrayList<String> getInstalledPackageList(Context context){
+        ArrayList<String> packages = new ArrayList();
+        try {
+            List<PackageInfo> packageInfos = context.getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
+
+            for (PackageInfo info : packageInfos) {
+
+
+                if ((info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                    String pkg = info.packageName;
+                    String appName = (String) info.applicationInfo.loadLabel(context.getPackageManager());
+                    packages.add(pkg);
+                } else {
+                    //system app
+                }
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return packages;
+    }
 }

@@ -23,11 +23,11 @@ public class MotrixiSDKReset implements FREFunction {
         try {
             String msg = String.valueOf(objectAry[0]);
 
-            //MotrixiSDK.resetConsentForm(mContext);
+            MotrixiSDK.resetConsentForm(mContext);
 
-            Intent intent = new Intent(mContext.getActivity(), DataCollectionActivity.class);
+            /*Intent intent = new Intent(mContext.getActivity(), DataCollectionActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.getActivity().startActivity(intent);
+            mContext.getActivity().startActivity(intent);*/
 
             // 返回值
             result = FREObject.newObject(msg);

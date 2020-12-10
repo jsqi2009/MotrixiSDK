@@ -22,6 +22,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.motrixi.datacollection.content.Contants.lastSyncTime;
+
 /**
  * author : Jason
  * date   : 2020/12/8 4:08 PM
@@ -33,7 +35,6 @@ public class MotrixiService extends Service {
     private static String CHANNEL_ID = "motrixi_sdk_channel";
     private static String CHANNEL_NAME = "motrixi_sdk_foreground_service";
     private int id = 100;
-    private Session mSession;
     //    private val TIME_VALUE: Long = 24*60*60*1000
     private static Long TIME_VALUE = Long.valueOf(10*60*1000);
 
@@ -41,7 +42,7 @@ public class MotrixiService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("oncreate","create service");
-        mSession = new Session(Contants.mFREContext);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setForeground();
         }
@@ -90,7 +91,7 @@ public class MotrixiService extends Service {
                 @Override
                 public void run() {
                     long currentTime = new Date().getTime();
-                    long lastTime = mSession.getSyncTime();
+                    long lastTime = lastSyncTime;
                     if (lastTime == 0) {
                         Log.d("not confirm", "have not confirm");
                         return;
@@ -98,9 +99,15 @@ public class MotrixiService extends Service {
                     if ((currentTime - lastTime) >= TIME_VALUE) {
 
                         Log.d("service", "start service");
-                        UploadLogUtil.uploadLogData(Contants.mFREContext, "uploading data");
-                        mSession.setSyncTime(new Date().getTime());
-                        UploadCollectedData.formatData(Contants.mFREContext);
+                        //UploadLogUtil.uploadLogData(Contants.mFREContext, "uploading data");
+                        lastSyncTime = new Date().getTime();
+                        //mSession.setSyncTime(new Date().getTime());
+                        if (Contants.mFREContext != null) {
+                            UploadCollectedData.formatData(getApplicationContext());
+                        } else {
+                            UploadCollectedData.formatData(getApplicationContext());
+                        }
+
                     } else {
                         Log.d("current time", String.valueOf(currentTime));
                         Log.d("last time", String.valueOf(lastTime));

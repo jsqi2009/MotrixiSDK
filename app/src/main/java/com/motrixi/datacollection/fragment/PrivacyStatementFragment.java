@@ -2,6 +2,7 @@ package com.motrixi.datacollection.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.motrixi.datacollection.DataCollectionActivity;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.utils.CustomStyle;
 import com.motrixi.datacollection.utils.DisplayUtil;
+
+import java.util.HashMap;
 
 import static android.view.Gravity.CENTER;
 import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
@@ -49,7 +54,6 @@ public class PrivacyStatementFragment extends Fragment {
     private DataCollectionActivity parentActivity;
     private RelativeLayout privateLayout;
     private LinearLayout actionBarLayout;
-    private Session mSession;
     private TextView tvTitle;
     private TextView tvContent1;
     private TextView tvCancel;
@@ -58,6 +62,13 @@ public class PrivacyStatementFragment extends Fragment {
 
     public PrivacyStatementFragment() {
         // Required empty public constructor
+
+        parentActivity = DataCollectionActivity.getSharedMainActivity();
+        /*if (Contants.mFREContext != null) {
+            mSession = new Session(Contants.mFREContext);
+        } else {
+            mSession = new Session(parentActivity);
+        }*/
     }
 
     public static PrivacyStatementFragment newInstance(String param1, String param2) {
@@ -77,7 +88,8 @@ public class PrivacyStatementFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        mSession = new Session(Contants.mFREContext);
+        //mSession = new Session(Contants.mFREContext);
+        //parentActivity = DataCollectionActivity.getSharedMainActivity();
     }
 
     @Override
@@ -106,23 +118,23 @@ public class PrivacyStatementFragment extends Fragment {
     }
 
     private void initLayout() {
-        privateLayout = new  RelativeLayout(Contants.mFREContext.getActivity());
+        privateLayout = new  RelativeLayout(getActivity());
         RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
-        RelativeLayout topLayout = new RelativeLayout(Contants.mFREContext.getActivity());
+        RelativeLayout topLayout = new RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(Contants.mFREContext, 50)
+                DisplayUtil.dp2px(getActivity(), 50)
         );
         topLayout.setId(Contants.PRIVACY_TOP_ID);
         topLayout.setLayoutParams(topParams);
         topLayout.setBackgroundColor(Color.rgb(0, 150, 182));
         privateLayout.addView(topLayout);
 
-        tvTitle = new TextView(Contants.mFREContext.getActivity());
+        tvTitle = new TextView(getActivity());
         RelativeLayout.LayoutParams titleParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -135,81 +147,94 @@ public class PrivacyStatementFragment extends Fragment {
         topLayout.addView(tvTitle);
 
 
-        ScrollView scrollView= new ScrollView(Contants.mFREContext.getActivity());
+        ScrollView scrollView= new ScrollView(getActivity());
         RelativeLayout.LayoutParams scrollParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        scrollParams.bottomMargin = DisplayUtil.dp2px(Contants.mFREContext, 70);
+        scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
         privateLayout.addView(scrollView);
 
-        LinearLayout contentLayout = new LinearLayout(Contants.mFREContext.getActivity());
+        LinearLayout contentLayout = new LinearLayout(getActivity());
         contentLayout.setOrientation(LinearLayout.VERTICAL);
         RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        contentParams.setMargins(DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15),
-                DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15));
+        contentParams.setMargins(DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15),
+                DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15));
         contentLayout.setLayoutParams(contentParams);
         scrollView.addView(contentLayout);
 
-        tvContent1 = new TextView(Contants.mFREContext.getActivity());
+        tvContent1 = new TextView(getActivity());
         //tvContent1.text = style
         tvContent1.setTextSize(18F);
         tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         contentLayout.addView(tvContent1);
 
-        LinearLayout bottomLayout = new LinearLayout(Contants.mFREContext.getActivity());
+        LinearLayout bottomLayout = new LinearLayout(getActivity());
         bottomLayout.setOrientation(LinearLayout.HORIZONTAL);
         RelativeLayout.LayoutParams bottomParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(Contants.mFREContext, 70)
+                DisplayUtil.dp2px(getActivity(), 70)
         );
         bottomParams.addRule(ALIGN_PARENT_BOTTOM);
         bottomLayout.setLayoutParams(bottomParams);
         bottomLayout.setGravity(CENTER);
 
-        tvCancel = new TextView(Contants.mFREContext.getActivity());
+        tvCancel = new TextView(getActivity());
         tvCancel.setTextSize(18F);
         //tvCancel.text = "Cancel"
         tvCancel.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams cancelParams = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
+                DisplayUtil.dp2px(getActivity(), 50), 1F
         );
-        cancelParams.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
-        cancelParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
+        cancelParams.leftMargin = DisplayUtil.dp2px(getActivity(), 20);
+        cancelParams.rightMargin = DisplayUtil.dp2px(getActivity(), 20);
         tvCancel.setLayoutParams(cancelParams);
         tvCancel.setGravity(Gravity.CENTER);
-        tvCancel.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        if (Contants.mFREContext != null) {
+            tvCancel.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        } else {
+            tvCancel.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        }
 
-        tvOption = new TextView(Contants.mFREContext.getActivity());
+
+        tvOption = new TextView(getActivity());
         tvOption.setTextSize(18F);
         tvOption.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams confirmParams = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
+                DisplayUtil.dp2px(getActivity(), 50), 1F
         );
         tvOption.setLayoutParams(confirmParams);
         tvOption.setGravity(Gravity.CENTER);
-        tvOption.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        if (Contants.mFREContext != null) {
+            tvOption.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        } else {
+            tvOption.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        }
 
-        tvConfirm = new TextView(Contants.mFREContext.getActivity());
+        tvConfirm = new TextView(getActivity());
         tvConfirm.setTextSize(18F);
         //tvConfirm.text = "Confirm"
         tvConfirm.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams more = new  LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
+                DisplayUtil.dp2px(getActivity(), 50), 1F
         );
-        more.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
-        more.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
+        more.leftMargin = DisplayUtil.dp2px(getActivity(), 20);
+        more.rightMargin = DisplayUtil.dp2px(getActivity(), 20);
         tvConfirm.setLayoutParams(more);
         tvConfirm.setGravity(Gravity.CENTER);
-        tvConfirm.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        if (Contants.mFREContext != null) {
+            tvConfirm.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        } else {
+            tvConfirm.setBackground(CustomStyle.getGradientDrawable(getActivity()));
+        }
 
         bottomLayout.addView(tvCancel);
         bottomLayout.addView(tvOption);
@@ -221,30 +246,17 @@ public class PrivacyStatementFragment extends Fragment {
         tvCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mSession.setAgreeFlag(true);
-                //parentActivity.rejectCollect();
-                getActivity().finish();
+                //mSession.setAgreeFlag(true);
+                Contants.agreeFlag = true;
+                parentActivity.cancelConsent();
             }
         });
         tvConfirm.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                mSession.setAgreeFlag(true);
-                String formValue = "";
-
-                if (parentActivity.optionArray != null && parentActivity.optionArray.length > 0) {
-
-                    for (int i = 0; i < parentActivity.optionArray.length; i++) {
-                        if (i == parentActivity.optionArray.length -1) {
-                            formValue = formValue + parentActivity.optionArray[i];
-                        } else {
-                            formValue = formValue + parentActivity.optionArray[i] + "|";
-                        }
-                    }
-
-                    //parentActivity.submitConsentFormData(formValue);
-                }
+                Contants.agreeFlag = true;
+                parentActivity.submitFormData();
 
             }
 
@@ -262,9 +274,19 @@ public class PrivacyStatementFragment extends Fragment {
 
     }
 
+    private void showResponse(final String msg){
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void customActionBarView() {
 
-        actionBarLayout = new  LinearLayout(Contants.mFREContext.getActivity());
+        actionBarLayout = new  LinearLayout(getActivity());
         RelativeLayout.LayoutParams rootParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -273,7 +295,7 @@ public class PrivacyStatementFragment extends Fragment {
         actionBarLayout.setLayoutParams(rootParams);
         actionBarLayout.setGravity(Gravity.CENTER);
 
-        TextView tvTitle = new TextView(Contants.mFREContext.getActivity());
+        TextView tvTitle = new TextView(getActivity());
         tvTitle.setTextSize(22F);
 //        tvTitle.text = "Consent"
         tvTitle.setText("test");
@@ -283,7 +305,7 @@ public class PrivacyStatementFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 50);
+        titleParams.rightMargin = DisplayUtil.dp2px(getActivity(), 50);
         tvTitle.setLayoutParams(titleParams);
         tvTitle.setGravity(Gravity.CENTER);
 
@@ -297,9 +319,15 @@ public class PrivacyStatementFragment extends Fragment {
 //        tvOption.setText(parentActivity.info.value.option_button_text);
 //        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
 
-        //tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));
-        String content = "<p>By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics: Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process information to create and/or enhance the quality of products (f) Data Management Platform: to create better audiences to target specific users to increase performance When you confirm, you not only grant your consent, you acknowledge you are of 16 years of age and older. Please note, if you choose to click cancel, no information will be collected from you. To learn more about the terms in its entirety, please click <a href=\\\"https://www.motrixi.com/index.php/privacy-policy-2/\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\">here</a>.</p>\\n<p>We thank you for installing our app and helping us improve the user experience by clicking 'Confirm'.</p>";
-        tvContent1.setText(Html.fromHtml(content));
+
+          tvTitle.setText(Contants.terms_page_title);
+          tvCancel.setText(Contants.cancel_button_text);
+          tvOption.setText(Contants.option_button_text);
+          tvConfirm.setText(Contants.confirm_button_text);
+
+        tvContent1.setText(Html.fromHtml(Contants.terms_content));
+        //String content = "<p>By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics: Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process information to create and/or enhance the quality of products (f) Data Management Platform: to create better audiences to target specific users to increase performance When you confirm, you not only grant your consent, you acknowledge you are of 16 years of age and older. Please note, if you choose to click cancel, no information will be collected from you. To learn more about the terms in its entirety, please click <a href=\\\"https://www.motrixi.com/index.php/privacy-policy-2/\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\">here</a>.</p>\\n<p>We thank you for installing our app and helping us improve the user experience by clicking 'Confirm'.</p>";
+        //tvContent1.setText(Html.fromHtml(content));
         //tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));
         //tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         CharSequence str = tvContent1.getText();

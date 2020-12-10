@@ -39,7 +39,6 @@ public class GPSLocationUtil {
 
     public static void init(FREContext context) {
 
-        mContext = context;
         mLocationManager = (LocationManager) context.getActivity().getSystemService(Context.LOCATION_SERVICE);
         // check the gps whether on
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -51,6 +50,31 @@ public class GPSLocationUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (mContext.getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && mContext.getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return;
+            }
+        }
+        Location location = mLocationManager.getLastKnownLocation(bestProvider);
+        mLocation = location;
+
+        //mLocationManager.requestLocationUpdates(bestProvider, 2000, 0, locationListener);
+        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, locationListener);
+        mLocationManager.requestLocationUpdates(bestProvider, 2000, 1, locationListener);
+    }
+
+    public static void init(Context context) {
+
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        // check the gps whether on
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //Toast.makeText(context, "Please set the GPS on...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String bestProvider = mLocationManager.getBestProvider(getCriteria(), true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 return;
             }
@@ -123,11 +147,35 @@ public class GPSLocationUtil {
         return mLocation;
     }
 
-    public static List<Address> getAddress(Location location) {
+    public static Location getLocation(Context context) {
+        init(context);
+        if (mLocation == null) {
+            Log.e("GPSLocationUtil", "setLocationData: current location is null");
+            //Toast.makeText(mContext, "current location is null", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        return mLocation;
+    }
+
+    public static List<Address> getAddress(Location location, FREContext context) {
         List<Address> result = null;
         try {
             if (location != null) {
-                Geocoder gc = new Geocoder(mContext.getActivity(), Locale.getDefault());
+                Geocoder gc = new Geocoder(context.getActivity(), Locale.getDefault());
+                result = gc.getFromLocation(location.getLatitude(),
+                        location.getLongitude(), 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static List<Address> getAddress(Location location, Context context) {
+        List<Address> result = null;
+        try {
+            if (location != null) {
+                Geocoder gc = new Geocoder(context, Locale.getDefault());
                 result = gc.getFromLocation(location.getLatitude(),
                         location.getLongitude(), 1);
             }

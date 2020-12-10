@@ -35,6 +35,10 @@ public class Session {
         this.mHashStorage = new HashStorage(c, FILE_NAME);
     }
 
+    public Session(Context c) {
+        this.mHashStorage = new HashStorage(c, FILE_NAME);
+    }
+
     public void setData(Object data, Class type, String key) {
         Gson gson = new Gson();
         String json = gson.toJson(data, type);
@@ -64,62 +68,6 @@ public class Session {
 
     public boolean getAgreeFlag() {
         return this.mHashStorage.getBoolean(KEY_AGREE);
-    }
-
-    public void setOption1Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION1, flag);
-    }
-
-    public boolean getOption1Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION1);
-    }
-
-    public void setOption2Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION2, flag);
-    }
-
-    public boolean getOption2Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION2);
-    }
-
-    public void setOption3Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION3, flag);
-    }
-
-    public boolean getOption3Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION3);
-    }
-
-    public void setOption4Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION4, flag);
-    }
-
-    public boolean getOption4Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION4);
-    }
-
-    public void setOption5Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION5, flag);
-    }
-
-    public boolean getOption5Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION5);
-    }
-
-    public void setOption6Flag(boolean flag) {
-        this.mHashStorage.put(KEY_OPTION6, flag);
-    }
-
-    public boolean getOption6Flag() {
-        return this.mHashStorage.getBoolean(KEY_OPTION6);
-    }
-
-    public void setViewOptionsFlag(boolean flag) {
-        this.mHashStorage.put(KEY_VIEW_OPTION, flag);
-    }
-
-    public boolean getViewOptionsFlag() {
-        return this.mHashStorage.getBoolean(KEY_VIEW_OPTION);
     }
 
     public void setSyncTime(long time) {

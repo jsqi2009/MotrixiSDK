@@ -22,6 +22,39 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class AdvertisingIdUtil {
 
+    public static String getGoogleAdId(Context context) throws Exception {
+        try {
+            if (Looper.getMainLooper() == Looper.myLooper()) {
+                return "Cannot call in the main thread, You must call in the other thread";
+            }
+            PackageManager pm = context.getPackageManager();
+            pm.getPackageInfo("com.android.vending", 0);
+            AdvertisingConnection connection = new AdvertisingConnection();
+            Intent intent = new Intent(
+                    "com.google.android.gms.ads.identifier.service.START");
+            intent.setPackage("com.google.android.gms");
+            if (context.bindService(intent, connection, Context.BIND_AUTO_CREATE)) {
+                try {
+                    AdvertisingInterface adInterface = new AdvertisingInterface(
+                            connection.getBinder());
+                    return adInterface.getId();
+                } finally {
+                    context.unbindService(connection);
+                }
+            }
+            return "";
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return "";
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public static String getGoogleAdId(FREContext context) throws Exception {
         try {
             if (Looper.getMainLooper() == Looper.myLooper()) {

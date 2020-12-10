@@ -39,15 +39,8 @@ public class OptionFragment extends Fragment {
 
     private View rootView;
     private DataCollectionActivity parentActivity;
-    private Session mSession;
 
     private RelativeLayout optionLayout;
-    private CheckBox checkBox1;
-    private CheckBox checkBox2;
-    private CheckBox checkBox3;
-    private CheckBox checkBox4;
-    private CheckBox checkBox5;
-    private CheckBox checkBox6;
     private LinearLayout actionBarLayout;
     private LinearLayout contentLayout;
     private TextView tvBack;
@@ -56,6 +49,8 @@ public class OptionFragment extends Fragment {
 
     public OptionFragment() {
         // Required empty public constructor
+
+        parentActivity = DataCollectionActivity.getSharedMainActivity();
     }
 
     // TODO: Rename and change types and number of parameters
@@ -92,8 +87,7 @@ public class OptionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        parentActivity = (DataCollectionActivity) getActivity();
-        mSession = new  Session(Contants.mFREContext);
+        //parentActivity = (DataCollectionActivity) getActivity();
         customActionBarView();
         setData();
     }
@@ -109,7 +103,7 @@ public class OptionFragment extends Fragment {
         RelativeLayout topLayout = new  RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new  RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(Contants.mFREContext, 50)
+                DisplayUtil.dp2px(getActivity(), 50)
         );
         topLayout.setId(Contants.OPTION_TOP_ID);
         topLayout.setLayoutParams(topParams);
@@ -133,7 +127,7 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        scrollParams.bottomMargin = DisplayUtil.dp2px(Contants.mFREContext, 70);
+        scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
         optionLayout.addView(scrollView);
@@ -144,8 +138,8 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        contentParams.setMargins(DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15),
-        DisplayUtil.dp2px(Contants.mFREContext, 15),DisplayUtil.dp2px(Contants.mFREContext, 15));
+        contentParams.setMargins(DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15),
+        DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15));
         contentLayout.setLayoutParams(contentParams);
         scrollView.addView(contentLayout);
 
@@ -153,7 +147,7 @@ public class OptionFragment extends Fragment {
         bottomLayout.setOrientation(LinearLayout.HORIZONTAL);
         RelativeLayout.LayoutParams bottomParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.dp2px(Contants.mFREContext, 70)
+                DisplayUtil.dp2px(getActivity(), 70)
         );
         bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         bottomLayout.setLayoutParams(bottomParams);
@@ -164,12 +158,12 @@ public class OptionFragment extends Fragment {
         tvBack.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams backParams = new LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
+                DisplayUtil.dp2px(getActivity(), 50), 1F
         );
-        backParams.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 40);
-        backParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
+        backParams.leftMargin = DisplayUtil.dp2px(getActivity(), 40);
+        backParams.rightMargin = DisplayUtil.dp2px(getActivity(), 20);
         tvBack.setLayoutParams(backParams);
-        tvBack.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        tvBack.setBackground(CustomStyle.getGradientDrawable(getActivity()));
         tvBack.setGravity(Gravity.CENTER);
 
         tvConfirm = new TextView(getActivity());
@@ -177,13 +171,13 @@ public class OptionFragment extends Fragment {
         tvConfirm.setTextColor(Color.BLACK);
         LinearLayout.LayoutParams more = new LinearLayout.LayoutParams(
                 0,
-                DisplayUtil.dp2px(Contants.mFREContext, 50), 1F
+                DisplayUtil.dp2px(getActivity(), 50), 1F
         );
-        more.leftMargin = DisplayUtil.dp2px(Contants.mFREContext, 20);
-        more.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 40);
+        more.leftMargin = DisplayUtil.dp2px(getActivity(), 20);
+        more.rightMargin = DisplayUtil.dp2px(getActivity(), 40);
         tvConfirm.setLayoutParams(more);
         tvConfirm.setGravity(Gravity.CENTER);
-        tvConfirm.setBackground(CustomStyle.getGradientDrawable(Contants.mFREContext));
+        tvConfirm.setBackground(CustomStyle.getGradientDrawable(getActivity()));
 
         bottomLayout.addView(tvBack);
         bottomLayout.addView(tvConfirm);
@@ -199,9 +193,8 @@ public class OptionFragment extends Fragment {
         tvConfirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mSession.setAgreeFlag(true);
-                String checkedValue = getOptionValue();
-                //parentActivity.submitConsentFormData(checkedValue);
+                Contants.agreeFlag = true;
+                parentActivity.submitFormData();
             }
         });
     }
@@ -220,13 +213,13 @@ public class OptionFragment extends Fragment {
         TextView tvTitle = new  TextView(getActivity());
         tvTitle.setTextSize(22F);
 //        tvTitle.text = "Options"
-        tvTitle.setText(parentActivity.info.value.option_page_title);
+        tvTitle.setText(Contants.option_page_title);
         tvTitle.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams titleParams = new  LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        titleParams.rightMargin = DisplayUtil.dp2px(Contants.mFREContext, 50);
+        titleParams.rightMargin = DisplayUtil.dp2px(getActivity(), 50);
         tvTitle.setLayoutParams(titleParams);
         tvTitle.setGravity(Gravity.CENTER);
 
@@ -235,9 +228,9 @@ public class OptionFragment extends Fragment {
 
     private void setData() {
 
-        tvTitle.setText(parentActivity.info.value.option_page_title);
-        tvBack.setText(parentActivity.info.value.back_button_text);
-        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
+        tvTitle.setText(Contants.option_page_title);
+        tvBack.setText(Contants.back_button_text);
+        tvConfirm.setText(Contants.confirm_button_text);
 
         contentLayout.removeAllViews();
         for (int i = 0; i < parentActivity.optionArray.length; i++) {
@@ -253,9 +246,9 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        checkBoxParams.topMargin = DisplayUtil.dp2px(Contants.mFREContext, 15);
+        checkBoxParams.topMargin = DisplayUtil.dp2px(getActivity(), 15);
         if (index == parentActivity.optionArray.length - 1) {
-            checkBoxParams.bottomMargin = DisplayUtil.dp2px(Contants.mFREContext, 25);
+            checkBoxParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 25);
         }
 
         checkBox.setText(parentActivity.optionArray[index]);

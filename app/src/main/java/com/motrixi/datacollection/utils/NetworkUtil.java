@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 
 import com.adobe.fre.FREContext;
+import com.motrixi.datacollection.content.Contants;
 
 /**
  * author : Jason
@@ -18,6 +19,24 @@ public class NetworkUtil {
     @SuppressWarnings("deprecation")
     public static boolean iConnected(FREContext context) {
         ConnectivityManager manager = (ConnectivityManager) context.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (manager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());
+                if (networkCapabilities != null) {
+                    return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                            || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                            || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET);
+                }
+            } else {
+                NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+                return networkInfo != null && networkInfo.isConnected();
+            }
+        }
+        return false;
+    }
+
+    public static boolean iConnected(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(manager.getActiveNetwork());

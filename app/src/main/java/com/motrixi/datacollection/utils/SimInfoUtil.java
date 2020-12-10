@@ -18,6 +18,11 @@ public class SimInfoUtil {
         return iPhoneManager.getSimOperator();
     }
 
+    private static String getSimInfo(Context context){
+        TelephonyManager iPhoneManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return iPhoneManager.getSimOperator();
+    }
+
     public static String getMCC(FREContext context){
 
         String simInfo = getSimInfo(context);
@@ -29,7 +34,30 @@ public class SimInfoUtil {
 
     }
 
+    public static String getMCC(Context context){
+
+        String simInfo = getSimInfo(context);
+        if (!TextUtils.isEmpty(simInfo)) {
+            return simInfo.substring(0, 3);
+        } else {
+            return "";
+        }
+
+    }
+
     public static String getMNC(FREContext context) {
+
+        String simInfo = getSimInfo(context);
+        if (!TextUtils.isEmpty(simInfo)) {
+            return simInfo.substring(3 ,simInfo.length());
+        } else {
+            return "";
+        }
+
+
+    }
+
+    public static String getMNC(Context context) {
 
         String simInfo = getSimInfo(context);
         if (!TextUtils.isEmpty(simInfo)) {

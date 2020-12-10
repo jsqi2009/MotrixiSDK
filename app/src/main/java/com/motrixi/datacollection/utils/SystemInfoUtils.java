@@ -25,11 +25,19 @@ public class SystemInfoUtils {
         return context.getActivity().getResources().getDisplayMetrics().widthPixels;
     }
 
+    public static int getDeviceWidth(Context context){
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
     /**
      * 获取设备高度（px）
      */
     public static int getDeviceHeight(FREContext context){
         return context.getActivity().getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public static int getDeviceHeight(Context context){
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
 
     /**
@@ -165,6 +173,26 @@ public class SystemInfoUtils {
     }
 
     public static String getDeviceAllInfo(FREContext context){
+        return "" +
+                "\n1. Device Width:\n\t\t" + getDeviceWidth(context) +
+                "\n\n2. Device Height:\n\t\t" + getDeviceHeight(context) +
+                "\n\n3. Device Model:\n\t\t" + android.os.Build.MODEL +
+                "\n\n4. Manufacture:\n\t\t" + android.os.Build.MANUFACTURER +
+                "\n\n5. Android Version:\n\t\t" + android.os.Build.VERSION.RELEASE +
+                "\n\n6. Android SDK Version:\n\t\t" + android.os.Build.VERSION.SDK_INT +
+                "\n\n7. Product:\n\t\t" + android.os.Build.PRODUCT +
+                "\n\n8. ID:\n\t\t" + android.os.Build.ID +
+                "\n\n9. Display ID:\n\t\t" + android.os.Build.DISPLAY +
+                "\n\n10. Hardware:\n\t\t" + android.os.Build.HARDWARE +
+                "\n\n11. Device Name:\n\t\t" + android.os.Build.DEVICE +
+                "\n\n12. Bootloader:\n\t\t" + android.os.Build.BOOTLOADER +
+                "\n\n13. Board:\n\t\t" + android.os.Build.BOARD +
+                "\n\n14. CodeName:\n\t\t" + android.os.Build.VERSION.CODENAME;
+
+
+    }
+
+    public static String getDeviceAllInfo(Context context){
         return "" +
                 "\n1. Device Width:\n\t\t" + getDeviceWidth(context) +
                 "\n\n2. Device Height:\n\t\t" + getDeviceHeight(context) +

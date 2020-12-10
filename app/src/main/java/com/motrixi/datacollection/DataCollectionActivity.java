@@ -1,14 +1,17 @@
 package com.motrixi.datacollection;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -16,15 +19,32 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.adobe.fre.FREContext;
+import com.google.gson.JsonObject;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment;
+import com.motrixi.datacollection.network.HttpClient;
+import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
+import com.motrixi.datacollection.utils.AdvertisingIdUtil;
+import com.motrixi.datacollection.utils.MessageUtil;
 import com.motrixi.datacollection.utils.UploadCollectedData;
+import com.motrixi.datacollection.utils.UploadLogUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DataCollectionActivity extends FragmentActivity {
 
@@ -35,22 +55,65 @@ public class DataCollectionActivity extends FragmentActivity {
     Manifest.permission.FOREGROUND_SERVICE};
     private int request_code = 1;
     private ArrayList<String> mPermissionList = new  ArrayList();
-    private Session mSession;
+    private static Session mSession;
     private RelativeLayout rootLayout;
     private FrameLayout frameLayout;
     private LinearLayout actionBarLayout;
     public static ConsentDetailInfo.ResultInfo info;
     public static String[] optionArray;
 
+    private static DataCollectionActivity mSharedMainActivity = null;
+    public static DataCollectionActivity getSharedMainActivityOrNull() {
+        return mSharedMainActivity;
+    }
+
+    public static DataCollectionActivity getSharedMainActivity() {
+        DataCollectionActivity mainActivity = getSharedMainActivityOrNull();
+        if (mainActivity == null)
+            throw new IllegalStateException("Activity doesn't exist");
+        return mainActivity;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (mSharedMainActivity == null) {
+            mSharedMainActivity = this; // new WeakReference<>(this);
+        }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         initLayout();
         setContentView(rootLayout);
 
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getAdvertisingId(this);
+    }
+
+    /**
+     * get the AdvertisingId
+     */
+    private static void getAdvertisingId(Context context) {
+        try {
+            Executors.newSingleThreadExecutor().execute(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(getSharedMainActivity());
+                        Log.d("google Id:", googleId);
+                        Contants.advertisingID = googleId;
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch ( Exception e) {
+        }
     }
 
     private void initLayout() {
@@ -75,20 +138,21 @@ public class DataCollectionActivity extends FragmentActivity {
     }
 
     private void initView() {
-        mSession = new Session(Contants.mFREContext);
+
         //info = mSession.getConsentDataInfo();
 
-        /*if (info != null) {
-            optionArray = info.value.options.replace("|","=").split("=");
+        if (!TextUtils.isEmpty(Contants.options)) {
+            optionArray = Contants.options.replace("|","=").split("=");
             Log.d("option array", optionArray.length + "");
-        }*/
+        }
 
         // 获取碎片管理器
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("","")).commit();
+        //fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("","")).commit();
+        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID,new  PrivacyStatementFragment()).commit();
     }
 
-    /*public void submitConsentFormData(String value) {
+    public void submitConsentFormData(String value) {
 
         Log.d("consent form value", value);
         Call<JsonObject> call = HttpClient.submitConsentForm(this, value, mSession.getAppID());
@@ -140,68 +204,102 @@ public class DataCollectionActivity extends FragmentActivity {
                 UploadLogUtil.uploadLogData(Contants.mFREContext, t.getMessage().toString());
             }
         });
-    }*/
+    }
 
-    /*public void rejectCollect(){
-
-        String appKey=Contants.APP_KEY;
-        String androidID = Settings.System.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
-
-        Call<JsonObject> call=HttpClient.rejectCollectionData(this,appKey,androidID);
-        call.enqueue(new Callback<JsonObject>(){
+    public void submitFormData() {
+        final String value = getValue();
+        new Thread(new Runnable() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        JSONObject responseObject= new JSONObject(response.body().toString());
+            public void run() {
+                HashMap<String, String> map = new HashMap();
+                map.put("value", value);
+                map.put("app_id",Contants.APP_ID);
 
-                        UploadLogUtil.uploadLogData(Contants.mFREContext,"cancel:"+responseObject.optString("message"));
-                        Log.d("cancel status","success");
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(
-                                    MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true, responseObject.optString("message"))
-                            );
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                String msg = PostMethodUtils.httpPost(Contants.SUBMIT_FORM_API, map);
+                Log.e("form response", msg);
+
+                handleFormData(msg);
+
+            }
+        }).start();
+    }
+
+    private void handleFormData(String detail) {
+
+        if (!detail.equals(Contants.RESPONSE_ERROR)) {
+            try {
+                JSONObject object = new JSONObject(detail);
+                JSONObject resultObject = object.optJSONObject("result");
+                String consentFormID = resultObject.optString("id");
+                Contants.consentFormID = consentFormID;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initPermission();
                     }
+                });
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void cancelConsent() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg;
+                String androidID = Settings.System.getString(getSharedMainActivity().getContentResolver(),Settings.Secure.ANDROID_ID);
+                HashMap<String, String> map = new HashMap();
+                map.put("app_key", Contants.APP_KEY);
+                map.put("android_id",androidID);
+
+                msg = PostMethodUtils.httpPost(Contants.CANCEL_CONSENT_API, map);
+                Log.e("cancel response", msg);
+
+                /*if (Contants.onLogListener != null) {
+                    Contants.onLogListener.onLogListener(
+                            MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true, responseObject.optString("message"))
+                    );
+                }*/
+
+                finish();
+            }
+        }).start();
+    }
+
+    private String getValue() {
+
+        String formValue = "";
+        if (optionArray != null && optionArray.length > 0) {
+
+            for (int i = 0; i < optionArray.length; i++) {
+                if (i == optionArray.length - 1) {
+                    formValue = formValue + optionArray[i];
                 } else {
-                    try {
-                        JSONObject errorObject= new JSONObject(String.valueOf(response.errorBody()));
-
-                        UploadLogUtil.uploadLogData(Contants.mFREContext,"cancel:"+errorObject.optString("message"));
-                        Log.d("cancel status","failure");
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(
-                                    MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true, errorObject.optString("message"))
-                            );
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    formValue = formValue + optionArray[i] + "|";
                 }
             }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("cancel status","network failure");
-                UploadLogUtil.uploadLogData(Contants.mFREContext,t.getMessage());
-            }
-
-        });
-    }*/
+        }
+        return  formValue;
+    }
 
 
-    private void initPermission() {
-        //mSession!!.agreeFlag = true
-        mSession.setSyncTime(new Date().getTime());
+    public void initPermission() {
+        //mSession.setSyncTime(new Date().getTime());
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
+
+            //Toast.makeText(this, "request permissions", Toast.LENGTH_SHORT).show();
         } else {
-            UploadCollectedData.formatData(Contants.mFREContext);
-            finish();
+
+            UploadCollectedData.formatData(this);
+            getSharedMainActivity().finish();
         }
     }
 
@@ -218,12 +316,15 @@ public class DataCollectionActivity extends FragmentActivity {
             ActivityCompat.requestPermissions(this, permissions, request_code);
         } else {
 
-            /*var service: Intent = Intent(this, UploadService::class.java)
-            startService(service)*/
+            //Toast.makeText(this, "already grant all the permissions", Toast.LENGTH_SHORT).show();
+
             //upload data
-            UploadCollectedData.formatData(Contants.mFREContext);
-            finish();
+            UploadCollectedData.formatData(this);
+            getSharedMainActivity().finish();
         }
+
+        //Toast.makeText(this, "grant all the permissions", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -243,8 +344,10 @@ public class DataCollectionActivity extends FragmentActivity {
 
         }
 
-        UploadCollectedData.formatData(Contants.mFREContext);
-        finish();
+        //Toast.makeText(this, "onRequestPermissionsResult", Toast.LENGTH_SHORT).show();
+
+        UploadCollectedData.formatData(this);
+        getSharedMainActivity().finish();
     }
 
     @Override

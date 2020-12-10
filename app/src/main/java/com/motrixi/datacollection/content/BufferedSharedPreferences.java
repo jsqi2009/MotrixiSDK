@@ -28,6 +28,14 @@ public final class BufferedSharedPreferences {
         }
     }
 
+    public BufferedSharedPreferences(Context paramContext, String paramString) {
+        if (!TextUtils.isEmpty(paramString)) {
+            this.mWriteBuffer = new HashMap();
+            this.mRemoveBuffer = new HashSet<>();
+            this.mSharedPreferences = paramContext.getSharedPreferences(paramString, 0);
+        }
+    }
+
     public void apply() {
         Editor editor;
         try {

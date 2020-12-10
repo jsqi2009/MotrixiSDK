@@ -20,7 +20,7 @@ public class MotrixiSDKInit implements FREFunction {
         try {
             String msg = objectAry[0].getAsString();
 
-            //MotrixiSDK.init(mContext, msg);
+            MotrixiSDK.init(mContext, msg);
 
             // 返回值
             result = FREObject.newObject(msg);
