@@ -39,10 +39,10 @@ dependencies {
     //noinspection GradleCompatible
      implementation 'com.android.support:appcompat-v7:26.1.0'
     //pending dependencies for Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    //implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    //implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+    //implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    //implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     //implementation'org.apache.commons:commons-lang3:3.5'
 
 

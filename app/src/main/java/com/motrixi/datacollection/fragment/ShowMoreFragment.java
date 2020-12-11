@@ -100,7 +100,7 @@ public class ShowMoreFragment extends Fragment {
         //parentActivity = (DataCollectionActivity) getActivity();
 
         //tvTitle.setText(parentActivity.info.value.link_page_title);
-        tvTitle.setText(Contants.link_page_title);
+        tvTitle.setText(parentActivity.mSession.getLinkTitle());
 
         customActionBarView();
         initView();

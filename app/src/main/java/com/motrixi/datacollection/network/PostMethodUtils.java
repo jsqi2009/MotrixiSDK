@@ -2,6 +2,7 @@ package com.motrixi.datacollection.network;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class PostMethodUtils {
             conn.setUseCaches(false);
 
             String postString = "";
+
+            Log.e("post url",conn.getURL().getPath());
 
             OutputStream out = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));

@@ -51,7 +51,7 @@ public class PrivacyStatementFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private View rootView;
-    private DataCollectionActivity parentActivity;
+    private static DataCollectionActivity parentActivity;
     private RelativeLayout privateLayout;
     private LinearLayout actionBarLayout;
     private TextView tvTitle;
@@ -72,6 +72,8 @@ public class PrivacyStatementFragment extends Fragment {
     }
 
     public static PrivacyStatementFragment newInstance(String param1, String param2) {
+        parentActivity = DataCollectionActivity.getSharedMainActivity();
+
         PrivacyStatementFragment fragment = new PrivacyStatementFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -246,18 +248,27 @@ public class PrivacyStatementFragment extends Fragment {
         tvCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                //mSession.setAgreeFlag(true);
-                Contants.agreeFlag = true;
+                parentActivity.mSession.setAgreeFlag(true);
+                //Contants.agreeFlag = true;
                 parentActivity.cancelConsent();
+                getActivity().finish();
             }
         });
         tvConfirm.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                Contants.agreeFlag = true;
+                parentActivity.mSession.setAgreeFlag(true);
+                //Contants.agreeFlag = true;
                 parentActivity.submitFormData();
 
+                if (Contants.mFREContext != null) {
+                    getActivity().finish();
+                }
+
+                if (parentActivity.mSession.getPermissionFlag()) {
+                    getActivity().finish();
+                }
             }
 
 
@@ -320,12 +331,12 @@ public class PrivacyStatementFragment extends Fragment {
 //        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
 
 
-          tvTitle.setText(Contants.terms_page_title);
-          tvCancel.setText(Contants.cancel_button_text);
-          tvOption.setText(Contants.option_button_text);
-          tvConfirm.setText(Contants.confirm_button_text);
+          tvTitle.setText(parentActivity.mSession.getTermsTitle());
+          tvCancel.setText(parentActivity.mSession.getCancelButton());
+          tvOption.setText(parentActivity.mSession.getOptionButton());
+          tvConfirm.setText(parentActivity.mSession.getConfirmButton());
 
-        tvContent1.setText(Html.fromHtml(Contants.terms_content));
+        tvContent1.setText(Html.fromHtml(parentActivity.mSession.getTermsContent()));
         //String content = "<p>By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics: Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process information to create and/or enhance the quality of products (f) Data Management Platform: to create better audiences to target specific users to increase performance When you confirm, you not only grant your consent, you acknowledge you are of 16 years of age and older. Please note, if you choose to click cancel, no information will be collected from you. To learn more about the terms in its entirety, please click <a href=\\\"https://www.motrixi.com/index.php/privacy-policy-2/\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\">here</a>.</p>\\n<p>We thank you for installing our app and helping us improve the user experience by clicking 'Confirm'.</p>";
         //tvContent1.setText(Html.fromHtml(content));
         //tvContent1.setText(Html.fromHtml(parentActivity.info.value.terms_content));

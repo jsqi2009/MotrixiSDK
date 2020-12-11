@@ -1,5 +1,6 @@
 package com.motrixi.datacollection.network;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.motrixi.datacollection.content.Contants;
@@ -40,6 +41,8 @@ public class GetMethodUtils {
             conn.setRequestMethod(requestMethod);
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(10000);
+
+            Log.e("get url", conn.getURL().getPath());
 
             conn.connect();
 

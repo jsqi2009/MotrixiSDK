@@ -9,6 +9,8 @@ import com.adobe.fre.FREObject;
 import com.adobe.fre.FRETypeMismatchException;
 import com.adobe.fre.FREWrongThreadException;
 import com.motrixi.datacollection.DataCollectionActivity;
+import com.motrixi.datacollection.MotrixiActivity;
+import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.utils.MotrixiSDK;
 
 /**
@@ -23,6 +25,7 @@ public class MotrixiSDKReset implements FREFunction {
         try {
             String msg = String.valueOf(objectAry[0]);
 
+            Contants.mFREContext = mContext;
             MotrixiSDK.resetConsentForm(mContext);
 
             /*Intent intent = new Intent(mContext.getActivity(), DataCollectionActivity.class);

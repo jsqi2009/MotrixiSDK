@@ -3,13 +3,10 @@ package com.motrixi.datacollection.content;
 import android.content.Context;
 
 import com.adobe.fre.FREContext;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 
 import java.util.List;
 
-import okhttp3.Cookie;
 
 public class Session {
 
@@ -29,6 +26,18 @@ public class Session {
     private static final String KEY_APP_KEY = "app_key";
     private static final String KEY_CONSENT_FORM_DATA = "consent_form_data";
 
+    private static final String KEY_TERMS_CONTENT = "terms_content";
+    private static final String KEY_OPTIONS = "options";
+    private static final String KEY_CANCEL_BUTTON = "cancel_button_text";
+    private static final String KEY_CONFIRM_BUTTON = "confirm_button_text";
+    private static final String KEY_OPTION_BUTTON = "option_button_text";
+    private static final String KEY_BACK_BUTTON = "back_button_text";
+    private static final String KEY_TERMS_TITLE = "terms_page_title";
+    private static final String KEY_LINK_TITLE = "link_page_title";
+    private static final String KEY_OPTION_TITLE = "option_page_title";
+    private static final String KEY_ADVERTISING_ID = "advertisingId";
+    private static final String KEY_REQUEST_PERMISSION = "request_permission";
+
     private HashStorage mHashStorage;
 
     public Session(FREContext c) {
@@ -39,7 +48,7 @@ public class Session {
         this.mHashStorage = new HashStorage(c, FILE_NAME);
     }
 
-    public void setData(Object data, Class type, String key) {
+   /* public void setData(Object data, Class type, String key) {
         Gson gson = new Gson();
         String json = gson.toJson(data, type);
         this.mHashStorage.put(key, json);
@@ -48,7 +57,7 @@ public class Session {
     public <T> T getData(Class<? extends T> type, String key) {
         Gson gson = new Gson();
         return gson.fromJson(this.mHashStorage.getString(key), type);
-    }
+    }*/
 
     public void clear() {
         this.mHashStorage.clear();
@@ -61,6 +70,13 @@ public class Session {
 
     }
 
+    public void setAppKey(String id) {
+        this.mHashStorage.put(KEY_APP_KEY, id);
+    }
+
+    public String getAppKey() {
+        return this.mHashStorage.getString(KEY_APP_KEY);
+    }
 
     public void setAgreeFlag(boolean flag) {
         this.mHashStorage.put(KEY_AGREE, flag);
@@ -94,13 +110,101 @@ public class Session {
         return this.mHashStorage.getString(KEY_CONSENT_FORM_ID);
     }
 
-    public void setConsentDataInfo(ConsentDetailInfo.ResultInfo info){
+    public void setTermsContent(String id) {
+        this.mHashStorage.put(KEY_TERMS_CONTENT, id);
+    }
+
+    public String getTermsContent() {
+        return this.mHashStorage.getString(KEY_TERMS_CONTENT);
+    }
+
+    public void setOption(String id) {
+        this.mHashStorage.put(KEY_OPTIONS, id);
+    }
+
+    public String getOption() {
+        return this.mHashStorage.getString(KEY_OPTIONS);
+    }
+
+    public void setCancelButton(String id) {
+        this.mHashStorage.put(KEY_CANCEL_BUTTON, id);
+    }
+
+    public String getCancelButton() {
+        return this.mHashStorage.getString(KEY_CANCEL_BUTTON);
+    }
+
+    public void setOptionButton(String id) {
+        this.mHashStorage.put(KEY_OPTION_BUTTON, id);
+    }
+
+    public String getOptionButton() {
+        return this.mHashStorage.getString(KEY_OPTION_BUTTON);
+    }
+
+    public void setConfirmButton(String id) {
+        this.mHashStorage.put(KEY_CONFIRM_BUTTON, id);
+    }
+
+    public String getConfirmButton() {
+        return this.mHashStorage.getString(KEY_CONFIRM_BUTTON);
+    }
+
+    public void setBackButton(String id) {
+        this.mHashStorage.put(KEY_BACK_BUTTON, id);
+    }
+
+    public String getBackButton() {
+        return this.mHashStorage.getString(KEY_BACK_BUTTON);
+    }
+
+    public void setTermsTitle(String id) {
+        this.mHashStorage.put(KEY_TERMS_TITLE, id);
+    }
+
+    public String getTermsTitle() {
+        return this.mHashStorage.getString(KEY_TERMS_TITLE);
+    }
+
+    public void setLinkTitle(String id) {
+        this.mHashStorage.put(KEY_LINK_TITLE, id);
+    }
+
+    public String getLinkTitle() {
+        return this.mHashStorage.getString(KEY_LINK_TITLE);
+    }
+
+    public void setOptionTitle(String id) {
+        this.mHashStorage.put(KEY_OPTION_TITLE, id);
+    }
+
+    public String getOptionTitle() {
+        return this.mHashStorage.getString(KEY_OPTION_TITLE);
+    }
+
+    public void setAdvertisingID(String id) {
+        this.mHashStorage.put(KEY_ADVERTISING_ID, id);
+    }
+
+    public String getAdvertisingID() {
+        return this.mHashStorage.getString(KEY_ADVERTISING_ID);
+    }
+
+    public void setPermissionFlag(boolean flag) {
+        this.mHashStorage.put(KEY_REQUEST_PERMISSION, flag);
+    }
+
+    public boolean getPermissionFlag() {
+        return this.mHashStorage.getBoolean(KEY_REQUEST_PERMISSION);
+    }
+
+    /*public void setConsentDataInfo(ConsentDetailInfo.ResultInfo info){
         setData(info, ConsentDetailInfo.ResultInfo.class, KEY_CONSENT_FORM_DATA);
     }
 
     public ConsentDetailInfo.ResultInfo getConsentDataInfo() {
         return getData(ConsentDetailInfo.ResultInfo.class, KEY_CONSENT_FORM_DATA);
-    }
+    }*/
 
 
 

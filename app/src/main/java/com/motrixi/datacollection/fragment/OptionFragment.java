@@ -193,8 +193,17 @@ public class OptionFragment extends Fragment {
         tvConfirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Contants.agreeFlag = true;
+                //Contants.agreeFlag = true;
+                parentActivity.mSession.setAgreeFlag(true);
                 parentActivity.submitFormData();
+
+                if (Contants.mFREContext != null) {
+                    getActivity().finish();
+                }
+
+                if (parentActivity.mSession.getPermissionFlag()) {
+                    getActivity().finish();
+                }
             }
         });
     }
@@ -213,7 +222,7 @@ public class OptionFragment extends Fragment {
         TextView tvTitle = new  TextView(getActivity());
         tvTitle.setTextSize(22F);
 //        tvTitle.text = "Options"
-        tvTitle.setText(Contants.option_page_title);
+        //tvTitle.setText(Contants.option_page_title);
         tvTitle.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams titleParams = new  LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -228,9 +237,9 @@ public class OptionFragment extends Fragment {
 
     private void setData() {
 
-        tvTitle.setText(Contants.option_page_title);
-        tvBack.setText(Contants.back_button_text);
-        tvConfirm.setText(Contants.confirm_button_text);
+        tvTitle.setText(parentActivity.mSession.getOptionTitle());
+        tvBack.setText(parentActivity.mSession.getBackButton());
+        tvConfirm.setText(parentActivity.mSession.getConfirmButton());
 
         contentLayout.removeAllViews();
         for (int i = 0; i < parentActivity.optionArray.length; i++) {

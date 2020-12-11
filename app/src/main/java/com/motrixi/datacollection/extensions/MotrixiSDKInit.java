@@ -1,11 +1,15 @@
 package com.motrixi.datacollection.extensions;
 
+import android.content.Intent;
+
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREInvalidObjectException;
 import com.adobe.fre.FREObject;
 import com.adobe.fre.FRETypeMismatchException;
 import com.adobe.fre.FREWrongThreadException;
+import com.motrixi.datacollection.MotrixiActivity;
+import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.utils.MotrixiSDK;
 
 /**
@@ -20,7 +24,13 @@ public class MotrixiSDKInit implements FREFunction {
         try {
             String msg = objectAry[0].getAsString();
 
-            MotrixiSDK.init(mContext, msg);
+            //MotrixiSDK.init(mContext, msg);
+
+            Contants.mFREContext = mContext;
+            Intent intent = new Intent(mContext.getActivity(), MotrixiActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("key", msg);
+            mContext.getActivity().startActivity(intent);
 
             // 返回值
             result = FREObject.newObject(msg);

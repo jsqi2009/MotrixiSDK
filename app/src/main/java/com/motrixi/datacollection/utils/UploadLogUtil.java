@@ -1,16 +1,9 @@
 package com.motrixi.datacollection.utils;
 
-import android.content.Context;
 import android.provider.Settings;
 
 import com.adobe.fre.FREContext;
-import com.google.gson.JsonObject;
 import com.motrixi.datacollection.content.Contants;
-import com.motrixi.datacollection.network.HttpClient;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * author : Jason
@@ -25,7 +18,7 @@ public class UploadLogUtil {
         String appKey = Contants.APP_KEY;
         String androidID = Settings.System.getString(context.getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        Call<JsonObject> call = HttpClient.uploadLog(context, val, appKey, androidID);
+        /*Call<JsonObject> call = HttpClient.uploadLog(context, val, appKey, androidID);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -37,6 +30,6 @@ public class UploadLogUtil {
 
             }
 
-        });
+        });*/
     }
 }

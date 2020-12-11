@@ -27,13 +27,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void init() {
 
-       MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
+       //MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
 
         textView = findViewById(R.id.tv_reset);
         textView.setOnClickListener(this);
 
-        /*Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);*/
+        Intent intent = new Intent(this, MotrixiActivity.class);
+        intent.putExtra("key", "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
+        startActivity(intent);
     }
 
     @Override

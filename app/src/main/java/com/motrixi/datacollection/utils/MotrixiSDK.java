@@ -4,17 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.adobe.fre.FREContext;
-import com.google.gson.JsonObject;
 import com.motrixi.datacollection.DataCollectionActivity;
 import com.motrixi.datacollection.content.Contants;
-import com.motrixi.datacollection.content.Session;
 import com.motrixi.datacollection.listener.OnLogListener;
 import com.motrixi.datacollection.network.GetMethodUtils;
-import com.motrixi.datacollection.network.HttpClient;
 import com.motrixi.datacollection.network.PostMethodUtils;
-import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 import com.motrixi.datacollection.service.MotrixiService;
 
 import org.json.JSONException;
@@ -22,11 +19,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * author : Jason
@@ -38,18 +30,33 @@ public class MotrixiSDK {
     //private static Session mSession;
     //private var onAppkeyListener: OnAppkeyListener? = null
 
-    public static void init(FREContext context, String appKey) {
+    public static void init(final FREContext context, String appKey) {
 
         Contants.mFREContext = context;
         Contants.APP_KEY = appKey;
+
+        Toast.makeText(context.getActivity(), appKey, Toast.LENGTH_SHORT).show();
 
         //HttpClient.init();
         //mSession = new Session(context);
 
         //get consent form data
-        consentFormDetails(context, appKey);
+        //consentFormDetails(context, appKey);
 
-        verifyKey(context);
+        /*Locale locale = Locale.getDefault();
+        final String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();*/
+        Toast.makeText(context.getActivity(), "start get consent details", Toast.LENGTH_SHORT).show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg = GetMethodUtils.httpGet(Contants.CONSENT_DETAIL_API, "en");
+                //Log.d("form details", msg);
+                formatConsentData(context, msg);
+            }
+        }).start();
+
+//        verifyKey(context);
 
         //mSession!!.appKey = appKey
 
@@ -113,100 +120,7 @@ public class MotrixiSDK {
         }
     }
 
-    /**
-     * verify the app key via API
-     */
-    private static void verifyAppkey(final FREContext context, String key) {
 
-        Log.d("app_key", key);
-        //UploadLogUtil.uploadLogData(context, key);
-        final Call<JsonObject> call = HttpClient.verifyAppkey(key);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        Log.d("verify success", response.body().toString());
-                        JSONObject responseObject = new JSONObject(response.body().toString());
-                        JSONObject resultObject = responseObject.optJSONObject("result");
-                        String appID = resultObject.optString("id");
-                        Contants.APP_ID = appID;
-                        Log.d("app_id", appID);
-
-                        if (Contants.onLogListener != null) {
-                            boolean flag = responseObject.optBoolean("success");
-
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, flag, responseObject.optString("message")));
-                        }
-
-                        if (responseObject.optBoolean("success")) {
-                            checkIsAgree(context);
-                        }
-
-                    } else {
-                        JSONObject error = new JSONObject(String.valueOf(response.errorBody()));
-                        Log.d("verify failure", error.optString("message"));
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, false, error.optString("message")));
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("verify key", "failure");
-            }
-        });
-    }
-
-    private static void verifyAppkey(final Context context, String key) {
-
-        Log.d("app_key", key);
-        //UploadLogUtil.uploadLogData(context, key);
-        final Call<JsonObject> call = HttpClient.verifyAppkey(key);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        Log.d("verify success", response.body().toString());
-                        JSONObject responseObject = new JSONObject(response.body().toString());
-                        JSONObject resultObject = responseObject.optJSONObject("result");
-                        String appID = resultObject.optString("id");
-                        Contants.APP_ID = appID;
-                        Log.d("app_id", appID);
-
-                        if (Contants.onLogListener != null) {
-                            boolean flag = responseObject.optBoolean("success");
-
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, flag, responseObject.optString("message")));
-                        }
-
-                        if (responseObject.optBoolean("success")) {
-                            checkIsAgree(context);
-                        }
-
-                    } else {
-                        JSONObject error = new JSONObject(String.valueOf(response.errorBody()));
-                        Log.d("verify failure", error.optString("message"));
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, false, error.optString("message")));
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("verify key", "failure");
-            }
-        });
-    }
 
     private static void verifyKey(final Context context) {
         new Thread(new Runnable() {
@@ -245,6 +159,7 @@ public class MotrixiSDK {
                 JSONObject resultObject = object.optJSONObject("result");
                 String appID = resultObject.optString("id");
                 Contants.APP_ID = appID;
+
                 if (object.optBoolean("success")) {
                     checkIsAgree(context);
                 }
@@ -262,6 +177,14 @@ public class MotrixiSDK {
                 JSONObject resultObject = object.optJSONObject("result");
                 String appID = resultObject.optString("id");
                 Contants.APP_ID = appID;
+
+                context.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context.getActivity(), Contants.APP_ID, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 if (object.optBoolean("success")) {
                     checkIsAgree(context);
                 }
@@ -278,6 +201,9 @@ public class MotrixiSDK {
             @Override
             public void run() {
                 try {
+
+                    Toast.makeText(context.getActivity(), "check whether show ", Toast.LENGTH_SHORT).show();
+
                     boolean flag = Contants.agreeFlag;
                     if (!flag) {
                         Intent intent = new Intent(context.getActivity(), DataCollectionActivity.class);
@@ -354,14 +280,16 @@ public class MotrixiSDK {
 
     private static void consentFormDetails(final FREContext context, String appKey) {
 
-        Locale locale = Locale.getDefault();
-        final String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();
+        /*Locale locale = Locale.getDefault();
+        final String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();*/
+
+        Toast.makeText(context.getActivity(), "start get consent details", Toast.LENGTH_SHORT).show();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String msg = GetMethodUtils.httpGet(Contants.CONSENT_DETAIL_API, lan);
-                Log.d("form details", msg);
+                String msg = GetMethodUtils.httpGet(Contants.CONSENT_DETAIL_API, "en");
+                //Log.d("form details", msg);
                 formatConsentData(context, msg);
             }
         }).start();
@@ -415,7 +343,16 @@ public class MotrixiSDK {
 
                 Log.e("options", Contants.options);
 
-                //verifyKey(context);
+
+
+                context.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context.getActivity(), Contants.options, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                verifyKey(context);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -424,83 +361,7 @@ public class MotrixiSDK {
     }
 
 
-    private static void getConsentDataList(final FREContext context, final String appKey) {
 
-        final Call<ConsentDetailInfo> call = HttpClient.fetchConsentData();
-        call.enqueue(new Callback<ConsentDetailInfo>() {
-            @Override
-            public void onResponse(Call<ConsentDetailInfo> call, Response<ConsentDetailInfo> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        Log.d("result", String.valueOf(response.body().result));
-                        //mSession.setConsentDataInfo(response.body().result);
-                        Contants.formInfo = response.body().result;
-
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, response.body().result.toString()));
-                        }
-
-                        //UploadLogUtil.uploadLogData(context, "get consent form data success ");
-
-                        verifyAppkey(context, appKey);
-                    } else {
-
-                        //UploadLogUtil.uploadLogData(context, "get consent form data failure ");
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, response.body().result.toString()));
-                        }
-                    }
-                } catch (Exception e) {
-                    //UploadLogUtil.uploadLogData(context, e.getMessage().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ConsentDetailInfo> call, Throwable t) {
-                Log.d("fetch consent", "failure");
-                //UploadLogUtil.uploadLogData(context, t.getMessage().toString());
-            }
-        });
-    }
-
-    private static void getConsentDataList(final Context context, final String appKey) {
-
-        final Call<ConsentDetailInfo> call = HttpClient.fetchConsentData();
-        call.enqueue(new Callback<ConsentDetailInfo>() {
-            @Override
-            public void onResponse(Call<ConsentDetailInfo> call, Response<ConsentDetailInfo> response) {
-                try {
-                    if (response.isSuccessful()) {
-                        Log.d("result", String.valueOf(response.body().result));
-                        //mSession.setConsentDataInfo(response.body().result);
-                        Contants.formInfo = response.body().result;
-
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, response.body().result.toString()));
-                        }
-
-                        //UploadLogUtil.uploadLogData(context, "get consent form data success ");
-
-                        verifyAppkey(context, appKey);
-                    } else {
-
-                        //UploadLogUtil.uploadLogData(context, "get consent form data failure ");
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, response.body().result.toString()));
-                        }
-                    }
-                } catch (Exception e) {
-                    //UploadLogUtil.uploadLogData(context, e.getMessage().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ConsentDetailInfo> call, Throwable t) {
-                Log.d("fetch consent", "failure");
-                //UploadLogUtil.uploadLogData(context, t.getMessage().toString());
-            }
-        });
-    }
 
     public static void setOnLogListener() {
 

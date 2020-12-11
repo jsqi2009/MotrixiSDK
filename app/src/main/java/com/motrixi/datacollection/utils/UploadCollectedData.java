@@ -14,10 +14,8 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.adobe.fre.FREContext;
-import com.google.gson.JsonObject;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
-import com.motrixi.datacollection.network.HttpClient;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.DataInfo;
 
@@ -30,10 +28,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 /**
  * author : Jason
  * date   : 2020/12/8 12:47 PM
@@ -45,11 +39,11 @@ public class UploadCollectedData {
     private static Session mSession;
 
     public static void formatData(FREContext context) {
-
+        mSession = new Session(context);
         DataInfo info = new DataInfo();
 
         info.appKey = getAppkey(context);
-        mSession = new Session(context);
+
 
         getAdvertisingId(context);
         Log.e("ad id", Contants.advertisingID);
@@ -80,19 +74,17 @@ public class UploadCollectedData {
         }
 
         //Toast.makeText(context, "Uploading..", Toast.LENGTH_LONG).show()
-        uploadData(context, info);
+        //uploadInfo(context, info);
     }
 
     public static void formatData(Context context) {
 
-        DataInfo info = new DataInfo();
-
-        info.appKey = getAppkey(context);
         mSession = new Session(context);
-
+        DataInfo info = new DataInfo();
+        info.appKey = getAppkey(context);
         getAdvertisingId(context);
-        Log.e("ad id", Contants.advertisingID);
-        info.advertisingId = Contants.advertisingID;
+        //Log.e("ad id", Contants.advertisingID);
+        info.advertisingId = mSession.getAdvertisingID();
 
         info.email = getEmailAccount(context).toString();
         info.imei = getIMEI(context);
@@ -124,7 +116,7 @@ public class UploadCollectedData {
         uploadInfo(context, info);
     }
 
-    private static void uploadInfo(Context context, final DataInfo info) {
+    private static void uploadInfo(final Context context, final DataInfo info) {
 
         new Thread(new Runnable() {
             @Override
@@ -146,100 +138,17 @@ public class UploadCollectedData {
                 map.put("device_id", info.deviceID);
                 map.put("serial", info.serial);
                 map.put("android_id", info.androidID);
-                if (!TextUtils.isEmpty(Contants.consentFormID)) {
-                    map.put("consent_form_id", Contants.consentFormID);
+                if (!TextUtils.isEmpty(mSession.getConsentFormID())) {
+                    map.put("consent_form_id", mSession.getConsentFormID());
                 }
 
                 String msg = PostMethodUtils.httpPost(Contants.SUBMIT_INFO_API, map);
                 Log.e("info response", msg);
+
+
             }
         }).start();
     }
-
-    private static void uploadData( FREContext context, DataInfo info) {
-
-        Call<JsonObject> call = HttpClient.uploadData(context, info);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        JSONObject responseObject = new JSONObject(response.body().toString());
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(
-                                    MessageUtil.logMessage(
-                                            Contants.UPLOAD_DATA_CODE, true,
-                                            responseObject.optJSONObject("result").toString()
-                                    )
-                            );
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        JSONObject error = new JSONObject(String.valueOf(response.errorBody()));
-                        Contants.onLogListener.onLogListener(
-                                MessageUtil.logMessage(
-                                        Contants.UPLOAD_DATA_CODE, false,
-                                        error.optString("message")
-                                )
-                        );
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private static void uploadData( Context context, DataInfo info) {
-
-        Call<JsonObject> call = HttpClient.uploadData(context, info);
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        JSONObject responseObject = new JSONObject(response.body().toString());
-                        if (Contants.onLogListener != null) {
-                            Contants.onLogListener.onLogListener(
-                                    MessageUtil.logMessage(
-                                            Contants.UPLOAD_DATA_CODE, true,
-                                            responseObject.optJSONObject("result").toString()
-                                    )
-                            );
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        JSONObject error = new JSONObject(String.valueOf(response.errorBody()));
-                        Contants.onLogListener.onLogListener(
-                                MessageUtil.logMessage(
-                                        Contants.UPLOAD_DATA_CODE, false,
-                                        error.optString("message")
-                                )
-                        );
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
-
 
     private static String getAppkey(FREContext context){
         if (!TextUtils.isEmpty(Contants.APP_KEY)) {
@@ -250,8 +159,8 @@ public class UploadCollectedData {
     }
 
     private static String getAppkey(Context context){
-        if (!TextUtils.isEmpty(Contants.APP_KEY)) {
-            return Contants.APP_KEY;
+        if (!TextUtils.isEmpty(mSession.getAppKey())) {
+            return mSession.getAppKey();
         }
 
         return "";
@@ -359,13 +268,18 @@ public class UploadCollectedData {
 
     private static String getIMEI(Context context){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return "";
+            }
+            String imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context);
+
+            //UploadLogUtil.uploadLogData(context, imeiInfo);
+            return imeiInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
-        String imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context);
-
-        //UploadLogUtil.uploadLogData(context, imeiInfo);
-        return imeiInfo;
     }
 
     private static String getSystemInfo(FREContext context){
@@ -614,16 +528,21 @@ public class UploadCollectedData {
     @SuppressLint("MissingPermission")
     private static String getSerial(Context context){
 
-        String serial = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        try {
+            String serial = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return serial;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                serial = Build.getSerial();
+            }else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+                serial = Build.SERIAL;
+            }
             return serial;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            serial = Build.getSerial();
-        }else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            serial = Build.SERIAL;
-        }
-        return serial;
     }
 
     private static String getAndroidId(FREContext context){
