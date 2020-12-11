@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 
@@ -251,7 +252,7 @@ public class DataCollectionActivity extends FragmentActivity {
     }
 
     public void initPermission() {
-        //mSession.setSyncTime(new Date().getTime());
+        mSession.setSyncTime(new Date().getTime());
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

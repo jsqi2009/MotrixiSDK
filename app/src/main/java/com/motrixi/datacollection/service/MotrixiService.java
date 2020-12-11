@@ -37,12 +37,14 @@ public class MotrixiService extends Service {
     private int id = 100;
     //    private val TIME_VALUE: Long = 24*60*60*1000
     private static Long TIME_VALUE = Long.valueOf(10*60*1000);
+    private Session session;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.e("oncreate","create service");
 
+        session = new Session(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setForeground();
         }
@@ -91,7 +93,8 @@ public class MotrixiService extends Service {
                 @Override
                 public void run() {
                     long currentTime = new Date().getTime();
-                    long lastTime = lastSyncTime;
+                    //long lastTime = lastSyncTime;
+                    long lastTime = session.getSyncTime();
                     if (lastTime == 0) {
                         Log.d("not confirm", "have not confirm");
                         return;
@@ -100,8 +103,8 @@ public class MotrixiService extends Service {
 
                         Log.d("service", "start service");
                         //UploadLogUtil.uploadLogData(Contants.mFREContext, "uploading data");
-                        lastSyncTime = new Date().getTime();
-                        //mSession.setSyncTime(new Date().getTime());
+                        //lastSyncTime = new Date().getTime();
+                        session.setSyncTime(new Date().getTime());
                         if (Contants.mFREContext != null) {
                             UploadCollectedData.formatData(getApplicationContext());
                         } else {

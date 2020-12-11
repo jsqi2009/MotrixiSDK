@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.adobe.fre.FREContext;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.extensions.MotrixiSDKInit;
 import com.motrixi.datacollection.listener.OnLogListener;
 import com.motrixi.datacollection.network.GetMethodUtils;
 import com.motrixi.datacollection.network.PostMethodUtils;
@@ -65,7 +66,7 @@ public class MotrixiActivity extends FragmentActivity {
         //Contants.APP_KEY = appKey;
         consentFormDetails();
 
-        //startService();
+        startService();
     }
 
     /**
@@ -152,12 +153,9 @@ public class MotrixiActivity extends FragmentActivity {
 
                 Log.e("options", Contants.options);
 
-                /*mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(mActivity, Contants.options, Toast.LENGTH_SHORT).show();
-                    }
-                });*/
+                if (Contants.mFREContext != null) {
+                    //MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("option", mSession.getOption());
+                }
 
                 verifyKey();
 
