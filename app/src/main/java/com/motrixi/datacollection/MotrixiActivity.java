@@ -154,7 +154,7 @@ public class MotrixiActivity extends FragmentActivity {
                 Log.e("options", Contants.options);
 
                 if (Contants.mFREContext != null) {
-                    //MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("option", mSession.getOption());
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("option", mSession.getOption());
                 }
 
                 verifyKey();
