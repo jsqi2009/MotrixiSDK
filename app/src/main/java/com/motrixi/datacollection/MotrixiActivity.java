@@ -19,6 +19,7 @@ import com.motrixi.datacollection.network.GetMethodUtils;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.service.MotrixiService;
 import com.motrixi.datacollection.utils.AdvertisingIdUtil;
+import com.motrixi.datacollection.utils.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,7 +162,8 @@ public class MotrixiActivity extends FragmentActivity {
                 Log.e("options", Contants.options);
 
                 if (Contants.mFREContext != null) {
-                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("option", mSession.getOption());
+                    String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, detail);
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
                 }
 
                 verifyKey();
@@ -170,7 +172,10 @@ public class MotrixiActivity extends FragmentActivity {
                 e.printStackTrace();
             }
         } else {
-
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, "get consent form data failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+            }
         }
     }
 
@@ -205,12 +210,30 @@ public class MotrixiActivity extends FragmentActivity {
                     }
                 });*/
 
+
+
                 if (object.optBoolean("success")) {
+
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.APP_KEY_CODE, true, detail);
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("verify appkey", result);
+                    }
+
                     checkIsAgree();
+                } else {
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.APP_KEY_CODE, false, detail);
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("verify appkey", result);
+                    }
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        } else {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.APP_KEY_CODE, false, "verify appkey failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("verify appkey", result);
             }
         }
     }

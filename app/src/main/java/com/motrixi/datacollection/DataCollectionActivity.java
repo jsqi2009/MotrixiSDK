@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.extensions.MotrixiSDKInit;
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
@@ -213,6 +214,11 @@ public class DataCollectionActivity extends FragmentActivity {
 //                Contants.consentFormID = consentFormID;
                 mSession.setConsentFormID(consentFormID);
 
+                if (Contants.mFREContext != null) {
+                    String result = MessageUtil.logMessage(Contants.CONSENT_FORM_CODE, true, detail);
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("upload form data", result);
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -222,6 +228,11 @@ public class DataCollectionActivity extends FragmentActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        } else {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.CONSENT_FORM_CODE, false, "upload form data failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("upload form data", result);
             }
         }
     }
@@ -245,6 +256,18 @@ public class DataCollectionActivity extends FragmentActivity {
                             MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true, responseObject.optString("message"))
                     );
                 }*/
+
+                if (msg != Contants.RESPONSE_ERROR) {
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, true, msg);
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("cancel", result);
+                    }
+                } else {
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.CANCEL_COLLECT_DATA, false, "cancel failure");
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("cancel", result);
+                    }
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override

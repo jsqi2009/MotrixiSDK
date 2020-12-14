@@ -29,6 +29,7 @@ public class MotrixiSDKInit implements FREFunction {
 
             //MotrixiSDK.init(mContext, msg);
             sdkContext = (MotrixiSDKContext) mContext;
+            Contants.mFREContext = mContext;
 
             Contants.mFREContext = mContext;
             Intent intent = new Intent(mContext.getActivity(), MotrixiActivity.class);

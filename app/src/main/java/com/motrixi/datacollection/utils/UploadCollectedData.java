@@ -16,6 +16,7 @@ import android.util.Patterns;
 import com.adobe.fre.FREContext;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.extensions.MotrixiSDKInit;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.DataInfo;
 
@@ -144,6 +145,18 @@ public class UploadCollectedData {
 
                 String msg = PostMethodUtils.httpPost(Contants.SUBMIT_INFO_API, map);
                 Log.e("info response", msg);
+
+                if (msg != Contants.RESPONSE_ERROR) {
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.UPLOAD_DATA_CODE, true, msg);
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("upload info", result);
+                    }
+                } else {
+                    if (Contants.mFREContext != null) {
+                        String result = MessageUtil.logMessage(Contants.UPLOAD_DATA_CODE, false, "cancel failure");
+                        MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("upload info", result);
+                    }
+                }
 
 
             }

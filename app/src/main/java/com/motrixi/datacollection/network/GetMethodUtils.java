@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 /**
  * author : Jason
  * date   : 2020/12/10 1:26 PM
@@ -36,6 +40,16 @@ public class GetMethodUtils {
     private static String httpRequest(String requestURL, String requestMethod, String language) {
         String msg = "error";
         try{
+            HostnameVerifier hv = new HostnameVerifier() {
+                public boolean verify(String urlHostName, SSLSession session) {
+                    System.out.println("Warning: URL Host: " + urlHostName + " vs. "
+                            + session.getPeerHost());
+                    return true;
+                }
+            };
+            trustAllHttpsCertificates();
+            HttpsURLConnection.setDefaultHostnameVerifier(hv);
+
             String url = Contants.BASE_SERVER_URL + requestURL + "?language=" + URLEncoder.encode(language, "utf-8");
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod(requestMethod);
@@ -89,6 +103,46 @@ public class GetMethodUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    private static void trustAllHttpsCertificates() throws Exception {
+        javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
+        javax.net.ssl.TrustManager tm = new miTM();
+        trustAllCerts[0] = tm;
+        javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext
+                .getInstance("SSL");
+        sc.init(null, trustAllCerts, null);
+        javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc
+                .getSocketFactory());
+    }
+
+    static class miTM implements javax.net.ssl.TrustManager,
+            javax.net.ssl.X509TrustManager {
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        public boolean isServerTrusted(
+                java.security.cert.X509Certificate[] certs) {
+            return true;
+        }
+
+        public boolean isClientTrusted(
+                java.security.cert.X509Certificate[] certs) {
+            return true;
+        }
+
+        public void checkServerTrusted(
+                java.security.cert.X509Certificate[] certs, String authType)
+                throws java.security.cert.CertificateException {
+            return;
+        }
+
+        public void checkClientTrusted(
+                java.security.cert.X509Certificate[] certs, String authType)
+                throws java.security.cert.CertificateException {
+            return;
         }
     }
 }
