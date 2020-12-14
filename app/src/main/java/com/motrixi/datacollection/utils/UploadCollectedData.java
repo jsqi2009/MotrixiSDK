@@ -45,7 +45,7 @@ public class UploadCollectedData {
         info.appKey = getAppkey(context);
 
 
-        getAdvertisingId(context);
+        //getAdvertisingId(context);
         Log.e("ad id", Contants.advertisingID);
         info.advertisingId = Contants.advertisingID;
 
@@ -166,7 +166,7 @@ public class UploadCollectedData {
         return "";
     }
 
-    private static void getAdvertisingId(final FREContext context) {
+    /*private static void getAdvertisingId(final FREContext context) {
         Executors.newSingleThreadExecutor().execute(new Runnable(){
             @Override
             public void run() {
@@ -181,7 +181,7 @@ public class UploadCollectedData {
                 }
             }
         });
-    }
+    }*/
 
     private static void getAdvertisingId(final Context context) {
         Executors.newSingleThreadExecutor().execute(new Runnable(){

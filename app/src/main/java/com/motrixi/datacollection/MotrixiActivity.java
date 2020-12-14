@@ -18,12 +18,17 @@ import com.motrixi.datacollection.listener.OnLogListener;
 import com.motrixi.datacollection.network.GetMethodUtils;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.service.MotrixiService;
+import com.motrixi.datacollection.utils.AdvertisingIdUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MotrixiActivity extends FragmentActivity {
 
@@ -68,6 +73,8 @@ public class MotrixiActivity extends FragmentActivity {
 
         startService();
     }
+
+
 
     /**
      * set listener
@@ -162,6 +169,8 @@ public class MotrixiActivity extends FragmentActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+
         }
     }
 

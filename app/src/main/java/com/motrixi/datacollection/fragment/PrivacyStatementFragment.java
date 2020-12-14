@@ -157,6 +157,7 @@ public class PrivacyStatementFragment extends Fragment {
         scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
+        scrollView.setBackgroundColor(Color.rgb(255, 255, 255));
         privateLayout.addView(scrollView);
 
         LinearLayout contentLayout = new LinearLayout(getActivity());
@@ -168,11 +169,13 @@ public class PrivacyStatementFragment extends Fragment {
         contentParams.setMargins(DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15),
                 DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15));
         contentLayout.setLayoutParams(contentParams);
+
         scrollView.addView(contentLayout);
 
         tvContent1 = new TextView(getActivity());
         //tvContent1.text = style
         tvContent1.setTextSize(18F);
+        tvContent1.setTextColor(Color.BLACK);
         tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         contentLayout.addView(tvContent1);
 
@@ -184,6 +187,7 @@ public class PrivacyStatementFragment extends Fragment {
         );
         bottomParams.addRule(ALIGN_PARENT_BOTTOM);
         bottomLayout.setLayoutParams(bottomParams);
+        bottomLayout.setBackgroundColor(Color.rgb(255, 255, 255));
         bottomLayout.setGravity(CENTER);
 
         tvCancel = new TextView(getActivity());

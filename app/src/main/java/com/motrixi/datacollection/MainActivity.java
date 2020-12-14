@@ -35,6 +35,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Intent intent = new Intent(this, MotrixiActivity.class);
         intent.putExtra("key", "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
         startActivity(intent);
+
+        //MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");
     }
 
     @Override

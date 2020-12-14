@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 /**
  * author : Jason
@@ -82,6 +83,29 @@ public class MotrixiSDK {
         //init ad id
 
         //verifyAppkey(context, appKey)
+    }
+
+    /**
+     * get the AdvertisingId
+     */
+    private static void getAdvertisingId(final Context context) {
+        try {
+            Executors.newSingleThreadExecutor().execute(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        Log.e("google Id:", "getting....");
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(context);
+                        Log.e("google Id:", googleId);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("TAG", e.getMessage());
+                    }
+                }
+            });
+        } catch ( Exception e) {
+        }
     }
 
 

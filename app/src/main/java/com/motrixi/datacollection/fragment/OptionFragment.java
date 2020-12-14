@@ -130,6 +130,7 @@ public class OptionFragment extends Fragment {
         scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
+        scrollView.setBackgroundColor(Color.rgb(255, 255, 255));
         optionLayout.addView(scrollView);
 
         contentLayout = new  LinearLayout(getActivity());
@@ -151,6 +152,7 @@ public class OptionFragment extends Fragment {
         );
         bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         bottomLayout.setLayoutParams(bottomParams);
+        bottomLayout.setBackgroundColor(Color.rgb(255, 255, 255));
         bottomLayout.setGravity(Gravity.CENTER);
 
         tvBack = new TextView(getActivity());

@@ -37,6 +37,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class DataCollectionActivity extends FragmentActivity {
 
@@ -79,6 +82,8 @@ public class DataCollectionActivity extends FragmentActivity {
         setContentView(rootLayout);
 
         initView();
+
+        getAdvertisingId(mSharedMainActivity);
     }
 
     @Override
@@ -88,25 +93,53 @@ public class DataCollectionActivity extends FragmentActivity {
             mSharedMainActivity = this; // new WeakReference<>(this);
         }
 
-        getAdvertisingId(this);
+        //getAdvertisingId(this);
+        //getAdvertisingId();
     }
 
     /**
      * get the AdvertisingId
      */
-    private void getAdvertisingId(Context context) {
+    private void getAdvertisingId() {
+        try {
+
+            ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(mSharedMainActivity);
+                        Log.e("google Id:", googleId);
+                        mSession.setAdvertisingID(googleId);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 0, TimeUnit.MILLISECONDS);
+        } catch ( Exception e) {
+        }
+    }
+
+    /**
+     * get the AdvertisingId
+     */
+    private void getAdvertisingId(final Context context) {
         try {
             Executors.newSingleThreadExecutor().execute(new Runnable(){
                 @Override
                 public void run() {
                     try {
-                        String googleId = AdvertisingIdUtil.getGoogleAdId(getSharedMainActivity());
-                        Log.d("google Id:", googleId);
+                        Log.e("google Id:", "getting....");
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(getApplicationContext());
+                        Log.e("google Id:", googleId);
+
 //                        Contants.advertisingID = googleId;
                         mSession.setAdvertisingID(googleId);
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.e("TAG", e.getMessage());
                     }
                 }
             });
