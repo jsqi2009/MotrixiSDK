@@ -55,7 +55,8 @@ class DataCollectionActivity : AppCompatActivity() {
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.READ_CONTACTS,
-        Manifest.permission.FOREGROUND_SERVICE
+        Manifest.permission.FOREGROUND_SERVICE,
+        Manifest.permission.GET_ACCOUNTS
     )
     private val request_code = 1
     var mPermissionList: ArrayList<String> = ArrayList()
@@ -241,6 +242,8 @@ class DataCollectionActivity : AppCompatActivity() {
                             )
                         )
                     }
+
+                    //stopService(Contants.startService)
                 } else {
                     var errorObject = JSONObject(response.errorBody()!!.string())
 

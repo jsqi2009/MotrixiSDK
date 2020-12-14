@@ -72,12 +72,12 @@ object MotrixiSDK {
      * start the foreground service
      */
     private fun startService(context: Context) {
-        val startService = Intent(context, MotrixiService::class.java)
+        Contants.startService = Intent(context, MotrixiService::class.java)
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(startService)
+            context.startForegroundService(Contants.startService)
             UploadLogUtil.uploadLogData(context, "startForegroundService ")
         } else {
-            context.startService(startService)
+            context.startService(Contants.startService)
             UploadLogUtil.uploadLogData(context, "startService")
         }
     }

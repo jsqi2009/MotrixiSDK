@@ -119,5 +119,10 @@ class MotrixiService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        if (startUploadExecutor != null) {
+            startUploadExecutor!!.shutdownNow()
+        }
+
     }
 }

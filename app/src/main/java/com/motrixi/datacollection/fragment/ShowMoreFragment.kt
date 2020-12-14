@@ -1,6 +1,7 @@
 package com.motrixi.datacollection.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,16 +12,14 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.NetworkUtil
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,6 +42,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     lateinit var webView: WebView
     private var actionBarLayout: LinearLayout? = null
     private var mSession: Session? = null
+    private val bar: ProgressBar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +123,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
             }
         })
 
+
         //initView()
     }
 
@@ -200,6 +201,16 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     }
 
     private val webClient = object : WebViewClient() {
+
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+
+        }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+        }
+
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
             Log.d(TAG, url!!)
             return false

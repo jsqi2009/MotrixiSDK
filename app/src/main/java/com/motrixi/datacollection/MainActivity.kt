@@ -1,6 +1,7 @@
 package com.motrixi.datacollection
 
 import android.accounts.Account
+import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -12,12 +13,11 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import com.motrixi.datacollection.feature.SystemInfoActivity
-import com.motrixi.datacollection.listener.OnAppkeyListener
 import com.motrixi.datacollection.listener.OnLogListener
 import com.motrixi.datacollection.network.ManifestMetaReader
-import com.motrixi.datacollection.network.models.LogInfo
 import com.motrixi.datacollection.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Executors
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 //初始化
 //        MotrixiSDK.init(this, "7536f220-27b5-11eb-96a9-6d9cb391fb34")
-        MotrixiSDK.init(this, "18ba65a0-2fb6-11eb-a0f2-ab567e7179a3")
+        MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec")
 //        MotrixiSDK.init(this, "123")
 
         //MotrixiSDK.init(上下文对象, "appKey")
@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val emailAccount: ArrayList<String> = ArrayList()
                 if (accounts.isNotEmpty()) {
                     for (account in accounts) {
+                        Log.e("account filter", account.name)
                         if (emailPattern.matcher(account.name).matches()) {
                             Log.e("account", account.name)
                             emailAccount.add(account.name)
@@ -141,6 +142,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     email_value.text = emailAccount.toString()
                 }
+
+
+
 
             }
             R.id.tv_google_ad_id -> {
@@ -249,4 +253,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("lzx", "onActivityResult ")
+        if (requestCode == 10 && resultCode == Activity.RESULT_OK) {
+            // Receiving a result from the AccountPicker
+            Log.e(
+                "email",
+                "KEY_ACCOUNT_NAME " + data!!.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+            )
+            Log.e(
+                "email",
+                "KEY_ACCOUNT_TYPE " + data.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE)
+            )
+            val accounts =
+                AccountManager.get(this).getAccountsByType("com.android.email")
+        }
+    }
+
 }

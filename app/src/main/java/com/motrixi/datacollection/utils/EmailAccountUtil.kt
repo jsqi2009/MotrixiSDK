@@ -17,6 +17,7 @@ object EmailAccountUtil {
         try {
             val accounts = AccountManager.get(context).accounts
 
+
             return accounts
         } catch (e: Exception) {
             return arrayOf()

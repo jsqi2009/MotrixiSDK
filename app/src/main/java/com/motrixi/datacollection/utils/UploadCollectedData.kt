@@ -158,13 +158,18 @@ object UploadCollectedData {
 
     private fun getIMEI(context: Context): String {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        try {
+            Log.e("version", Build.VERSION_CODES.Q.toString())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return ""
+            }
+            val imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context)
+
+            UploadLogUtil.uploadLogData(context, "imeiInfo:$imeiInfo")
+            return imeiInfo
+        } catch (e: Exception) {
             return ""
         }
-        val imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context)
-
-        UploadLogUtil.uploadLogData(context, "imeiInfo:$imeiInfo")
-        return imeiInfo
     }
 
     private fun getSystemInfo(context: Context): String? {
@@ -273,16 +278,20 @@ object UploadCollectedData {
     @SuppressLint("MissingPermission")
     private fun getSerial(context: Context): String {
 
-        var serial = ""
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        try {
+            var serial = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return serial
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                serial = Build.getSerial()
+            }else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+                serial = Build.SERIAL
+            }
             return serial
+        } catch (e: Exception) {
+            return ""
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            serial = Build.getSerial()
-        }else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            serial = Build.SERIAL
-        }
-        return serial
     }
 
     private fun getAndroidId(context: Context): String {
