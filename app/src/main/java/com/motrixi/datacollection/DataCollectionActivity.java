@@ -131,7 +131,7 @@ public class DataCollectionActivity extends FragmentActivity {
                 public void run() {
                     try {
                         Log.e("google Id:", "getting....");
-                        String googleId = AdvertisingIdUtil.getGoogleAdId(getApplicationContext());
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(context.getApplicationContext());
                         Log.e("google Id:", googleId);
 
 //                        Contants.advertisingID = googleId;
