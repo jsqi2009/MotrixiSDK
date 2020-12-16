@@ -1,6 +1,8 @@
 package com.motrixi.datacollection.fragment
 
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
@@ -20,6 +22,7 @@ import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
+import com.motrixi.datacollection.service.MotrixiService
 import com.motrixi.datacollection.utils.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -277,9 +280,17 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
-//                var checkedValue = getCheckedValue()
-//                parentActivity!!.submitConsentFormData(checkedValue)
+                if (!mSession!!.isCollecting) {
+                    Log.e("start service", "start service")
+                    var startService: Intent = Intent(activity, MotrixiService::class.java)
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        activity!!.startForegroundService(startService)
+                    } else {
+                        activity!!.stopService(startService)
+                    }
 
+                }
+                mSession!!.isCollecting = true
                 if (parentActivity!!.optionArray.size > 0) {
                     var checkedValue = parentActivity!!.getOptionValue()
                     parentActivity!!.submitConsentFormData(checkedValue)

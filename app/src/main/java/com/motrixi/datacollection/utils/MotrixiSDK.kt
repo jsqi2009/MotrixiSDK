@@ -72,12 +72,12 @@ object MotrixiSDK {
      * start the foreground service
      */
     private fun startService(context: Context) {
-        Contants.startService = Intent(context, MotrixiService::class.java)
+        var startService = Intent(context, MotrixiService::class.java)
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(Contants.startService)
+            context.startForegroundService(startService)
             UploadLogUtil.uploadLogData(context, "startForegroundService ")
         } else {
-            context.startService(Contants.startService)
+            context.startService(startService)
             UploadLogUtil.uploadLogData(context, "startService")
         }
     }
@@ -148,6 +148,7 @@ object MotrixiSDK {
                     if (Contants.onLogListener != null) {
                         Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, false, error.optString("message")))
                     }
+                    UploadLogUtil.uploadLogData(context, error.optString("message"))
                 }
             }
         })

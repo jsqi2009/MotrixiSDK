@@ -1,7 +1,9 @@
 package com.motrixi.datacollection.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
@@ -25,6 +27,7 @@ import com.motrixi.datacollection.DataCollectionActivity
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
+import com.motrixi.datacollection.service.MotrixiService
 import com.motrixi.datacollection.utils.CustomStyle
 import com.motrixi.datacollection.utils.DisplayUtil
 
@@ -260,9 +263,14 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
             }
         })
 
-        tvCancel.setOnClickListener(object : View.OnClickListener{
+        tvCancel.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 mSession!!.agreeFlag = true
+                Log.e("stop service", "stop service")
+                var startService: Intent = Intent(activity, MotrixiService::class.java)
+                activity!!.stopService(startService)
+                mSession!!.isCollecting = false
+
                 parentActivity!!.rejectCollect()
                 activity!!.finish()
             }
@@ -271,18 +279,20 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
-                var formValue = ""
-                /*if (mSession!!.viewOptionsFlag) {
+                if (!mSession!!.isCollecting) {
+                    Log.e("start service", "start service")
+                    var startService: Intent = Intent(activity, MotrixiService::class.java)
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        activity!!.startForegroundService(startService)
+                    } else {
+                        activity!!.stopService(startService)
+                    }
 
-                    formValue = parentActivity!!.getCheckedValue()
-                } else {
-                    formValue = parentActivity!!.OPTION_VALUE_1 + "|" + parentActivity!!.OPTION_VALUE_2 + "|" +
-                            parentActivity!!.OPTION_VALUE_3 + "|" + parentActivity!!.OPTION_VALUE_4 + "|" +
-                            parentActivity!!.OPTION_VALUE_5 + "|" + parentActivity!!.OPTION_VALUE_6
-                }*/
+                }
+                mSession!!.isCollecting = true
+                var formValue = ""
 
                 if (parentActivity!!.optionArray.size > 0) {
-
                     formValue = parentActivity!!.getOptionValue()
                     parentActivity!!.submitConsentFormData(formValue)
                 }

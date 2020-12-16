@@ -28,6 +28,7 @@ class Session(c: Context) {
         private val KEY_CONSENT_FORM_ID = "consent_form_id"
         private val KEY_APP_KEY = "app_key"
         private val KEY_CONSENT_FORM_DATA = "consent_form_data"
+        private val KEY_COLLECTING_FLAG = "collecting_flag"
 
 
         private val KEY_TOKEN = "token"
@@ -121,6 +122,9 @@ class Session(c: Context) {
         get() = this.mHashStorage.getString(KEY_TOKEN)
         set(paramString) = this.mHashStorage.put(KEY_TOKEN, paramString)
 
+    var isCollecting: Boolean
+        get() = this.mHashStorage.getBoolean(KEY_COLLECTING_FLAG)
+        set(paramString) = this.mHashStorage.put(KEY_COLLECTING_FLAG, paramString)
 
 
 
