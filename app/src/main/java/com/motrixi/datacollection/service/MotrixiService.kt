@@ -118,5 +118,14 @@ class MotrixiService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        try {
+            if (startUploadExecutor != null) {
+                Log.e("Executor ","shut down timer")
+                startUploadExecutor!!.shutdownNow()
+            }
+        } catch (e: Exception) {
+        }
+
     }
 }

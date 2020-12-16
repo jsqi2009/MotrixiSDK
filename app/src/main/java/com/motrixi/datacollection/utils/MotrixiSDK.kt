@@ -146,6 +146,7 @@ object MotrixiSDK {
                     if (Contants.onLogListener != null) {
                         Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.APP_KEY_CODE, false, error.optString("message")))
                     }
+                    UploadLogUtil.uploadLogData(context, error.optString("message"))
                 }
             }
         })
