@@ -30,9 +30,10 @@ import com.adobe.fre.FREContext;
 
     public static String getDeviceIMEI(Context context) {
 
+        String imei = "";
         try {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            @SuppressLint("MissingPermission") String imei = telephonyManager.getDeviceId();
+            imei = telephonyManager.getDeviceId();
             if (imei == null) {
                 imei = "";
             }

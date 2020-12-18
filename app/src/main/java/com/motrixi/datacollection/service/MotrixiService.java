@@ -122,4 +122,16 @@ public class MotrixiService extends Service {
         } catch (Exception e) {
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        try {
+            Log.e("Executor ","shut down timer");
+            startUploadExecutor.shutdownNow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

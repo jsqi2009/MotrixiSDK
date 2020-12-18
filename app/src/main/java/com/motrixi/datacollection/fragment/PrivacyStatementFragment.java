@@ -1,6 +1,8 @@
 package com.motrixi.datacollection.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -27,6 +29,7 @@ import com.motrixi.datacollection.DataCollectionActivity;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
 import com.motrixi.datacollection.network.PostMethodUtils;
+import com.motrixi.datacollection.service.MotrixiService;
 import com.motrixi.datacollection.utils.CustomStyle;
 import com.motrixi.datacollection.utils.DisplayUtil;
 
@@ -253,6 +256,10 @@ public class PrivacyStatementFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 parentActivity.mSession.setAgreeFlag(true);
+                Log.e("stop service", "stop service");
+                Intent startService =  new Intent(getActivity(), MotrixiService.class);
+                getActivity().stopService(startService);
+                parentActivity.mSession.setIsCollecting(false);
                 //Contants.agreeFlag = true;
                 parentActivity.cancelConsent();
                 getActivity().finish();
@@ -263,6 +270,13 @@ public class PrivacyStatementFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 parentActivity.mSession.setAgreeFlag(true);
+                Intent startService = new Intent(getActivity(), MotrixiService.class);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    getActivity().startForegroundService(startService);
+                } else {
+                    getActivity().startService(startService);
+                }
+                parentActivity.mSession.setIsCollecting(true);
                 //Contants.agreeFlag = true;
                 parentActivity.submitFormData();
 
@@ -270,9 +284,10 @@ public class PrivacyStatementFragment extends Fragment {
                     getActivity().finish();
                 }
 
-                if (parentActivity.mSession.getPermissionFlag()) {
+                /*if (parentActivity.mSession.getPermissionFlag()) {
                     getActivity().finish();
-                }
+                }*/
+                getActivity().finish();
             }
 
 

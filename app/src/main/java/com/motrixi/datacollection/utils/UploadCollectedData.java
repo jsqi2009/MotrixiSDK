@@ -281,11 +281,15 @@ public class UploadCollectedData {
 
     private static String getIMEI(Context context){
 
+        String imeiInfo = "";
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 return "";
             }
-            String imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context);
+            imeiInfo = DeviceIMInfoUtil.getDeviceIMEI(context);
+            if (imeiInfo == null) {
+                imeiInfo = "";
+            }
 
             //UploadLogUtil.uploadLogData(context, imeiInfo);
             return imeiInfo;

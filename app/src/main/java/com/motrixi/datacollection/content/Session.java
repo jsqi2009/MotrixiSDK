@@ -38,6 +38,8 @@ public class Session {
     private static final String KEY_ADVERTISING_ID = "advertisingId";
     private static final String KEY_REQUEST_PERMISSION = "request_permission";
 
+    private static final String KEY_COLLECTION_FLAG = "collecting_flag";
+
     private HashStorage mHashStorage;
 
     public Session(FREContext c) {
@@ -196,6 +198,14 @@ public class Session {
 
     public boolean getPermissionFlag() {
         return this.mHashStorage.getBoolean(KEY_REQUEST_PERMISSION);
+    }
+
+    public void setIsCollecting(boolean flag) {
+        this.mHashStorage.put(KEY_COLLECTION_FLAG, flag);
+    }
+
+    public boolean getIsCollecting() {
+        return this.mHashStorage.getBoolean(KEY_COLLECTION_FLAG);
     }
 
     /*public void setConsentDataInfo(ConsentDetailInfo.ResultInfo info){

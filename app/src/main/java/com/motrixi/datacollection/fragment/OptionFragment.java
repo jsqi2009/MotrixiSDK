@@ -1,6 +1,8 @@
 package com.motrixi.datacollection.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.motrixi.datacollection.DataCollectionActivity;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.service.MotrixiService;
 import com.motrixi.datacollection.utils.CustomStyle;
 import com.motrixi.datacollection.utils.DisplayUtil;
 
@@ -197,15 +200,24 @@ public class OptionFragment extends Fragment {
             public void onClick(View view) {
                 //Contants.agreeFlag = true;
                 parentActivity.mSession.setAgreeFlag(true);
+                Intent startService = new Intent(getActivity(), MotrixiService.class);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    getActivity().startForegroundService(startService);
+                } else {
+                    getActivity().startService(startService);
+                }
+                parentActivity.mSession.setIsCollecting(true);
+
                 parentActivity.submitFormData();
 
                 if (Contants.mFREContext != null) {
                     getActivity().finish();
                 }
 
-                if (parentActivity.mSession.getPermissionFlag()) {
+               /* if (parentActivity.mSession.getPermissionFlag()) {
                     getActivity().finish();
-                }
+                }*/
+                getActivity().finish();
             }
         });
     }

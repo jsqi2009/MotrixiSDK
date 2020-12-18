@@ -46,7 +46,6 @@ public class DataCollectionActivity extends FragmentActivity {
 
     private String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.READ_PHONE_STATE,
-    Manifest.permission.ACCESS_COARSE_LOCATION,
     Manifest.permission.READ_CONTACTS,
     Manifest.permission.FOREGROUND_SERVICE};
     private int request_code = 1;
@@ -278,6 +277,8 @@ public class DataCollectionActivity extends FragmentActivity {
 
 
                 Log.e("cancel ", "test");
+
+                mSharedMainActivity.finish();
                 //System.exit(0);
                 //android.os.Process.killProcess(android.os.Process.myPid());
 
@@ -332,7 +333,7 @@ public class DataCollectionActivity extends FragmentActivity {
         }
 
         if (mPermissionList.size() > 0) {
-            ActivityCompat.requestPermissions(mSharedMainActivity, permissions, request_code);
+            ActivityCompat.requestPermissions(this, permissions, request_code);
         } else {
 
             //Toast.makeText(this, "already grant all the permissions", Toast.LENGTH_SHORT).show();
@@ -353,11 +354,14 @@ public class DataCollectionActivity extends FragmentActivity {
         mSession.setPermissionFlag(true);
         boolean hasPermission = false;
         if (request_code == requestCode) {
-            for (int grantResult : grantResults) {
-                if (grantResult == -1) {
-                    hasPermission = true;
+            if (grantResults.length > 0) {
+                for (int grantResult : grantResults) {
+                    if (grantResult == -1) {
+                        hasPermission = true;
+                    }
                 }
             }
+
         }
 
         if (hasPermission) {
