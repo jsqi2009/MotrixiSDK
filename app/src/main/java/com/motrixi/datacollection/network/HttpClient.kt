@@ -209,14 +209,14 @@ object HttpClient {
     }
 
 
-    fun fetchConsentData(context: Context) : Call<ConsentDetailInfo> {
+    fun fetchConsentData(context: Context, code: String) : Call<ConsentDetailInfo> {
 
         val locale: Locale = Locale.getDefault()
         val lan: String = locale.language.toLowerCase() + "-" + locale.country.toLowerCase()
 //        val lan: String = locale.language.toLowerCase()
 
         var map: HashMap<String, Any> = HashMap()
-        map.put("language", lan)
+        map.put("language", code)
 
         val call = mHttpApi!!.requestAuthConsent(getHeaders(context),
             "api","consent","detail", map)
@@ -232,6 +232,14 @@ object HttpClient {
 
         val call=mHttpApi!!.requestAuthPost(getHeaders(context),
             "api","cancel_consent","add",map)
+
+        return call
+    }
+
+    fun getLanguageList(context: Context) : Call<JsonObject> {
+
+        val call = mHttpApi!!.requestAuth2(getHeaders(context),
+            "api","consent","list")
 
         return call
     }
