@@ -2,6 +2,7 @@ package com.motrixi.datacollection
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
@@ -27,10 +28,9 @@ import com.motrixi.datacollection.fragment.PrivacyStatementFragment
 import com.motrixi.datacollection.listener.OnRequestPermissionListener
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.models.ConsentDetailInfo
-import com.motrixi.datacollection.utils.DisplayUtil
-import com.motrixi.datacollection.utils.MessageUtil
-import com.motrixi.datacollection.utils.UploadCollectedData
-import com.motrixi.datacollection.utils.UploadLogUtil
+import com.motrixi.datacollection.network.models.LanguageInfo
+import com.motrixi.datacollection.utils.*
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,7 +68,8 @@ class DataCollectionActivity : AppCompatActivity() {
     private var onRequestListener: OnRequestPermissionListener? = null
     private var actionBarLayout: LinearLayout? = null
     var info: ConsentDetailInfo.ResultInfo? = null
-    lateinit var optionArray: ArrayList<String>
+    var optionArray: ArrayList<String> = ArrayList()
+    var lanList: ArrayList<LanguageInfo> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,12 +97,16 @@ class DataCollectionActivity : AppCompatActivity() {
         }*/
 
 
-        initView()
+        mSession = Session(this)
+        getConsentDataList(this, "en", 0)
+        //initView()
     }
 
     override fun onResume() {
         super.onResume()
         //mSession!!.agreeFlag = true
+
+        getLanguageList(this)
     }
 
     private fun customActionBarView() {
@@ -155,19 +160,39 @@ class DataCollectionActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceType")
-    private fun initView() {
-        mSession = Session(this)
+    private fun initView(tag: Int) {
+        //mSession = Session(this)
 
         info = mSession!!.consentDataInfo
-        optionArray = info!!.value!!.options!!.split("|") as ArrayList<String>
-        Log.d("option array", optionArray.size.toString())
+        Log.e("option",info!!.value!!.options!!)
+        if (info!!.value!!.options!!.contains("|")) {
+            optionArray = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
+            Log.d("option array", optionArray.size.toString())
+        } else {
+            optionArray.clear()
+            optionArray.add(info!!.value!!.options!!)
+        }
+
 
         // 获取碎片管理器
         val fm: FragmentManager = supportFragmentManager
 //        fm.beginTransaction().add(R.id.home_container, PrivacyStatementFragment()).commit()
 
 //        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
-        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        //fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+
+        /*if (!fm.beginTransaction().isEmpty) {
+            fm.beginTransaction().replace(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        } else {
+            fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        }*/
+
+        if (tag == 1) {
+            fm.beginTransaction().replace(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        } else {
+            fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        }
+
     }
 
     fun submitConsentFormData(value: String) {
@@ -347,6 +372,87 @@ class DataCollectionActivity : AppCompatActivity() {
             }
         }
         return formValue
+    }
+
+    fun getConsentDataList(context: Context, code: String, flag: Int) {
+
+        var call = HttpClient.fetchConsentData(context, code)
+        call.enqueue(object : Callback<ConsentDetailInfo> {
+            override fun onFailure(call: retrofit2.Call<ConsentDetailInfo>, t: Throwable) {
+                Log.d("fetch consent", "failure")
+
+                UploadLogUtil.uploadLogData(context, t.message.toString())
+            }
+
+            override fun onResponse(call: retrofit2.Call<ConsentDetailInfo>, response: Response<ConsentDetailInfo>) {
+
+                try {
+                    if (response.isSuccessful) {
+                        Log.d("result", response.body()!!.result.toString())
+                        mSession!!.consentDataInfo = response.body()!!.result!!
+
+                        if (Contants.onLogListener != null) {
+                            Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, response.body()!!.result!!.toString()))
+                        }
+
+                        UploadLogUtil.uploadLogData(context, "get consent form data success ")
+
+                        initView(flag)
+
+                    } else {
+
+                        UploadLogUtil.uploadLogData(context, "get consent form data failure ")
+                        if (Contants.onLogListener != null) {
+                            Contants.onLogListener!!.onLogListener(MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, response.body()!!.result!!.toString()))
+                        }
+                    }
+                } catch (e: Exception) {
+                    UploadLogUtil.uploadLogData(context, e.message.toString())
+                }
+            }
+        })
+    }
+
+    private fun getLanguageList(context: Context) {
+
+        lanList.clear()
+        var call = HttpClient.getLanguageList(context)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
+                Log.d("fetch language", "failure")
+
+                UploadLogUtil.uploadLogData(context, t.message.toString())
+            }
+
+            override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
+
+                try {
+                    if (response.isSuccessful) {
+                        Log.d("result", response.body().toString())
+                        var responseObject:JSONObject = JSONObject(response.body().toString())
+                        var resultArray: JSONArray = responseObject.optJSONArray("result")
+
+                        for (i in 0 until resultArray.length()){
+                            val item:JSONObject = resultArray.get(i) as JSONObject
+                            val valueObj:JSONObject = item.optJSONObject("value")
+                            val languageObj:JSONObject = valueObj.optJSONObject("select_language")
+                            val code = languageObj.optString("code")
+                            val language = languageObj.optString("language")
+
+//                            var info: LanguageInfo = LanguageInfo()
+//                            info.code = code
+//                            info.language = language
+                            lanList.add(LanguageInfo(code, language))
+                            Log.e("language info", "$code-$language")
+                        }
+                    } else {
+                        UploadLogUtil.uploadLogData(context, "get consent list failure ")
+                    }
+                } catch (e: Exception) {
+                    UploadLogUtil.uploadLogData(context, e.message.toString())
+                }
+            }
+        })
     }
 
     fun getCheckedValue(): String {

@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -16,17 +15,21 @@ import android.text.style.URLSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.Gravity.CENTER
+import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM
+import android.widget.RelativeLayout.ALIGN_PARENT_RIGHT
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import com.motrixi.datacollection.DataCollectionActivity
+import com.motrixi.datacollection.adapter.LanguageAdapter
 import com.motrixi.datacollection.R
 import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
+import com.motrixi.datacollection.network.models.LanguageInfo
 import com.motrixi.datacollection.service.MotrixiService
 import com.motrixi.datacollection.utils.CustomStyle
 import com.motrixi.datacollection.utils.DisplayUtil
@@ -51,13 +54,18 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
     private var parentActivity: DataCollectionActivity? = null
 
     lateinit var privateLayout: RelativeLayout
-    private var actionBarLayout: LinearLayout? = null
+    //private var actionBarLayout: LinearLayout? = null
+    private var actionBarLayout: RelativeLayout? = null
     private var mSession: Session? = null
     lateinit var tvTitle: TextView
     lateinit var tvContent1: TextView
     lateinit var tvCancel: TextView
     lateinit var tvOption: TextView
     lateinit var tvConfirm: TextView
+
+    lateinit var contentLayout: LinearLayout
+    lateinit var bottomLayout: LinearLayout
+    lateinit var listView: ListView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +143,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         scrollView.layoutParams  =scrollParams
         privateLayout.addView(scrollView)
 
-        var contentLayout: LinearLayout = LinearLayout(activity)
+        contentLayout = LinearLayout(activity)
         contentLayout.orientation = LinearLayout.VERTICAL
         val contentParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -173,10 +181,13 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvContent2.textSize = 18F
         tvContent2.text = Contants.PRIVATE_STATEMENT_2
 
+
+
         contentLayout.addView(tvContent1)
+        //contentLayout.addView(listView)
         //contentLayout.addView(tvContent2)
 
-        var bottomLayout: LinearLayout = LinearLayout(activity)
+        bottomLayout  = LinearLayout(activity)
         bottomLayout.orientation = LinearLayout.HORIZONTAL
         val bottomParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -256,6 +267,16 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         privateLayout!!.layoutParams = rootParams
         privateLayout.addView(bottomLayout)
 
+        listView = ListView(activity)
+        val listParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        listView.layoutParams = listParams
+        listView.visibility = View.GONE
+        privateLayout.addView(listView)
+
+
         ivBack.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
 
@@ -326,30 +347,61 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     private fun customActionBarView() {
 
-        actionBarLayout = LinearLayout(activity)
+        /*actionBarLayout = LinearLayout(activity)
         val rootParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
+        actionBarLayout!!.layoutParams = rootParams
+        actionBarLayout!!.gravity = Gravity.CENTER*/
 
+        actionBarLayout = RelativeLayout(activity)
+        val rootParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         actionBarLayout!!.layoutParams = rootParams
         actionBarLayout!!.gravity = Gravity.CENTER
 
         val tvTitle = TextView(activity)
-        tvTitle.textSize = 22F
+        tvTitle.textSize = 20F
 //        tvTitle.text = "Consent"
         tvTitle.text = parentActivity!!.info!!.value!!.terms_page_title
         tvTitle.setTextColor(Color.WHITE)
-        val titleParams = LinearLayout.LayoutParams(
+        val titleParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.MATCH_PARENT
         )
+        titleParams.addRule(CENTER_HORIZONTAL)
         titleParams.rightMargin = DisplayUtil.dp2px(activity!!, 50)
         tvTitle.layoutParams = titleParams
 //        tvCancel.setBackgroundColor(Color.rgb(0, 150, 182))  //#0096B6
         tvTitle.gravity = Gravity.CENTER
 
+
+        val tvLanguage = TextView(activity)
+        tvLanguage.textSize = 17F
+        tvLanguage.text = "Language"
+        tvLanguage.setTextColor(Color.WHITE)
+        val languageParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        languageParams.addRule(ALIGN_PARENT_RIGHT)
+        tvLanguage.layoutParams = languageParams
+        tvLanguage.gravity = Gravity.CENTER
+
         actionBarLayout!!.addView(tvTitle)
+        actionBarLayout!!.addView(tvLanguage)
+
+        tvLanguage.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+
+                if (parentActivity!!.lanList != null && parentActivity!!.lanList.size > 0) {
+                    setListViewData()
+                }
+            }
+        })
     }
 
     private fun setData() {
@@ -379,6 +431,31 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
                 style.setSpan(clickableSpan, sp.getSpanStart(url), sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             tvContent1.text = style
+        }
+    }
+
+    private fun setListViewData() {
+        val lanList: ArrayList<LanguageInfo> = ArrayList()
+        lanList.add(LanguageInfo("jan", "Japanese"))
+        lanList.add(LanguageInfo("zh", "Chinese"))
+        lanList.add(LanguageInfo("en", "English"))
+
+        contentLayout.visibility = View.GONE
+        bottomLayout.visibility = View.GONE
+        listView.visibility = View.VISIBLE
+
+        listView.adapter = LanguageAdapter(activity, 0, parentActivity!!.lanList)
+        listView.onItemClickListener = object : AdapterView.OnItemClickListener{
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+
+                var code = parentActivity!!.lanList[position].code.toString()
+                Log.e("code", code)
+                contentLayout.visibility = View.VISIBLE
+                bottomLayout.visibility = View.VISIBLE
+                listView.visibility = View.GONE
+
+                parentActivity!!.getConsentDataList(activity!!, code, 1)
+            }
         }
     }
 

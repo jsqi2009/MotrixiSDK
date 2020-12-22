@@ -49,7 +49,8 @@ object MotrixiSDK {
         mSession = Session(context)
 
         //get consent form data
-        getConsentDataList(context, appKey)
+        //getConsentDataList(context, appKey)
+        verifyAppkey(context, appKey)
 
         //mSession!!.appKey = appKey
         Contants.APP_KEY = appKey
@@ -206,7 +207,7 @@ object MotrixiSDK {
 
     private fun getConsentDataList(context: Context, appKey: String) {
 
-        var call = HttpClient.fetchConsentData(context)
+        var call = HttpClient.fetchConsentData(context, "")
         call.enqueue(object : Callback<ConsentDetailInfo> {
             override fun onFailure(call: retrofit2.Call<ConsentDetailInfo>, t: Throwable) {
                 Log.d("fetch consent", "failure")
