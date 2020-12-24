@@ -6,10 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Html
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -63,6 +60,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
     lateinit var contentLayout: LinearLayout
     lateinit var bottomLayout: LinearLayout
+    lateinit var tvLanguage: TextView
     lateinit var listView: ListView
 
 
@@ -129,7 +127,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvTitle.setTextColor(Color.BLACK)
         tvTitle.layoutParams = titleParams
 
-        val tvLanguage = TextView(activity)
+        tvLanguage = TextView(activity)
         tvLanguage.textSize = 17F
         tvLanguage.text = "Language"
         tvLanguage.setTextColor(Color.BLACK)
@@ -401,7 +399,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
         val tvLanguage = TextView(activity)
         tvLanguage.textSize = 17F
-        tvLanguage.text = "Language"
+        tvLanguage.text = ""
         tvLanguage.setTextColor(Color.BLACK)
         val languageParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -430,6 +428,11 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvCancel.text = parentActivity!!.info!!.value!!.cancel_button_text
         tvOption.text = parentActivity!!.info!!.value!!.option_button_text
         tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
+        if (!TextUtils.isEmpty(parentActivity!!.info!!.value!!.language_button_text)) {
+            tvLanguage.text = parentActivity!!.info!!.value!!.language_button_text
+        } else {
+            tvLanguage.text = "Language"
+        }
 
         tvContent1.text = Html.fromHtml(parentActivity!!.info!!.value!!.terms_content)
         val str: CharSequence = tvContent1.text
