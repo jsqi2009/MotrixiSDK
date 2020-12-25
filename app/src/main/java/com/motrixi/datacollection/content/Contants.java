@@ -20,6 +20,7 @@ public class Contants {
     public static final String CANCEL_CONSENT_API = "/api/cancel_consent/add";
     public static final String SUBMIT_FORM_API = "/api/consent_form/submit";
     public static final String SUBMIT_INFO_API = "/api/sdk_information/add";
+    public static final String FETCH_LANGUAGE_API = "/api/consent/list";
 
     public static String advertisingID = "";
     public static String APP_ID = "";
@@ -37,6 +38,7 @@ public class Contants {
     public static int UPLOAD_DATA_CODE = 1003;    // upload the collected data
     public static int FETCH_CONSENT_DATA = 1004;   // fetch consent form data
     public static int CANCEL_COLLECT_DATA = 1005;    // cancel collect data
+    public static int GET_LANGUAGE_LIST = 1006;    // cancel collect data
 
     public static FREContext mFREContext = null;
 

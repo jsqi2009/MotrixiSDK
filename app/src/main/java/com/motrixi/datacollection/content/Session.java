@@ -39,6 +39,7 @@ public class Session {
     private static final String KEY_REQUEST_PERMISSION = "request_permission";
 
     private static final String KEY_COLLECTION_FLAG = "collecting_flag";
+    private static final String KEY_LANGUAGE_BUTTON = "language_button";
 
     private HashStorage mHashStorage;
 
@@ -207,6 +208,17 @@ public class Session {
     public boolean getIsCollecting() {
         return this.mHashStorage.getBoolean(KEY_COLLECTION_FLAG);
     }
+
+    public void setLanguageButton(String id) {
+        this.mHashStorage.put(KEY_LANGUAGE_BUTTON, id);
+    }
+
+    public String getLanguageButton() {
+        return this.mHashStorage.getString(KEY_LANGUAGE_BUTTON);
+    }
+
+
+
 
     /*public void setConsentDataInfo(ConsentDetailInfo.ResultInfo info){
         setData(info, ConsentDetailInfo.ResultInfo.class, KEY_CONSENT_FORM_DATA);

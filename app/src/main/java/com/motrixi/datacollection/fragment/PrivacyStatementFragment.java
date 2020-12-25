@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -19,24 +20,37 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.motrixi.datacollection.DataCollectionActivity;
+import com.motrixi.datacollection.LanguageAdapter;
 import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
+import com.motrixi.datacollection.extensions.MotrixiSDKInit;
+import com.motrixi.datacollection.network.GetMethodUtils;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.service.MotrixiService;
 import com.motrixi.datacollection.utils.CustomStyle;
 import com.motrixi.datacollection.utils.DisplayUtil;
+import com.motrixi.datacollection.utils.MessageUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
+
 
 import static android.view.Gravity.CENTER;
 import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
+import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
+import static android.widget.RelativeLayout.CENTER_IN_PARENT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +77,11 @@ public class PrivacyStatementFragment extends Fragment {
     private TextView tvOption;
     private TextView tvConfirm;
 
+    private LinearLayout contentLayout;
+    private LinearLayout bottomLayout;
+    private TextView tvLanguage;
+    private ListView listView;
+
     public PrivacyStatementFragment() {
         // Required empty public constructor
 
@@ -82,6 +101,10 @@ public class PrivacyStatementFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
+
+
+
         return fragment;
     }
 
@@ -105,6 +128,7 @@ public class PrivacyStatementFragment extends Fragment {
 
         initLayout();
         rootView = privateLayout;
+
 
         return rootView;
     }
@@ -149,7 +173,23 @@ public class PrivacyStatementFragment extends Fragment {
         tvTitle.setTextSize(20F);
         tvTitle.setTextColor(Color.BLACK);
         tvTitle.setLayoutParams(titleParams);
+
+
+        tvLanguage = new TextView(getActivity());
+        RelativeLayout.LayoutParams languageParams = new  RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        languageParams.rightMargin = DisplayUtil.dp2px(getActivity(), 10);
+        languageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        languageParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        tvLanguage.setText("Language");
+        tvLanguage.setTextSize(17F);
+        tvLanguage.setTextColor(Color.BLACK);
+        tvLanguage.setLayoutParams(languageParams);
+
         topLayout.addView(tvTitle);
+        topLayout.addView(tvLanguage);
 
 
         ScrollView scrollView= new ScrollView(getActivity());
@@ -163,7 +203,7 @@ public class PrivacyStatementFragment extends Fragment {
         scrollView.setBackgroundColor(Color.rgb(255, 255, 255));
         privateLayout.addView(scrollView);
 
-        LinearLayout contentLayout = new LinearLayout(getActivity());
+        contentLayout = new LinearLayout(getActivity());
         contentLayout.setOrientation(LinearLayout.VERTICAL);
         RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -182,7 +222,7 @@ public class PrivacyStatementFragment extends Fragment {
         tvContent1.setMovementMethod(LinkMovementMethod.getInstance());
         contentLayout.addView(tvContent1);
 
-        LinearLayout bottomLayout = new LinearLayout(getActivity());
+        bottomLayout = new LinearLayout(getActivity());
         bottomLayout.setOrientation(LinearLayout.HORIZONTAL);
         RelativeLayout.LayoutParams bottomParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -252,6 +292,19 @@ public class PrivacyStatementFragment extends Fragment {
         privateLayout.setLayoutParams(rootParams);
         privateLayout.addView(bottomLayout);
 
+        listView = new ListView(getActivity());
+        RelativeLayout.LayoutParams listParams = new  RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        listParams.addRule(RelativeLayout.BELOW, topLayout.getId());
+        listView.setBackgroundColor(Color.rgb(255, 255, 255));
+        listView.setLayoutParams(listParams);
+        //listView.setDivider(null);
+        listView.setVisibility(View.GONE);
+        privateLayout.addView(listView);
+
+
         tvCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -299,6 +352,15 @@ public class PrivacyStatementFragment extends Fragment {
                         .addToBackStack("option")
                         .replace(Contants.HOME_CONTAINER_ID, new OptionFragment())
                         .commit();
+            }
+        });
+
+        tvLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (parentActivity.lanList != null && parentActivity.lanList.size() > 0) {
+                    setListViewData();
+                }
             }
         });
 
@@ -350,10 +412,12 @@ public class PrivacyStatementFragment extends Fragment {
 //        tvConfirm.setText(parentActivity.info.value.confirm_button_text);
 
 
+
           tvTitle.setText(parentActivity.mSession.getTermsTitle());
           tvCancel.setText(parentActivity.mSession.getCancelButton());
           tvOption.setText(parentActivity.mSession.getOptionButton());
           tvConfirm.setText(parentActivity.mSession.getConfirmButton());
+          tvLanguage.setText(parentActivity.mSession.getLanguageButton());
 
         tvContent1.setText(Html.fromHtml(parentActivity.mSession.getTermsContent()));
         //String content = "<p>By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics: Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process information to create and/or enhance the quality of products (f) Data Management Platform: to create better audiences to target specific users to increase performance When you confirm, you not only grant your consent, you acknowledge you are of 16 years of age and older. Please note, if you choose to click cancel, no information will be collected from you. To learn more about the terms in its entirety, please click <a href=\\\"https://www.motrixi.com/index.php/privacy-policy-2/\\\" target=\\\"_blank\\\" rel=\\\"noopener\\\">here</a>.</p>\\n<p>We thank you for installing our app and helping us improve the user experience by clicking 'Confirm'.</p>";
@@ -383,6 +447,107 @@ public class PrivacyStatementFragment extends Fragment {
                 style.setSpan(clickableSpan ,sp.getSpanStart(url),sp.getSpanEnd(url),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             tvContent1.setText(style);
+        }
+    }
+
+    private void setListViewData() {
+
+        contentLayout.setVisibility(View.GONE);
+        bottomLayout.setVisibility(View.GONE);
+        listView.setVisibility(View.VISIBLE);
+
+        listView.setAdapter(new LanguageAdapter(parentActivity, 0, parentActivity.lanList));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String code = String.valueOf(parentActivity.lanList.get(position).code);
+                Log.e("code", code);
+
+                contentLayout.setVisibility(View.VISIBLE);
+                bottomLayout.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.GONE);
+
+                //parentActivity.consentFormDetails(code, 1);
+                consentFormDetails(code, 1);
+
+
+            }
+        });
+    }
+
+    public void consentFormDetails(final String language, final int flag) {
+
+        Locale locale = Locale.getDefault();
+        final String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();
+
+        //Toast.makeText(mActivity, "start get consent details", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg = GetMethodUtils.httpGet(Contants.CONSENT_DETAIL_API, language);
+                Log.d("form details", msg);
+                formatConsentData(msg, flag);
+            }
+        }).start();
+    }
+
+    private void formatConsentData(final String detail, final int flag) {
+
+        if (!detail.equals(Contants.RESPONSE_ERROR)) {
+            try {
+                JSONObject object = new JSONObject(detail);
+                JSONObject resultObject = object.optJSONObject("result");
+                JSONObject valueObject = resultObject.optJSONObject("value");
+
+                parentActivity.mSession.setTermsContent(valueObject.optString("terms_content"));
+                parentActivity.mSession.setOption(valueObject.optString("options"));
+                parentActivity.mSession.setCancelButton(valueObject.optString("cancel_button_text"));
+                parentActivity.mSession.setConfirmButton(valueObject.optString("confirm_button_text"));
+                parentActivity.mSession.setOptionButton(valueObject.optString("option_button_text"));
+                parentActivity.mSession.setBackButton(valueObject.optString("back_button_text"));
+                parentActivity.mSession.setTermsTitle(valueObject.optString("terms_page_title"));
+                parentActivity.mSession.setLinkTitle(valueObject.optString("link_page_title"));
+                parentActivity.mSession.setOptionTitle(valueObject.optString("option_page_title"));
+                if (valueObject.has("language_button_text")) {
+                    parentActivity.mSession.setLanguageButton(valueObject.optString("language_button_text"));
+                } else {
+                    parentActivity.mSession.setLanguageButton("Language");
+                }
+                //mSession.setLanguageButton(valueObject.optString("language_button_text"));
+
+                if (!TextUtils.isEmpty(parentActivity.mSession.getOption())) {
+                    if (parentActivity.mSession.getOption().contains("|")) {
+                        parentActivity.optionArray = parentActivity.mSession.getOption().replace("|", "=").split("=");
+                        Log.d("option array", parentActivity.optionArray.length + "");
+                    } else {
+                        parentActivity.optionArray = new String[1];
+                        parentActivity.optionArray[0] = parentActivity.mSession.getOption();
+                    }
+
+                }
+
+                Log.e("options", Contants.options);
+
+                if (Contants.mFREContext != null) {
+                    String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, detail);
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setData();
+                    }
+                });
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, "get consent form data failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+            }
         }
     }
 }

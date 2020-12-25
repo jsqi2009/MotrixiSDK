@@ -1,5 +1,6 @@
 package com.motrixi.datacollection.network;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -50,7 +51,11 @@ public class GetMethodUtils {
             trustAllHttpsCertificates();
             HttpsURLConnection.setDefaultHostnameVerifier(hv);
 
-            String url = Contants.BASE_SERVER_URL + requestURL + "?language=" + URLEncoder.encode(language, "utf-8");
+            //String url = Contants.BASE_SERVER_URL + requestURL + "?language=" + URLEncoder.encode(language, "utf-8");
+            String url = Contants.BASE_SERVER_URL + requestURL;
+            if (!TextUtils.isEmpty(language)) {
+                url = url + "?language=" + URLEncoder.encode(language, "utf-8");
+            }
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod(requestMethod);
             conn.setReadTimeout(10000);

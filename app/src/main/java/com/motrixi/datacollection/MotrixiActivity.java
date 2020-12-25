@@ -70,7 +70,8 @@ public class MotrixiActivity extends FragmentActivity {
     public void init(String appKey) {
         mSession.setAppKey(appKey);
         //Contants.APP_KEY = appKey;
-        consentFormDetails();
+        //consentFormDetails();
+        verifyKey();
 
         startService();
     }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -24,19 +25,23 @@ import com.motrixi.datacollection.content.Contants;
 import com.motrixi.datacollection.content.Session;
 import com.motrixi.datacollection.extensions.MotrixiSDKInit;
 import com.motrixi.datacollection.fragment.PrivacyStatementFragment;
+import com.motrixi.datacollection.network.GetMethodUtils;
 import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
+import com.motrixi.datacollection.network.models.LanguageInfo;
 import com.motrixi.datacollection.utils.AdvertisingIdUtil;
 import com.motrixi.datacollection.utils.MessageUtil;
 import com.motrixi.datacollection.utils.UploadCollectedData;
 import com.motrixi.datacollection.utils.UploadLogUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -56,6 +61,10 @@ public class DataCollectionActivity extends FragmentActivity {
     private LinearLayout actionBarLayout;
     public static ConsentDetailInfo.ResultInfo info;
     public static String[] optionArray;
+    private FragmentManager fm;
+
+    public ArrayList<LanguageInfo> lanList = new  ArrayList();
+    private static final String BUNDLE_FRAGMENTS_KEY = "android:support:fragments";
 
     private static DataCollectionActivity mSharedMainActivity = null;
     public static DataCollectionActivity getSharedMainActivityOrNull() {
@@ -71,6 +80,10 @@ public class DataCollectionActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null && this.clearFragmentsTag()) {
+            //重建时清除 fragment的状态
+            savedInstanceState.remove(BUNDLE_FRAGMENTS_KEY);
+        }
         super.onCreate(savedInstanceState);
         if (mSharedMainActivity == null) {
             mSharedMainActivity = this; // new WeakReference<>(this);
@@ -81,8 +94,9 @@ public class DataCollectionActivity extends FragmentActivity {
         initLayout();
         setContentView(rootLayout);
 
-        initView();
+        //initView();
 
+        consentFormDetails("en", 0);
         getAdvertisingId(mSharedMainActivity);
     }
 
@@ -92,6 +106,8 @@ public class DataCollectionActivity extends FragmentActivity {
         if (mSharedMainActivity == null) {
             mSharedMainActivity = this; // new WeakReference<>(this);
         }
+
+        getLanguageList();
 
         //getAdvertisingId(this);
         //getAdvertisingId();
@@ -168,19 +184,44 @@ public class DataCollectionActivity extends FragmentActivity {
 
     }
 
-    private void initView() {
+    private void initView(int flag) {
 
         //info = mSession.getConsentDataInfo();
 
         if (!TextUtils.isEmpty(mSession.getOption())) {
-            optionArray = mSession.getOption().replace("|","=").split("=");
-            Log.d("option array", optionArray.length + "");
+            if (mSession.getOption().contains("|")) {
+                optionArray = mSession.getOption().replace("|", "=").split("=");
+                Log.d("option array", optionArray.length + "");
+            } else {
+                optionArray = new String[1];
+                optionArray[0] = mSession.getOption();
+            }
+
         }
 
         // 获取碎片管理器
-        FragmentManager fm = getSupportFragmentManager();
+        //FragmentManager fm = getSupportFragmentManager();
+        if (fm == null) {
+            fm = getSupportFragmentManager();
+        }
+
+
         //fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("","")).commit();
-        fm.beginTransaction().add(Contants.HOME_CONTAINER_ID,PrivacyStatementFragment.newInstance("","")).commit();
+        //fm.beginTransaction().add(Contants.HOME_CONTAINER_ID,PrivacyStatementFragment.newInstance("","")).commit();
+
+        try {
+            if (flag == 1) {
+                fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("", "")).commit();
+    //            fm.beginTransaction().replace(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("", "")).commitAllowingStateLoss();
+    //            fm.beginTransaction().replace(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment.newInstance("","")).commitAllowingStateLoss();
+            } else {
+                fm.beginTransaction().add(Contants.HOME_CONTAINER_ID,PrivacyStatementFragment.newInstance("","")).commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("exception",e.getMessage());
+            //fm.beginTransaction().add(Contants.HOME_CONTAINER_ID,PrivacyStatementFragment.newInstance("","")).commit();
+        }
     }
 
 
@@ -382,4 +423,152 @@ public class DataCollectionActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void consentFormDetails(final String language, final int flag) {
+
+        Locale locale = Locale.getDefault();
+        final String lan = locale.getLanguage().toLowerCase() + "-" + locale.getCountry().toLowerCase();
+
+        //Toast.makeText(mActivity, "start get consent details", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg = GetMethodUtils.httpGet(Contants.CONSENT_DETAIL_API, language);
+                Log.d("form details", msg);
+                formatConsentData(msg, flag);
+            }
+        }).start();
+    }
+
+    private void formatConsentData(final String detail, final int flag) {
+
+        if (!detail.equals(Contants.RESPONSE_ERROR)) {
+            try {
+                JSONObject object = new JSONObject(detail);
+                JSONObject resultObject = object.optJSONObject("result");
+                JSONObject valueObject = resultObject.optJSONObject("value");
+
+                Contants.terms_content = valueObject.optString("terms_content");
+                Contants.options = valueObject.optString("options");
+                Contants.cancel_button_text = valueObject.optString("cancel_button_text");
+                Contants.confirm_button_text = valueObject.optString("confirm_button_text");
+                Contants.option_button_text = valueObject.optString("option_button_text");
+                Contants.back_button_text = valueObject.optString("back_button_text");
+                Contants.terms_page_title = valueObject.optString("terms_page_title");
+                Contants.link_page_title = valueObject.optString("link_page_title");
+                Contants.option_page_title = valueObject.optString("option_page_title");
+
+                mSession.setTermsContent(valueObject.optString("terms_content"));
+                mSession.setOption(valueObject.optString("options"));
+                mSession.setCancelButton(valueObject.optString("cancel_button_text"));
+                mSession.setConfirmButton(valueObject.optString("confirm_button_text"));
+                mSession.setOptionButton(valueObject.optString("option_button_text"));
+                mSession.setBackButton(valueObject.optString("back_button_text"));
+                mSession.setTermsTitle(valueObject.optString("terms_page_title"));
+                mSession.setLinkTitle(valueObject.optString("link_page_title"));
+                mSession.setOptionTitle(valueObject.optString("option_page_title"));
+                if (valueObject.has("language_button_text")) {
+                    mSession.setLanguageButton(valueObject.optString("language_button_text"));
+                } else {
+                    mSession.setLanguageButton("Language");
+                }
+                //mSession.setLanguageButton(valueObject.optString("language_button_text"));
+
+                Log.e("options", Contants.options);
+
+                if (Contants.mFREContext != null) {
+                    String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, true, detail);
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+                }
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //initView(flag);
+                    }
+                });
+                initView(flag);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, "get consent form data failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+            }
+        }
+    }
+
+    public void getLanguageList() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg = GetMethodUtils.httpGet(Contants.FETCH_LANGUAGE_API, "");
+                Log.d("language details", msg);
+                formatLanguageData(msg);
+            }
+        }).start();
+    }
+
+    private void formatLanguageData(final String detail) {
+
+        lanList.clear();
+        if (!detail.equals(Contants.RESPONSE_ERROR)) {
+            try {
+                JSONObject object = new JSONObject(detail);
+                JSONArray resultArray = object.optJSONArray("result");
+
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject item = resultArray.optJSONObject(i);
+                    JSONObject valueObj  = item.optJSONObject("value");
+                    JSONObject lanObj  = valueObj.optJSONObject("select_language");
+
+                    String code = lanObj.optString("code");
+                    String language = lanObj.optString("language");
+
+                    LanguageInfo info = new LanguageInfo();
+                    info.code = code;
+                    info.language = language;
+                    lanList.add(info);
+                    Log.e("language info", code + "-" + language);
+                }
+
+                if (Contants.mFREContext != null) {
+                    String result = MessageUtil.logMessage(Contants.GET_LANGUAGE_LIST, true, lanList.toString());
+                    MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("language details", result);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.GET_LANGUAGE_LIST, false, "get language list data failure");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("language details", result);
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("onSaveInstanceState","sve");
+        if (outState != null && this.clearFragmentsTag()) {
+            //销毁时不保存fragment的状态
+            outState.remove(BUNDLE_FRAGMENTS_KEY);
+        }
+    }
+
+    protected boolean clearFragmentsTag() {
+        return true;
+    }
 }
