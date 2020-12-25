@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -62,6 +63,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
     lateinit var tvCancel: TextView
     lateinit var tvOption: TextView
     lateinit var tvConfirm: TextView
+    lateinit var tvLanguage: TextView
 
     lateinit var contentLayout: LinearLayout
     lateinit var bottomLayout: LinearLayout
@@ -379,9 +381,9 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvTitle.gravity = Gravity.CENTER
 
 
-        val tvLanguage = TextView(activity)
+        tvLanguage = TextView(activity)
         tvLanguage.textSize = 17F
-        tvLanguage.text = "Language"
+        //tvLanguage.text = "Language"
         tvLanguage.setTextColor(Color.WHITE)
         val languageParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -409,6 +411,11 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvCancel.text = parentActivity!!.info!!.value!!.cancel_button_text
         tvOption.text = parentActivity!!.info!!.value!!.option_button_text
         tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
+        if (!TextUtils.isEmpty(parentActivity!!.info!!.value!!.language_button_text)) {
+            tvLanguage.text = parentActivity!!.info!!.value!!.language_button_text
+        } else {
+            tvLanguage.text = "Language"
+        }
 
         tvContent1.text = Html.fromHtml(parentActivity!!.info!!.value!!.terms_content)
         val str: CharSequence = tvContent1.text

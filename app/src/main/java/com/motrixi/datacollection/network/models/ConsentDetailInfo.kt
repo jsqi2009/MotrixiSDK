@@ -37,9 +37,10 @@ class ConsentDetailInfo: Serializable {
         var terms_page_title: String? = null
         var link_page_title: String? = null
         var option_page_title: String? = null
+        var language_button_text: String? = null
         var terms_link: String? = null
         override fun toString(): String {
-            return "ListInfo(terms_content=$terms_content, options=$options, cancel_button_text=$cancel_button_text, confirm_button_text=$confirm_button_text, option_button_text=$option_button_text, back_button_text=$back_button_text, terms_page_title=$terms_page_title, link_page_title=$link_page_title, option_page_title=$option_page_title, terms_link=$terms_link)"
+            return "ListInfo(terms_content=$terms_content, options=$options, cancel_button_text=$cancel_button_text, confirm_button_text=$confirm_button_text, option_button_text=$option_button_text, back_button_text=$back_button_text, terms_page_title=$terms_page_title, link_page_title=$link_page_title, option_page_title=$option_page_title, language_button_text=$language_button_text, terms_link=$terms_link)"
         }
     }
 
