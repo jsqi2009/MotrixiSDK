@@ -70,6 +70,7 @@ class DataCollectionActivity : AppCompatActivity() {
     var info: ConsentDetailInfo.ResultInfo? = null
     var optionArray: ArrayList<String> = ArrayList()
     var lanList: ArrayList<LanguageInfo> = ArrayList()
+    var selectedOptionList: ArrayList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,10 +169,16 @@ class DataCollectionActivity : AppCompatActivity() {
         if (info!!.value!!.options!!.contains("|")) {
             optionArray = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
             Log.d("option array", optionArray.size.toString())
+
+            selectedOptionList = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
         } else {
             optionArray.clear()
             optionArray.add(info!!.value!!.options!!)
+
+            selectedOptionList.clear()
+            selectedOptionList.add(info!!.value!!.options!!)
         }
+
 
 
         // 获取碎片管理器
@@ -369,6 +376,21 @@ class DataCollectionActivity : AppCompatActivity() {
                 formValue += optionArray[index]
             } else {
                 formValue = formValue + optionArray[index] + "|"
+            }
+        }
+        return formValue
+    }
+
+    fun getOptionSelectedValue(): String {
+        var formValue = ""
+        if (selectedOptionList.size == 0) {
+            return formValue
+        }
+        for (index in selectedOptionList.indices) {
+            if (index == selectedOptionList.size - 1) {
+                formValue += selectedOptionList[index]
+            } else {
+                formValue = formValue + selectedOptionList[index] + "|"
             }
         }
         return formValue

@@ -316,7 +316,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
                 var formValue = ""
 
                 if (parentActivity!!.optionArray.size > 0) {
-                    formValue = parentActivity!!.getOptionValue()
+//                    formValue = parentActivity!!.getOptionValue()
+                    formValue = parentActivity!!.getOptionSelectedValue()
                     parentActivity!!.submitConsentFormData(formValue)
                 }
             }
@@ -327,6 +328,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
                     .addToBackStack("option")
                     .replace(Contants.HOME_CONTAINER_ID, OptionFragment())
                     .commit()
+
             }
         })
 

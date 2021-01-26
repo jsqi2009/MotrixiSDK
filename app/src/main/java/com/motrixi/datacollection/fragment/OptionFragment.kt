@@ -292,7 +292,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                 }
                 mSession!!.isCollecting = true
                 if (parentActivity!!.optionArray.size > 0) {
-                    var checkedValue = parentActivity!!.getOptionValue()
+//                    var checkedValue = parentActivity!!.getOptionValue()
+                    var checkedValue = parentActivity!!.getOptionSelectedValue()
                     parentActivity!!.submitConsentFormData(checkedValue)
                 }
             }
@@ -302,7 +303,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         parentActivity = activity as DataCollectionActivity?
         mSession = Session(activity!!)
-        initView()
+        //initView()
 
         customActionBarView()
         parentActivity!!.actionBar!!.customView = actionBarLayout
@@ -346,6 +347,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvConfirm.text = parentActivity!!.info!!.value!!.confirm_button_text
 
         contentLayout.removeAllViews()
+        Log.e("option size", parentActivity!!.optionArray.size.toString())
         for (index in parentActivity!!.optionArray.indices) {
             addCheckBoxView(index)
         }
@@ -365,8 +367,50 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox.textSize = 15F
         checkBox.layoutParams = checkBoxParams
         checkBox.highlightColor = Color.rgb(0, 150, 182)
-        checkBox.isClickable = false
-        checkBox.isChecked = true
+        //checkBox.isChecked = true
+        //checkBox.isChecked = parentActivity!!.selectedOptionList.contains(parentActivity!!.optionArray[index])
+        for (position in parentActivity!!.selectedOptionList.indices) {
+            if (parentActivity!!.selectedOptionList[position] == parentActivity!!.optionArray[index]) {
+                checkBox.isChecked = true
+                break
+            }
+        }
+        checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+
+                val checkText = checkBox.text.toString()
+                Log.e("text value", checkBox.text.toString())
+                if (isChecked) {
+                    Log.e("check status", isChecked.toString())
+                    var flag1 = true
+                    for (pos in parentActivity!!.selectedOptionList.indices) {
+                        if (parentActivity!!.selectedOptionList[pos] == checkText) {
+                            flag1 = false
+                            break
+                        }
+                    }
+                    if (flag1) {
+                        parentActivity!!.selectedOptionList.add(checkText)
+                    }
+                } else {
+                    Log.e("check status", isChecked.toString())
+                    var flag2 = false
+                    for (posi in parentActivity!!.selectedOptionList.indices) {
+                        if (parentActivity!!.selectedOptionList[posi] == checkText) {
+                            flag2 = true
+                            break
+                        }
+                    }
+                    if (flag2) {
+                        parentActivity!!.selectedOptionList.remove(checkText)
+                    }
+                }
+                Log.e("selected size", parentActivity!!.selectedOptionList.size.toString())
+            }
+        })
+        //checkBox.isClickable = false
+
+
         contentLayout.addView(checkBox)
     }
 
