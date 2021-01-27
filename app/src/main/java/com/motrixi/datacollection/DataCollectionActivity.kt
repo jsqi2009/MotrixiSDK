@@ -67,6 +67,7 @@ class DataCollectionActivity : FragmentActivity() {
     var info: ConsentDetailInfo.ResultInfo? = null
     var optionArray: ArrayList<String> = ArrayList()
     var lanList: ArrayList<LanguageInfo> = ArrayList()
+    var selectedOptionList: ArrayList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,9 +165,13 @@ class DataCollectionActivity : FragmentActivity() {
         if (info!!.value!!.options!!.contains("|")) {
             optionArray = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
             Log.d("option array", optionArray.size.toString())
+            selectedOptionList = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
         } else {
             optionArray.clear()
             optionArray.add(info!!.value!!.options!!)
+
+            selectedOptionList.clear()
+            selectedOptionList.add(info!!.value!!.options!!)
         }
 
         // 获取碎片管理器

@@ -287,7 +287,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                 }
                 mSession!!.isCollecting = true
                 //var checkedValue = getCheckedValue()
-                var checkedValue = getOptionValue()
+                //var checkedValue = getOptionValue()
+                var checkedValue = getOptionSelectedValue()
                 parentActivity!!.submitConsentFormData(checkedValue)
             }
         })
@@ -364,8 +365,47 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox.textSize = 15F
         checkBox.layoutParams = checkBoxParams
         checkBox.highlightColor = Color.rgb(0, 150, 182)
-        checkBox.isClickable = false
-        checkBox.isChecked = true
+        for (position in parentActivity!!.selectedOptionList.indices) {
+            if (parentActivity!!.selectedOptionList[position] == parentActivity!!.optionArray[index]) {
+                checkBox.isChecked = true
+                break
+            }
+        }
+        checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+
+                val checkText = checkBox.text.toString()
+                Log.e("text value", checkBox.text.toString())
+                if (isChecked) {
+                    Log.e("check status", isChecked.toString())
+                    var flag1 = true
+                    for (pos in parentActivity!!.selectedOptionList.indices) {
+                        if (parentActivity!!.selectedOptionList[pos] == checkText) {
+                            flag1 = false
+                            break
+                        }
+                    }
+                    if (flag1) {
+                        parentActivity!!.selectedOptionList.add(checkText)
+                    }
+                } else {
+                    Log.e("check status", isChecked.toString())
+                    var flag2 = false
+                    for (posi in parentActivity!!.selectedOptionList.indices) {
+                        if (parentActivity!!.selectedOptionList[posi] == checkText) {
+                            flag2 = true
+                            break
+                        }
+                    }
+                    if (flag2) {
+                        parentActivity!!.selectedOptionList.remove(checkText)
+                    }
+                }
+                Log.e("selected size", parentActivity!!.selectedOptionList.size.toString())
+            }
+        })
+        //checkBox.isClickable = false
+        //checkBox.isChecked = true
         contentLayout.addView(checkBox)
     }
 
@@ -471,6 +511,21 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                 } else {
                     formValue = formValue + parentActivity!!.optionArray[index] + "|"
                 }
+            }
+        }
+        return formValue
+    }
+
+    private fun getOptionSelectedValue(): String {
+        var formValue = ""
+        if (parentActivity!!.selectedOptionList.size == 0) {
+            return formValue
+        }
+        for (index in parentActivity!!.selectedOptionList.indices) {
+            if (index == parentActivity!!.selectedOptionList.size - 1) {
+                formValue += parentActivity!!.selectedOptionList[index]
+            } else {
+                formValue = formValue + parentActivity!!.selectedOptionList[index] + "|"
             }
         }
         return formValue

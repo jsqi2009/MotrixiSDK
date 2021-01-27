@@ -325,11 +325,11 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
                 if (parentActivity!!.optionArray.size > 0) {
 
-                    for (index in parentActivity!!.optionArray.indices) {
-                        if (index == parentActivity!!.optionArray.size -1) {
-                            formValue = formValue + parentActivity!!.optionArray[index]
+                    for (index in parentActivity!!.selectedOptionList.indices) {
+                        if (index == parentActivity!!.selectedOptionList.size -1) {
+                            formValue = formValue + parentActivity!!.selectedOptionList[index]
                         } else {
-                            formValue = formValue + parentActivity!!.optionArray[index] + "|"
+                            formValue = formValue + parentActivity!!.selectedOptionList[index] + "|"
                         }
                     }
 
