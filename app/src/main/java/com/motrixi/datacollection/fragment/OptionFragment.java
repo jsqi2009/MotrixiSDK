@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -264,7 +266,7 @@ public class OptionFragment extends Fragment {
 
     private void addCheckBoxView(int index) {
 
-        CheckBox checkBox = new CheckBox(getActivity());
+        final CheckBox checkBox = new CheckBox(getActivity());
         LinearLayout.LayoutParams checkBoxParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -279,8 +281,46 @@ public class OptionFragment extends Fragment {
         checkBox.setTextSize(15F);
         checkBox.setLayoutParams(checkBoxParams);
         checkBox.setHighlightColor(Color.rgb(0, 150, 182));
-        checkBox.setClickable(false);
-        checkBox.setChecked(true);
+
+        for (int i = 0; i < parentActivity.optionList.size(); i++) {
+            if (parentActivity.optionList.get(i).equals(parentActivity.optionArray[index])) {
+                checkBox.setChecked(true);
+                break;
+            }
+        }
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String checkText = checkBox.getText().toString();
+                Log.e("text value", checkText);
+                if (b) {
+                    boolean flag1 = true;
+                    for (int position = 0; position < parentActivity.optionList.size(); position++) {
+                        if (parentActivity.optionList.get(position).equals(checkText)) {
+                            flag1 = false;
+                            break;
+                        }
+                    }
+                    if (flag1) {
+                        parentActivity.optionList.add(checkText);
+                    }
+                } else {
+                    boolean flag2 = false;
+                    for (int pos = 0; pos < parentActivity.optionList.size(); pos++) {
+                        if (parentActivity.optionList.get(pos).equals(checkText)) {
+                            flag2 = true;
+                            break;
+                        }
+                    }
+                    if (flag2) {
+                        parentActivity.optionList.remove(checkText);
+                    }
+                }
+
+            }
+        });
+        //checkBox.setClickable(false);
+        //checkBox.setChecked(true);
         contentLayout.addView(checkBox);
     }
 

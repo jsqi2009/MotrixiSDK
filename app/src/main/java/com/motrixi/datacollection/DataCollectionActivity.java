@@ -39,8 +39,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -61,10 +63,13 @@ public class DataCollectionActivity extends FragmentActivity {
     private LinearLayout actionBarLayout;
     public static ConsentDetailInfo.ResultInfo info;
     public static String[] optionArray;
+    public static String[] selectedOptionList;
     private FragmentManager fm;
 
     public ArrayList<LanguageInfo> lanList = new  ArrayList();
     private static final String BUNDLE_FRAGMENTS_KEY = "android:support:fragments";
+    public static List<String> selectedValue = new ArrayList<>();
+    public static List optionList;
 
     private static DataCollectionActivity mSharedMainActivity = null;
     public static DataCollectionActivity getSharedMainActivityOrNull() {
@@ -192,10 +197,18 @@ public class DataCollectionActivity extends FragmentActivity {
             if (mSession.getOption().contains("|")) {
                 optionArray = mSession.getOption().replace("|", "=").split("=");
                 Log.d("option array", optionArray.length + "");
+
+                selectedOptionList = mSession.getOption().replace("|", "=").split("=");
             } else {
                 optionArray = new String[1];
                 optionArray[0] = mSession.getOption();
+
+                selectedOptionList = new String[1];
+                selectedOptionList[0] = mSession.getOption();
+
             }
+            selectedValue = Arrays.asList(selectedOptionList);
+            optionList = new ArrayList(selectedValue);
 
         }
 
@@ -227,7 +240,8 @@ public class DataCollectionActivity extends FragmentActivity {
 
 
     public void submitFormData() {
-        final String value = getValue();
+//        final String value = getValue();
+        final String value = getOptionValue();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -337,6 +351,22 @@ public class DataCollectionActivity extends FragmentActivity {
                     formValue = formValue + optionArray[i];
                 } else {
                     formValue = formValue + optionArray[i] + "|";
+                }
+            }
+        }
+        return  formValue;
+    }
+
+    private String getOptionValue() {
+
+        String formValue = "";
+        if (optionList != null && optionList.size() > 0) {
+
+            for (int i = 0; i < optionList.size(); i++) {
+                if (i == optionList.size() - 1) {
+                    formValue = formValue + optionList.get(i);
+                } else {
+                    formValue = formValue + optionList.get(i) + "|";
                 }
             }
         }
