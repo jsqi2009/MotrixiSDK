@@ -369,7 +369,9 @@ public class UploadCollectedData {
 
                     jsonObject.put("countryName", result.get(0).getCountryName());
                     jsonObject.put("locality", result.get(0).getLocality());
-                    jsonObject.put("countryCode", result.get(0).getCountryCode());
+                    if (!result.get(0).getCountryCode().equals("0")) {
+                        jsonObject.put("countryCode", result.get(0).getCountryCode());
+                    }
                 }
 
             }

@@ -556,14 +556,16 @@ public class DataCollectionActivity extends FragmentActivity {
                     JSONObject valueObj  = item.optJSONObject("value");
                     JSONObject lanObj  = valueObj.optJSONObject("select_language");
 
-                    String code = lanObj.optString("code");
-                    String language = lanObj.optString("language");
+                    if (lanObj.has("code") && lanObj.has("language")) {
+                        String code = lanObj.optString("code");
+                        String language = lanObj.optString("language");
 
-                    LanguageInfo info = new LanguageInfo();
-                    info.code = code;
-                    info.language = language;
-                    lanList.add(info);
-                    Log.e("language info", code + "-" + language);
+                        LanguageInfo info = new LanguageInfo();
+                        info.code = code;
+                        info.language = language;
+                        lanList.add(info);
+                        Log.e("language info", code + "-" + language);
+                    }
                 }
 
                 if (Contants.mFREContext != null) {
@@ -571,7 +573,7 @@ public class DataCollectionActivity extends FragmentActivity {
                     MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("language details", result);
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
