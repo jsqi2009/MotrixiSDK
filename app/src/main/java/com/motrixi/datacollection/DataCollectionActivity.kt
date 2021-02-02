@@ -401,11 +401,14 @@ class DataCollectionActivity : FragmentActivity() {
                             val item:JSONObject = resultArray.get(i) as JSONObject
                             val valueObj:JSONObject = item.optJSONObject("value")
                             val languageObj:JSONObject = valueObj.optJSONObject("select_language")
-                            val code = languageObj.optString("code")
-                            val language = languageObj.optString("language")
 
-                            lanList.add(LanguageInfo(code, language))
-                            Log.e("language info", "$code-$language")
+                            if (languageObj.has("code") && languageObj.has("language")) {
+                                val code = languageObj.optString("code")
+                                val language = languageObj.optString("language")
+
+                                lanList.add(LanguageInfo(code, language))
+                                Log.e("language info", "$code-$language")
+                            }
                         }
                     } else {
                         UploadLogUtil.uploadLogData(context, "get consent list failure ")

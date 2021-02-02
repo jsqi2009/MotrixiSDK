@@ -212,7 +212,10 @@ object UploadCollectedData {
 
                     jsonObject.put("countryName", result[0].countryName)
                     jsonObject.put("locality", result[0].locality)
-                    jsonObject.put("countryCode", result[0].countryCode)
+                    if (result[0].countryCode != "0") {
+                        jsonObject.put("countryCode", result[0].countryCode)
+                    }
+
                 }
 
             }
