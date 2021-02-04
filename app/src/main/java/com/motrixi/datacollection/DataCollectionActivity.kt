@@ -5,16 +5,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -71,6 +69,7 @@ class DataCollectionActivity : AppCompatActivity() {
     var optionArray: ArrayList<String> = ArrayList()
     var lanList: ArrayList<LanguageInfo> = ArrayList()
     var selectedOptionList: ArrayList<String> = ArrayList()
+    private var mLocationManager: LocationManager? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +100,8 @@ class DataCollectionActivity : AppCompatActivity() {
         mSession = Session(this)
         getConsentDataList(this, "en", 0)
         //initView()
+
+        checkGPSStatus()
     }
 
     override fun onResume() {
@@ -108,6 +109,17 @@ class DataCollectionActivity : AppCompatActivity() {
         //mSession!!.agreeFlag = true
 
         getLanguageList(this)
+    }
+
+    private fun checkGPSStatus() {
+        mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (Contants.onLogListener != null) {
+                Contants.onLogListener!!.onLogListener(
+                    MessageUtil.logMessage(Contants.SET_GPS, false, "The GPS is disabled, please set the GPS to enable")
+                )
+            }
+        }
     }
 
     private fun customActionBarView() {

@@ -3,14 +3,18 @@ package com.motrixi.datacollection.fragment
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Picture
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
+import android.webkit.WebView.GONE
+import android.webkit.WebView.PictureListener
 import android.webkit.WebViewClient
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -19,6 +23,7 @@ import com.motrixi.datacollection.content.Contants
 import com.motrixi.datacollection.content.Session
 import com.motrixi.datacollection.utils.DisplayUtil
 import com.motrixi.datacollection.utils.NetworkUtil
+import java.util.function.LongFunction
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,7 +47,7 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
     lateinit var webView: WebView
     private var actionBarLayout: LinearLayout? = null
     private var mSession: Session? = null
-    private val bar: ProgressBar? = null
+    lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,20 +113,43 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         tvTitle.layoutParams = titleParams
         topLayout.addView(tvTitle)
 
-        webView = WebView(activity!!)
-        val webParams = RelativeLayout.LayoutParams(
+
+        /*var progressBarLayout = RelativeLayout(activity)
+        val barLayoutParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        barLayoutParams.addRule(RelativeLayout.BELOW, topLayout.id)
+        progressBarLayout.layoutParams = barLayoutParams
+        moreLayout.addView(progressBarLayout)*/
+
+        progressBar = ProgressBar(activity!!)
+        val barParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        barParams.addRule(RelativeLayout.CENTER_IN_PARENT)
+        progressBar.layoutParams = barParams
+        progressBar.isIndeterminate  = true
+        moreLayout.addView(progressBar)
+
+
+        webView = WebView(activity!!)
+        val webParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         webParams.addRule(RelativeLayout.BELOW, topLayout.id)
         webView.layoutParams  = webParams
         moreLayout.addView(webView)
+
 
         ivBack.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 activity!!.onBackPressed()
             }
         })
+
 
 
         //initView()
@@ -166,10 +194,40 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
             Log.d("network status", "offline")
             webSettings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
+        //webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
 
         webSettings.domStorageEnabled = true
         webSettings.databaseEnabled = true
-        webView!!.webViewClient = webClient
+        //webView.webViewClient = webClient
+
+        webView.setPictureListener(pictureListener)
+
+        webView.webViewClient = object : WebViewClient(){
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                Log.e("finish", "onPageFinished")
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                Log.e("start load", "onPageStarted")
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                return super.shouldOverrideUrlLoading(view, url)
+            }
+
+
+        }
+
+        webView.webChromeClient = object : WebChromeClient(){
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                super.onProgressChanged(view, newProgress)
+                if (newProgress == 100) {
+                    Log.e("load done", "Finished")
+                }
+            }
+        }
     }
 
     private fun customActionBarView() {
@@ -200,21 +258,38 @@ class ShowMoreFragment : Fragment(), View.OnClickListener {
         actionBarLayout!!.addView(tvTitle)
     }
 
+
+    private val pictureListener : PictureListener = object : PictureListener {
+        override fun onNewPicture(p0: WebView?, p1: Picture?) {
+            Log.e("picture", "listener")
+            if (progressBar != null) {
+                if (progressBar.isShown) {
+                    progressBar.visibility = View.GONE
+                }
+            }
+        }
+
+    }
+
     private val webClient = object : WebViewClient() {
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
+            Log.e("start load", "onPageStarted")
 
         }
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            Log.e("finish", "onPageFinished")
         }
 
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
             Log.d(TAG, url!!)
             return false
         }
+
+
     }
 
     override fun onClick(view: View?) {
