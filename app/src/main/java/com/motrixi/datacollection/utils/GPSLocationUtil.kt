@@ -29,7 +29,7 @@ object GPSLocationUtil {
 
         // check the gps whether on
         if (!mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(context, "Please set the GPS on...", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Please set the GPS on...", Toast.LENGTH_SHORT).show()
             //val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             //mContext.startActivityForResult(intent, 0)
             return
