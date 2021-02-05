@@ -152,6 +152,7 @@ public class PrivacyStatementFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        privateLayout.setBackgroundColor(Color.rgb(255, 255, 255));
 
         RelativeLayout topLayout = new RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new RelativeLayout.LayoutParams(
@@ -197,10 +198,15 @@ public class PrivacyStatementFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        //scrollParams.setMargins(50, 20, 50, 20);
+        scrollParams.setMargins(DisplayUtil.dp2px(getActivity(), 8),0,
+                DisplayUtil.dp2px(getActivity(), 8),DisplayUtil.dp2px(getActivity(), 5));
         scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
+
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
         scrollView.setBackgroundColor(Color.rgb(255, 255, 255));
+        scrollView.setVerticalScrollBarEnabled(false);
         privateLayout.addView(scrollView);
 
         contentLayout = new LinearLayout(getActivity());
@@ -209,6 +215,8 @@ public class PrivacyStatementFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        //contentParams.setMargins(50, 20, 50, 20);
+        contentLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         contentParams.setMargins(DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15),
                 DisplayUtil.dp2px(getActivity(), 15),DisplayUtil.dp2px(getActivity(), 15));
         contentLayout.setLayoutParams(contentParams);

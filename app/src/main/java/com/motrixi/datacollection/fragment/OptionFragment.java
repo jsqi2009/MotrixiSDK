@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class OptionFragment extends Fragment {
     private TextView tvBack;
     private TextView tvConfirm;
     private TextView tvTitle;
+
 
     public OptionFragment() {
         // Required empty public constructor
@@ -104,6 +106,7 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
         optionLayout.setLayoutParams(rootParams);
+        optionLayout.setBackgroundColor(Color.rgb(255, 255, 255));
 
         RelativeLayout topLayout = new  RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new  RelativeLayout.LayoutParams(
@@ -132,10 +135,13 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        scrollParams.setMargins(DisplayUtil.dp2px(getActivity(), 8),0,
+                DisplayUtil.dp2px(getActivity(), 8),DisplayUtil.dp2px(getActivity(), 5));
         scrollParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 70);
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         scrollView.setLayoutParams(scrollParams);
         scrollView.setBackgroundColor(Color.rgb(255, 255, 255));
+        scrollView.setVerticalScrollBarEnabled(false);
         optionLayout.addView(scrollView);
 
         contentLayout = new  LinearLayout(getActivity());

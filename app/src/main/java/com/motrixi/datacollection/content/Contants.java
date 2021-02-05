@@ -39,6 +39,7 @@ public class Contants {
     public static int FETCH_CONSENT_DATA = 1004;   // fetch consent form data
     public static int CANCEL_COLLECT_DATA = 1005;    // cancel collect data
     public static int GET_LANGUAGE_LIST = 1006;    // cancel collect data
+    public static int SET_GPS = 1007;    // SET_GPS
 
     public static FREContext mFREContext = null;
 

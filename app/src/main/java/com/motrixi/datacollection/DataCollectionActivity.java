@@ -3,6 +3,7 @@ package com.motrixi.datacollection;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.PersistableBundle;
 import android.provider.Settings;
@@ -70,6 +71,7 @@ public class DataCollectionActivity extends FragmentActivity {
     private static final String BUNDLE_FRAGMENTS_KEY = "android:support:fragments";
     public static List<String> selectedValue = new ArrayList<>();
     public static List optionList;
+    private LocationManager mLocationManager;
 
     private static DataCollectionActivity mSharedMainActivity = null;
     public static DataCollectionActivity getSharedMainActivityOrNull() {
@@ -103,6 +105,8 @@ public class DataCollectionActivity extends FragmentActivity {
 
         consentFormDetails("en", 0);
         getAdvertisingId(mSharedMainActivity);
+
+        checkGPSStatus();
     }
 
     @Override
@@ -116,6 +120,16 @@ public class DataCollectionActivity extends FragmentActivity {
 
         //getAdvertisingId(this);
         //getAdvertisingId();
+    }
+
+    private void checkGPSStatus(){
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (Contants.mFREContext != null) {
+                String result = MessageUtil.logMessage(Contants.SET_GPS, false, "The GPS is disabled, please set the GPS to enable");
+                MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("GPS disabled", result);
+            }
+        }
     }
 
     /**
@@ -176,7 +190,6 @@ public class DataCollectionActivity extends FragmentActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
         rootLayout.setLayoutParams(rootParams);
-
 
         frameLayout  = new FrameLayout(this);
         FrameLayout.LayoutParams itemParams = new  FrameLayout.LayoutParams(

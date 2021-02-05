@@ -3,6 +3,7 @@ package com.motrixi.datacollection.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Picture;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,7 @@ public class ShowMoreFragment extends Fragment {
     private WebView webView;
     private LinearLayout actionBarLayout;
     private TextView tvTitle;
+    private ProgressBar progressBar;
 
     public ShowMoreFragment() {
         // Required empty public constructor
@@ -114,6 +117,7 @@ public class ShowMoreFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
         moreLayout.setLayoutParams(rootParams);
+        moreLayout.setBackgroundColor(Color.rgb(255, 255, 255));
 
         RelativeLayout topLayout = new RelativeLayout(getActivity());
         RelativeLayout.LayoutParams topParams = new  RelativeLayout.LayoutParams(
@@ -137,10 +141,20 @@ public class ShowMoreFragment extends Fragment {
         tvTitle.setLayoutParams(titleParams);
         topLayout.addView(tvTitle);
 
+        progressBar = new ProgressBar(getActivity());
+        RelativeLayout.LayoutParams barParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        barParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        progressBar.setLayoutParams(barParams);
+        progressBar.setIndeterminate(true);
+        moreLayout.addView(progressBar);
+
         webView = new  WebView(getActivity());
         RelativeLayout.LayoutParams webParams = new  RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
         webParams.addRule(RelativeLayout.BELOW, topLayout.getId());
         webView.setLayoutParams(webParams);
@@ -175,6 +189,8 @@ public class ShowMoreFragment extends Fragment {
             webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
+
+        //webView.setPictureListener(pictureListener);
         webView.setWebViewClient(webViewClient);
     }
 
@@ -214,11 +230,22 @@ public class ShowMoreFragment extends Fragment {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i("ansen","url:"+url);
+            Log.i("url","url:"+url);
 
             return super.shouldOverrideUrlLoading(view, url);
         }
 
     };
+
+    /*private WebView.PictureListener pictureListener = new WebView.PictureListener() {
+        @Override
+        public void onNewPicture(WebView webView, @Nullable Picture picture) {
+            if (progressBar != null) {
+                if (progressBar.isShown()) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        }
+    };*/
 
 }
