@@ -268,6 +268,18 @@ public class OptionFragment extends Fragment {
             addCheckBoxView(i);
         }
 
+        TextView tvStatement = new  TextView(getActivity());
+        LinearLayout.LayoutParams statementParams = new  LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        statementParams.topMargin = DisplayUtil.dp2px(getActivity(), 10);
+        tvStatement.setLayoutParams(statementParams);
+        tvStatement.setTextSize(18F);
+        tvStatement.setText(Contants.STATEMENT.replace(Contants.SPECIAL_VALUE, ""));
+        tvStatement.setTextColor(Color.GRAY);
+        contentLayout.addView(tvStatement);
+
     }
 
     private void addCheckBoxView(int index) {

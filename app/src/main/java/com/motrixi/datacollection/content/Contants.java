@@ -12,6 +12,7 @@ import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 public class Contants {
 
     public static final String BASE_SERVER_URL = "https://api.motrixi.osvlabs.com";
+//    public static final String BASE_SERVER_URL = "https://platform.motrixi.com";
     public static final String WEB_URL = "https://www.motrixi.com/index.php/privacy-policy-2/";
     public static final String RESPONSE_ERROR = "error";
 
@@ -57,4 +58,8 @@ public class Contants {
     public static ConsentDetailInfo.ResultInfo formInfo = null;
     public static String consentFormID = "";
     public static long lastSyncTime = 0;
+
+    public static String STATEMENT = "";
+    public static final String SPECIAL_VALUE = "**##**";
+
 }

@@ -523,9 +523,12 @@ public class PrivacyStatementFragment extends Fragment {
                 }
                 //mSession.setLanguageButton(valueObject.optString("language_button_text"));
 
+                Contants.STATEMENT = "";
                 if (!TextUtils.isEmpty(parentActivity.mSession.getOption())) {
                     if (parentActivity.mSession.getOption().contains("|")) {
                         parentActivity.optionArray = parentActivity.mSession.getOption().replace("|", "=").split("=");
+
+                        fetchStatement();
                         Log.d("option array", parentActivity.optionArray.length + "");
                     } else {
                         parentActivity.optionArray = new String[1];
@@ -555,6 +558,32 @@ public class PrivacyStatementFragment extends Fragment {
             if (Contants.mFREContext != null) {
                 String result = MessageUtil.logMessage(Contants.FETCH_CONSENT_DATA, false, "get consent form data failure");
                 MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("consent details", result);
+            }
+        }
+    }
+
+    private void fetchStatement(){
+
+        int index = -1;
+        for (int i = 0; i < parentActivity.optionArray.length; i++) {
+            if (parentActivity.optionArray[i].contains(Contants.SPECIAL_VALUE)) {
+                Contants.STATEMENT = parentActivity.optionArray[i];
+                index = i;
+                break;
+            }
+        }
+
+        if (!TextUtils.isEmpty(Contants.STATEMENT)) {
+            //判断数据合理性
+            if (index >= 0 && index < parentActivity.optionArray.length) {
+                String[] option_arrays_result = new String[parentActivity.optionArray.length - 1];
+                //将arrays数组在index前的元素都复制到新数组arrays_result中
+                System.arraycopy(parentActivity.optionArray, 0, option_arrays_result, 0, index);
+                //判断index之后是否还有元素，有则将index后的元素从index位置复制到新数组中
+                if (index < parentActivity.optionArray.length - 1) {
+                    System.arraycopy(parentActivity.optionArray, index + 1, option_arrays_result, index, option_arrays_result.length - index);
+                }
+                parentActivity.optionArray = option_arrays_result;
             }
         }
     }
