@@ -8,10 +8,15 @@ object Contants {
 
 
     val BASE_SERVER_URL = "https://api.motrixi.osvlabs.com"
+    //val BASE_SERVER_URL = "https://platform.motrixi.com"
     val WEB_URL = "https://www.motrixi.com/index.php/privacy-policy-2/"
     var advertisingID = ""
     var APP_ID = ""
     var APP_KEY = ""
+
+    var STATEMENT: String = ""
+    val SPECIAL_VALUE = "**##**"
+
 
     val PRIVATE_STATEMENT_1 = "By entering your email and clicking confirm, you consent to the collection of the use of your data to our trusted partners and us. Our trusted partners whom we share the information with may include storage, analytic providers, agencies, platforms, data providers, and research development. The purpose of sharing the data allows our third parties for the following (a) Data Customization: to custom data with demographics, behavioral, contextual or other information for personalized targeted advertisement (b) Measurement: measure key point indicators to evaluate marketing performance (c) Analytics:" +
             "Identify and analyze behavioral data and patterns, and/or make more-informed business decisions and verify or disprove scientific models, theories and hypotheses (d) Modeling: To pinpoint key shared attributions for look alike audiences (e) Research and Development: allowing parties to process" +

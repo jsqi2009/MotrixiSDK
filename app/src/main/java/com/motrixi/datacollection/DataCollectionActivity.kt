@@ -175,12 +175,15 @@ class DataCollectionActivity : FragmentActivity() {
     @SuppressLint("ResourceType")
     private fun initView(flag: Int) {
 
+        Contants.STATEMENT = ""
 
         info = mSession!!.consentDataInfo
         if (info!!.value!!.options!!.contains("|")) {
             optionArray = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
             Log.d("option array", optionArray.size.toString())
             selectedOptionList = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
+
+            fetchStatement()
         } else {
             optionArray.clear()
             optionArray.add(info!!.value!!.options!!)
@@ -200,6 +203,19 @@ class DataCollectionActivity : FragmentActivity() {
             fm.beginTransaction().replace(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
         } else {
             fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
+        }
+    }
+
+    fun fetchStatement(){
+        for (str in optionArray) {
+            if (str.contains(Contants.SPECIAL_VALUE)) {
+                Contants.STATEMENT = str
+                break
+            }
+        }
+        if (!Contants.STATEMENT.isEmpty()) {
+            optionArray.remove(Contants.STATEMENT)
+            selectedOptionList.remove(Contants.STATEMENT)
         }
     }
 

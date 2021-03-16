@@ -346,6 +346,18 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             addCheckBoxView(index)
         }
 
+        val tvStatement = TextView(activity)
+        val statementParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        statementParams.topMargin = DisplayUtil.dp2px(activity!!, 10)
+        tvStatement.layoutParams = statementParams
+        tvStatement.textSize = 18F
+        tvStatement.text = Contants.STATEMENT.replace(Contants.SPECIAL_VALUE, "")
+        tvStatement.setTextColor(Color.GRAY)
+        contentLayout.addView(tvStatement)
+
     }
 
     private fun addCheckBoxView(index: Int) {
