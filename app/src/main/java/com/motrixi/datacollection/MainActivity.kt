@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 //初始化
 //        MotrixiSDK.init(this, "7536f220-27b5-11eb-96a9-6d9cb391fb34")
-        MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec")
+        MotrixiSDK.init(this, "6ebc1d80-7762-11eb-8446-d1713a3f35b9")
 //        MotrixiSDK.init(this, "123")
 
         //MotrixiSDK.init(上下文对象, "appKey")

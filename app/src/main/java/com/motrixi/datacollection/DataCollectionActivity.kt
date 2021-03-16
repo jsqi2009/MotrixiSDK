@@ -52,9 +52,7 @@ class DataCollectionActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.READ_CONTACTS,
-        Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.GET_ACCOUNTS
+        Manifest.permission.FOREGROUND_SERVICE
     )
     private val request_code = 1
     var mPermissionList: ArrayList<String> = ArrayList()
