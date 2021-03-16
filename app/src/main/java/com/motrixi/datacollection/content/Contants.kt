@@ -10,8 +10,8 @@ object Contants {
 
 
 
-//    val BASE_SERVER_URL = "https://api.motrixi.osvlabs.com"
-    val BASE_SERVER_URL = " https://platform.motrixi.com"
+    val BASE_SERVER_URL = "https://api.motrixi.osvlabs.com"
+//    val BASE_SERVER_URL = " https://platform.motrixi.com"
 
     val WEB_URL = "https://www.motrixi.com/index.php/privacy-policy-2/"
     var advertisingID = ""
