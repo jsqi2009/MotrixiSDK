@@ -55,6 +55,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
     lateinit var contentLayout: LinearLayout
     lateinit var tvBack: TextView
     lateinit var tvConfirm: TextView
+    lateinit var statementLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,6 +130,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         optionLayout.addView(scrollView)
 
         contentLayout = LinearLayout(activity)
+        contentLayout.id = Contants.STATEMENT_ID
         contentLayout!!.orientation = LinearLayout.VERTICAL
         val contentParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -216,6 +218,25 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         checkBox6.highlightColor = Color.rgb(0, 150, 182)
         checkBox6.isClickable = false
         //contentLayout.addView(checkBox6)
+
+        statementLayout = LinearLayout(activity)
+        statementLayout.orientation = LinearLayout.VERTICAL
+        val statementParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        statementParams.addRule(RelativeLayout.BELOW, contentLayout.id)
+        statementParams.setMargins(DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15))
+        statementLayout.layoutParams = statementParams
+
+        val tvStatement = TextView(activity)
+        tvStatement.textSize = 18F
+        tvStatement.text = "123"
+
+        //statementLayout.addView(tvStatement)
+        //optionLayout.addView(statementLayout)
+
+        //contentLayout.addView(tvStatement)
 
         var bottomLayout: LinearLayout = LinearLayout(activity)
         bottomLayout.orientation = LinearLayout.HORIZONTAL
@@ -351,6 +372,17 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         for (index in parentActivity!!.optionArray.indices) {
             addCheckBoxView(index)
         }
+        val tvStatement = TextView(activity)
+        val statementParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        statementParams.topMargin = DisplayUtil.dp2px(activity!!, 20)
+        tvStatement.layoutParams = statementParams
+        tvStatement.textSize = 18F
+        tvStatement.text = Contants.STATEMENT.replace(Contants.SPECIAL_VALUE, "")
+        tvStatement.setTextColor(Color.GRAY)
+        contentLayout.addView(tvStatement)
 
     }
 

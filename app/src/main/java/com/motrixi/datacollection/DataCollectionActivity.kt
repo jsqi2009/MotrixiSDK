@@ -176,6 +176,7 @@ class DataCollectionActivity : AppCompatActivity() {
     private fun initView(tag: Int) {
         //mSession = Session(this)
 
+        Contants.STATEMENT = ""
         info = mSession!!.consentDataInfo
         Log.e("option",info!!.value!!.options!!)
         if (info!!.value!!.options!!.contains("|")) {
@@ -183,6 +184,8 @@ class DataCollectionActivity : AppCompatActivity() {
             Log.d("option array", optionArray.size.toString())
 
             selectedOptionList = info!!.value!!.options!!.replace("|", "=").split("=") as ArrayList<String>
+
+            fetchStatement()
         } else {
             optionArray.clear()
             optionArray.add(info!!.value!!.options!!)
@@ -212,6 +215,19 @@ class DataCollectionActivity : AppCompatActivity() {
             fm.beginTransaction().add(Contants.HOME_CONTAINER_ID, PrivacyStatementFragment()).commit()
         }
 
+    }
+
+    fun fetchStatement(){
+        for (str in optionArray) {
+            if (str.contains(Contants.SPECIAL_VALUE)) {
+                Contants.STATEMENT = str
+                break
+            }
+        }
+        if (!Contants.STATEMENT.isEmpty()) {
+            optionArray.remove(Contants.STATEMENT)
+            selectedOptionList.remove(Contants.STATEMENT)
+        }
     }
 
     fun submitConsentFormData(value: String) {
