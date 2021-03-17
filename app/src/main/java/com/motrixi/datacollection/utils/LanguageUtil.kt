@@ -1,5 +1,6 @@
 package com.motrixi.datacollection.utils
 
+import android.content.Context
 import java.util.*
 
 /**
@@ -16,5 +17,12 @@ object LanguageUtil {
         val country = locale.country
         return "$lan/$country"
 
+    }
+
+    fun getCountryCode(context: Context): String{
+        var countryCode = ""
+        var locale = context.resources.configuration.locale
+        countryCode = locale.country
+        return countryCode
     }
 }

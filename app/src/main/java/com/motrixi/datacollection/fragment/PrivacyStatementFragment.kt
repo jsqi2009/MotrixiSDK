@@ -140,7 +140,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        scrollParams.bottomMargin = DisplayUtil.dp2px(activity!!, 70)
+        scrollParams.bottomMargin = DisplayUtil.dp2px(activity!!, 30)
         scrollParams.addRule(RelativeLayout.BELOW, topLayout.id)
         scrollView.layoutParams  =scrollParams
         privateLayout.addView(scrollView)
@@ -151,7 +151,8 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        contentParams.setMargins(DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15))
+        //contentParams.setMargins(DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15))
+        contentParams.setMargins(DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 5),DisplayUtil.dp2px(activity!!, 15),DisplayUtil.dp2px(activity!!, 15))
         contentLayout.layoutParams = contentParams
         scrollView.addView(contentLayout)
 
