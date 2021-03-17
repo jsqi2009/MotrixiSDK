@@ -354,6 +354,7 @@ public class DataCollectionActivity extends FragmentActivity {
                 HashMap<String, String> map = new HashMap();
                 map.put("app_key", mSession.getAppKey());
                 map.put("android_id",androidID);
+                map.put("advertising_id",Contants.advertisingID);
 
                 msg = PostMethodUtils.httpPost(Contants.CANCEL_CONSENT_API, map);
                 Log.e("cancel response", msg);

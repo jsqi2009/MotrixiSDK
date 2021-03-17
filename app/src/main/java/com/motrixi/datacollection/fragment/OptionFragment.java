@@ -274,6 +274,7 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         statementParams.topMargin = DisplayUtil.dp2px(getActivity(), 10);
+        statementParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 30);
         tvStatement.setLayoutParams(statementParams);
         tvStatement.setTextSize(18F);
         tvStatement.setText(Contants.STATEMENT.replace(Contants.SPECIAL_VALUE, ""));
