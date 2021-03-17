@@ -352,6 +352,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         statementParams.topMargin = DisplayUtil.dp2px(activity!!, 10)
+        statementParams.bottomMargin = DisplayUtil.dp2px(activity!!, 30)
         tvStatement.layoutParams = statementParams
         tvStatement.textSize = 18F
         tvStatement.text = Contants.STATEMENT.replace(Contants.SPECIAL_VALUE, "")

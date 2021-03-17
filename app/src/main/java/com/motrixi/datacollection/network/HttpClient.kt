@@ -224,11 +224,12 @@ object HttpClient {
         return call
     }
 
-    fun rejectCollectionData(context:Context,appKey:String,androidID:String):Call<JsonObject>{
+    fun rejectCollectionData(context:Context,appKey:String,androidID:String, advertisingID: String):Call<JsonObject>{
 
         var map:HashMap<String,Any> = HashMap()
         map.put("app_key",appKey)
         map.put("android_id",androidID)
+        map.put("advertising_id",advertisingID)
 
         val call=mHttpApi!!.requestAuthPost(getHeaders(context),
             "api","cancel_consent","add",map)
@@ -243,6 +244,21 @@ object HttpClient {
 
         return call
     }
+
+    fun uploadPresent(context: Context, appKey: String, androidID: String, advertisingID: String, countryCode: String) : Call<JsonObject> {
+
+        var map: HashMap<String, Any> = HashMap()
+        map.put("app_key", appKey)
+        map.put("android_id", androidID)
+        map.put("advertising_id", advertisingID)
+        map.put("country", countryCode)
+
+        val call = mHttpApi!!.requestAuthPost(getHeaders(context),
+            "api","consent_popup","create", map)
+
+        return call
+    }
+
 
 
 

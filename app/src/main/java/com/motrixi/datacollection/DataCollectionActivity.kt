@@ -28,10 +28,7 @@ import com.motrixi.datacollection.fragment.PrivacyStatementFragment
 import com.motrixi.datacollection.network.HttpClient
 import com.motrixi.datacollection.network.models.ConsentDetailInfo
 import com.motrixi.datacollection.network.models.LanguageInfo
-import com.motrixi.datacollection.utils.DisplayUtil
-import com.motrixi.datacollection.utils.MessageUtil
-import com.motrixi.datacollection.utils.UploadCollectedData
-import com.motrixi.datacollection.utils.UploadLogUtil
+import com.motrixi.datacollection.utils.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Callback
@@ -108,6 +105,8 @@ class DataCollectionActivity : FragmentActivity() {
         //mSession!!.agreeFlag = true
 
         getLanguageList(this)
+
+        uploadPresent(this)
     }
 
     private fun checkGPSStatus() {
@@ -270,7 +269,7 @@ class DataCollectionActivity : FragmentActivity() {
         var appKey=Contants.APP_KEY
         var androidID = Settings.System.getString(this.contentResolver,Settings.Secure.ANDROID_ID)
 
-        var call=HttpClient.rejectCollectionData(this,appKey,androidID)
+        var call=HttpClient.rejectCollectionData(this,appKey,androidID, Contants.advertisingID)
         call.enqueue(object:Callback<JsonObject>{
             override fun onFailure(call:retrofit2.Call<JsonObject>,t:Throwable){
                 Log.d("cancel status","network failure")
@@ -500,6 +499,34 @@ class DataCollectionActivity : FragmentActivity() {
         }
         return formValue
     }
+
+    private fun uploadPresent(context: Context) {
+
+        val appKey = Contants.APP_KEY
+        val androidID = Settings.System.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+        val country = LanguageUtil.getCountryCode(this)
+
+        val call = HttpClient.uploadPresent(context, appKey, androidID, Contants.advertisingID, country)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
+                Log.d("upload present", "failure")
+                UploadLogUtil.uploadLogData(context, t.message.toString())
+            }
+
+            override fun onResponse(call: retrofit2.Call<JsonObject>, response: Response<JsonObject>) {
+                try {
+                    if (response.isSuccessful) {
+                        UploadLogUtil.uploadLogData(context, "upload present success ")
+                    } else {
+                        UploadLogUtil.uploadLogData(context, "upload present failure ")
+                    }
+                } catch (e: Exception) {
+                    UploadLogUtil.uploadLogData(context, e.message.toString())
+                }
+            }
+        })
+    }
+
 
 
 }

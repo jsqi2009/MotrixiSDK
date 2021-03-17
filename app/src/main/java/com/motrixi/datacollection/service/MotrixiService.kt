@@ -31,8 +31,8 @@ class MotrixiService: Service() {
     private val CHANNEL_NAME = "motrixi_sdk_foreground_service"
     private var id = 100
     private var mSession: Session? = null
-//    private val TIME_VALUE: Long = 24*60*60*1000
-    private val TIME_VALUE: Long = 10*60*1000
+    private val TIME_VALUE: Long = 24*60*60*1000
+//    private val TIME_VALUE: Long = 10*60*1000
 
 
     override fun onCreate() {
