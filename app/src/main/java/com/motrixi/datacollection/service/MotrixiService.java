@@ -35,8 +35,8 @@ public class MotrixiService extends Service {
     private static String CHANNEL_ID = "motrixi_sdk_channel";
     private static String CHANNEL_NAME = "motrixi_sdk_foreground_service";
     private int id = 100;
-    //    private val TIME_VALUE: Long = 24*60*60*1000
-    private static Long TIME_VALUE = Long.valueOf(10*60*1000);
+        private static Long TIME_VALUE = Long.valueOf(24*60*60*1000);
+//    private static Long TIME_VALUE = Long.valueOf(10*60*1000);
     private Session session;
 
     @Override

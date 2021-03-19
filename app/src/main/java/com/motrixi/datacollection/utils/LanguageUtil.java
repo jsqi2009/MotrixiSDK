@@ -1,5 +1,7 @@
 package com.motrixi.datacollection.utils;
 
+import android.content.Context;
+
 import java.util.Locale;
 
 /**
@@ -16,5 +18,12 @@ public class LanguageUtil {
         String country = locale.getCountry();
         return lan + "/" + country;
 
+    }
+
+    public static String getCountryCode(Context context){
+        String countryCode = "";
+        Locale locale = context.getResources().getConfiguration().locale;
+        countryCode = locale.getCountry();
+        return  countryCode;
     }
 }

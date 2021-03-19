@@ -74,9 +74,35 @@ public class MotrixiActivity extends FragmentActivity {
         verifyKey();
 
         startService();
+
+        getAdvertisingId(mActivity);
     }
 
+    /**
+     * get the AdvertisingId
+     */
+    private void getAdvertisingId(final Context context) {
+        try {
+            Executors.newSingleThreadExecutor().execute(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        Log.e("google Id:", "getting....");
+                        String googleId = AdvertisingIdUtil.getGoogleAdId(context.getApplicationContext());
+                        Log.e("google Id:", googleId);
 
+                        Contants.advertisingID = googleId;
+                        mSession.setAdvertisingID(googleId);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("TAG", e.getMessage());
+                    }
+                }
+            });
+        } catch ( Exception e) {
+        }
+    }
 
     /**
      * set listener

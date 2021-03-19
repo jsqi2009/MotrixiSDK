@@ -31,6 +31,7 @@ import com.motrixi.datacollection.network.PostMethodUtils;
 import com.motrixi.datacollection.network.models.ConsentDetailInfo;
 import com.motrixi.datacollection.network.models.LanguageInfo;
 import com.motrixi.datacollection.utils.AdvertisingIdUtil;
+import com.motrixi.datacollection.utils.LanguageUtil;
 import com.motrixi.datacollection.utils.MessageUtil;
 import com.motrixi.datacollection.utils.UploadCollectedData;
 import com.motrixi.datacollection.utils.UploadLogUtil;
@@ -120,6 +121,7 @@ public class DataCollectionActivity extends FragmentActivity {
 
         //getAdvertisingId(this);
         //getAdvertisingId();
+        uploadPresent();
     }
 
     private void checkGPSStatus(){
@@ -169,7 +171,7 @@ public class DataCollectionActivity extends FragmentActivity {
                         String googleId = AdvertisingIdUtil.getGoogleAdId(context.getApplicationContext());
                         Log.e("google Id:", googleId);
 
-//                        Contants.advertisingID = googleId;
+                        Contants.advertisingID = googleId;
                         mSession.setAdvertisingID(googleId);
 
                     } catch (Exception e) {
@@ -636,6 +638,25 @@ public class DataCollectionActivity extends FragmentActivity {
                 MotrixiSDKInit.sdkContext.dispatchStatusEventAsync("language details", result);
             }
         }
+    }
+
+    public void uploadPresent() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msg;
+                String androidID = Settings.System.getString(getSharedMainActivity().getContentResolver(),Settings.Secure.ANDROID_ID);
+                HashMap<String, String> map = new HashMap();
+                map.put("app_key", mSession.getAppKey());
+                map.put("android_id",androidID);
+                map.put("advertising_id",Contants.advertisingID);
+                map.put("country", LanguageUtil.getCountryCode(DataCollectionActivity.this));
+
+                msg = PostMethodUtils.httpPost(Contants.UPLOAD_POPUP_API, map);
+                Log.e("popup response", msg);
+            }
+        }).start();
     }
 
     @Override

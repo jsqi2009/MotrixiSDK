@@ -11,8 +11,8 @@ import com.motrixi.datacollection.network.models.ConsentDetailInfo;
  */
 public class Contants {
 
-    public static final String BASE_SERVER_URL = "https://api.motrixi.osvlabs.com";
-//    public static final String BASE_SERVER_URL = "https://platform.motrixi.com";
+//    public static final String BASE_SERVER_URL = "https://api.motrixi.osvlabs.com";
+    public static final String BASE_SERVER_URL = "https://platform.motrixi.com";
     public static final String WEB_URL = "https://www.motrixi.com/index.php/privacy-policy-2/";
     public static final String RESPONSE_ERROR = "error";
 
@@ -22,6 +22,7 @@ public class Contants {
     public static final String SUBMIT_FORM_API = "/api/consent_form/submit";
     public static final String SUBMIT_INFO_API = "/api/sdk_information/add";
     public static final String FETCH_LANGUAGE_API = "/api/consent/list";
+    public static final String UPLOAD_POPUP_API = "/api/consent_popup/create";
 
     public static String advertisingID = "";
     public static String APP_ID = "";
