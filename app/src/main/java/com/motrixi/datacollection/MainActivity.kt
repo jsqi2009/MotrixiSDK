@@ -35,7 +35,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     private fun initView() {
 
 //初始化
-        MotrixiSDK.init(this, "6ebc1d80-7762-11eb-8446-d1713a3f35b9")
+        MotrixiSDK.init(this, "4ee18780-86cf-11eb-9cb0-1521cfcf4a10")
 
         //MotrixiSDK.init(上下文对象, "appKey")
 

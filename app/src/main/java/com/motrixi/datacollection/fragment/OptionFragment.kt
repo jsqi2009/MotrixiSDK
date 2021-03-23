@@ -275,6 +275,10 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
+
+                tvConfirm.isClickable = false
+                tvConfirm.setTextColor(Color.GRAY)
+
                 if (!mSession!!.isCollecting) {
                     Log.e("start service", "start service")
                     var startService: Intent = Intent(activity, MotrixiService::class.java)
@@ -401,6 +405,8 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                     if (flag1) {
                         parentActivity!!.selectedOptionList.add(checkText)
                     }
+
+                    parentActivity!!.checkedList.add(index)
                 } else {
                     Log.e("check status", isChecked.toString())
                     var flag2 = false
@@ -413,6 +419,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                     if (flag2) {
                         parentActivity!!.selectedOptionList.remove(checkText)
                     }
+                    parentActivity!!.checkedList.remove(index)
                 }
                 Log.e("selected size", parentActivity!!.selectedOptionList.size.toString())
             }

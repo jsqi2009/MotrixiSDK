@@ -309,6 +309,10 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
                 mSession!!.agreeFlag = true
+
+                tvConfirm.isClickable = false
+                tvConfirm.setTextColor(Color.GRAY)
+
                 var formValue = ""
                 if (!mSession!!.isCollecting) {
                     Log.e("start service", "start service")

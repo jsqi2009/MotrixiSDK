@@ -67,6 +67,8 @@ class DataCollectionActivity : FragmentActivity() {
     var lanList: ArrayList<LanguageInfo> = ArrayList()
     var selectedOptionList: ArrayList<String> = ArrayList()
     private var mLocationManager: LocationManager? = null
+    var checkedList: ArrayList<Int> = ArrayList()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,12 +218,17 @@ class DataCollectionActivity : FragmentActivity() {
             optionArray.remove(Contants.STATEMENT)
             selectedOptionList.remove(Contants.STATEMENT)
         }
+
+        for (index in optionArray.indices) {
+            checkedList.add(index)
+        }
+        Log.e("checked list", checkedList.toString())
     }
 
     fun submitConsentFormData(value: String) {
 
         Log.d("consent form value", value)
-        var call = HttpClient.submitConsentForm(this, value, mSession!!.appID)
+        var call = HttpClient.submitConsentForm(this, value, mSession!!.appID, checkedList.toString())
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
                 Log.d("submit status", "failure")
