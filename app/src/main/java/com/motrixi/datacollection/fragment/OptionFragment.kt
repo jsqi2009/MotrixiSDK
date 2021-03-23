@@ -300,6 +300,10 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
         tvConfirm.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
+
+                tvConfirm.isClickable = false
+                tvConfirm.setTextColor(Color.GRAY)
+
                 mSession!!.agreeFlag = true
                 if (!mSession!!.isCollecting) {
                     Log.e("start service", "start service")

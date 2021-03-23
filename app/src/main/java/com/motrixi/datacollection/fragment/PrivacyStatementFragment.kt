@@ -289,7 +289,7 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
 
         tvCancel.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                mSession!!.agreeFlag = true
+                //mSession!!.agreeFlag = true
                 Log.e("stop service", "stop service")
                 var startService: Intent = Intent(activity, MotrixiService::class.java)
                 activity!!.stopService(startService)
@@ -302,6 +302,10 @@ class PrivacyStatementFragment : Fragment(), View.OnClickListener {
         tvConfirm.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
                 //parentActivity!!.initPermission()
+
+                tvConfirm.isClickable = false
+                tvConfirm.setTextColor(Color.GRAY)
+
                 mSession!!.agreeFlag = true
                 if (!mSession!!.isCollecting) {
                     Log.e("start service", "start service")
