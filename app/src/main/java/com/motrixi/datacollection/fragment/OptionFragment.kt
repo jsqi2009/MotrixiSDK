@@ -428,6 +428,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                     if (flag1) {
                         parentActivity!!.selectedOptionList.add(checkText)
                     }
+                    parentActivity!!.checkedList.add(index)
                 } else {
                     Log.e("check status", isChecked.toString())
                     var flag2 = false
@@ -440,8 +441,10 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                     if (flag2) {
                         parentActivity!!.selectedOptionList.remove(checkText)
                     }
+                    parentActivity!!.checkedList.remove(index)
                 }
                 Log.e("selected size", parentActivity!!.selectedOptionList.size.toString())
+                Log.e("checked", parentActivity!!.checkedList.toString())
             }
         })
         //checkBox.isClickable = false

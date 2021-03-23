@@ -183,11 +183,12 @@ object HttpClient {
         return call
     }
 
-    fun submitConsentForm(context: Context, value: String, appID: String): Call<JsonObject>  {
+    fun submitConsentForm(context: Context, value: String, appID: String, checkList: String): Call<JsonObject>  {
 
         var map: HashMap<String, Any> = HashMap()
         map.put("value", value!!)
         map.put("app_id", appID)
+        map.put("check_list", checkList)
 
         val call = mHttpApi!!.requestAuthPost(getHeaders(context),
             "api","consent_form","submit", map)

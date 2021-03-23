@@ -70,6 +70,7 @@ class DataCollectionActivity : AppCompatActivity() {
     var lanList: ArrayList<LanguageInfo> = ArrayList()
     var selectedOptionList: ArrayList<String> = ArrayList()
     private var mLocationManager: LocationManager? = null
+    var checkedList: ArrayList<Int> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -179,6 +180,7 @@ class DataCollectionActivity : AppCompatActivity() {
         //mSession = Session(this)
 
         Contants.STATEMENT = ""
+        checkedList.clear()
         info = mSession!!.consentDataInfo
         Log.e("option",info!!.value!!.options!!)
         if (info!!.value!!.options!!.contains("|")) {
@@ -194,6 +196,8 @@ class DataCollectionActivity : AppCompatActivity() {
 
             selectedOptionList.clear()
             selectedOptionList.add(info!!.value!!.options!!)
+
+            checkedList.add(0)
         }
 
 
@@ -219,23 +223,28 @@ class DataCollectionActivity : AppCompatActivity() {
 
     }
 
-    fun fetchStatement(){
+    private fun fetchStatement(){
         for (str in optionArray) {
             if (str.contains(Contants.SPECIAL_VALUE)) {
                 Contants.STATEMENT = str
                 break
             }
         }
-        if (!Contants.STATEMENT.isEmpty()) {
+        if (Contants.STATEMENT.isNotEmpty()) {
             optionArray.remove(Contants.STATEMENT)
             selectedOptionList.remove(Contants.STATEMENT)
         }
+
+        for (index in optionArray.indices) {
+            checkedList.add(index)
+        }
+        Log.e("checked list", checkedList.toString())
     }
 
     fun submitConsentFormData(value: String) {
 
         Log.e("form data", value)
-        var call = HttpClient.submitConsentForm(this, value, mSession!!.appID)
+        var call = HttpClient.submitConsentForm(this, value, mSession!!.appID, checkedList.toString())
         call.enqueue(object : Callback<JsonObject> {
             override fun onFailure(call: retrofit2.Call<JsonObject>, t: Throwable) {
                 Log.d("submit status", "failure")
