@@ -33,7 +33,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         textView.setOnClickListener(this);
 
         Intent intent = new Intent(this, MotrixiActivity.class);
-        intent.putExtra("key", "4ee18780-86cf-11eb-9cb0-1521cfcf4a10");
+        intent.putExtra("key", "86cf1530-88a2-11eb-b5b4-4dd2cbc4e7f1");
         startActivity(intent);
 
         //MotrixiSDK.init(this, "ce13d5d0-1f2e-11eb-b44e-7132fcb9deec");

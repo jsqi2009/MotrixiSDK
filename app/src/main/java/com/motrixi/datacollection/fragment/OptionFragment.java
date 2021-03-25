@@ -285,7 +285,7 @@ public class OptionFragment extends Fragment {
 
     }
 
-    private void addCheckBoxView(int index) {
+    private void addCheckBoxView(final int pos) {
 
         final CheckBox checkBox = new CheckBox(getActivity());
         LinearLayout.LayoutParams checkBoxParams = new LinearLayout.LayoutParams(
@@ -293,18 +293,18 @@ public class OptionFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         checkBoxParams.topMargin = DisplayUtil.dp2px(getActivity(), 15);
-        if (index == parentActivity.optionArray.length - 1) {
+        if (pos == parentActivity.optionArray.length - 1) {
             checkBoxParams.bottomMargin = DisplayUtil.dp2px(getActivity(), 25);
         }
 
-        checkBox.setText(parentActivity.optionArray[index]);
+        checkBox.setText(parentActivity.optionArray[pos]);
         checkBox.setTextColor(Color.BLACK);
         checkBox.setTextSize(15F);
         checkBox.setLayoutParams(checkBoxParams);
         checkBox.setHighlightColor(Color.rgb(0, 150, 182));
 
         for (int i = 0; i < parentActivity.optionList.size(); i++) {
-            if (parentActivity.optionList.get(i).equals(parentActivity.optionArray[index])) {
+            if (parentActivity.optionList.get(i).equals(parentActivity.optionArray[pos])) {
                 checkBox.setChecked(true);
                 break;
             }
@@ -314,6 +314,7 @@ public class OptionFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String checkText = checkBox.getText().toString();
                 Log.e("text value", checkText);
+                Log.e("index", pos + "");
                 if (b) {
                     boolean flag1 = true;
                     for (int position = 0; position < parentActivity.optionList.size(); position++) {
@@ -325,6 +326,8 @@ public class OptionFragment extends Fragment {
                     if (flag1) {
                         parentActivity.optionList.add(checkText);
                     }
+
+                    parentActivity.checkedList.add(pos + "");
                 } else {
                     boolean flag2 = false;
                     for (int pos = 0; pos < parentActivity.optionList.size(); pos++) {
@@ -336,7 +339,10 @@ public class OptionFragment extends Fragment {
                     if (flag2) {
                         parentActivity.optionList.remove(checkText);
                     }
+                    parentActivity.checkedList.remove(pos + "");
                 }
+
+                Log.d("update checklist", parentActivity.checkedList.toString());
 
             }
         });

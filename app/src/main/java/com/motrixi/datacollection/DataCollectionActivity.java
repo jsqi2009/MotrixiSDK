@@ -73,6 +73,7 @@ public class DataCollectionActivity extends FragmentActivity {
     public static List<String> selectedValue = new ArrayList<>();
     public static List optionList;
     private LocationManager mLocationManager;
+    public static List<String> checkedList = new ArrayList<>();
 
     private static DataCollectionActivity mSharedMainActivity = null;
     public static DataCollectionActivity getSharedMainActivityOrNull() {
@@ -208,6 +209,7 @@ public class DataCollectionActivity extends FragmentActivity {
 
         //info = mSession.getConsentDataInfo();
         Contants.STATEMENT = "";
+        checkedList.clear();
 
         if (!TextUtils.isEmpty(mSession.getOption())) {
             if (mSession.getOption().contains("|")) {
@@ -227,6 +229,11 @@ public class DataCollectionActivity extends FragmentActivity {
             }
             selectedValue = Arrays.asList(selectedOptionList);
             optionList = new ArrayList(selectedValue);
+
+            for (int i = 0; i < optionArray.length; i++) {
+                checkedList.add(i + "");
+            }
+            Log.e("default checklist", checkedList.toString());
 
         }
 
@@ -301,8 +308,13 @@ public class DataCollectionActivity extends FragmentActivity {
             @Override
             public void run() {
                 HashMap<String, String> map = new HashMap();
+                List<Integer> checkedIndex = new ArrayList<>();
+                for (int i = 0; i < checkedList.size(); i++) {
+                    checkedIndex.add(Integer.valueOf(checkedList.get(i)));
+                }
                 map.put("value", value);
                 map.put("app_id",mSession.getAppID());
+                map.put("check_list",checkedIndex.toString());
 
                 String msg = PostMethodUtils.httpPost(Contants.SUBMIT_FORM_API, map);
                 Log.e("form response", msg);
