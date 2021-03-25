@@ -208,6 +208,8 @@ public class OptionFragment extends Fragment {
             public void onClick(View view) {
                 //Contants.agreeFlag = true;
                 parentActivity.mSession.setAgreeFlag(true);
+                tvConfirm.setClickable(false);
+                tvConfirm.setTextColor(Color.GRAY);
                 Intent startService = new Intent(getActivity(), MotrixiService.class);
                 if (Build.VERSION.SDK_INT >= 26) {
                     getActivity().startForegroundService(startService);
