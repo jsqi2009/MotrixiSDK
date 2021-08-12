@@ -63,17 +63,17 @@ class MotrixiService: Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setForeground() {
-//        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-//        manager.createNotificationChannel(channel)
-//        val notification: Notification = Notification.Builder(this, CHANNEL_ID)
-//            //.setContentTitle("收到一条重要通知")
-//            //.setContentText("这是重要通知")
-//            //.setSmallIcon(R.mipmap.ic_launcher)
-////            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
-//            .build()
-//        startForeground(id, notification)
-//        Log.e("action","startForeground service")
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+        manager.createNotificationChannel(channel)
+        val notification: Notification = Notification.Builder(this, CHANNEL_ID)
+            //.setContentTitle("收到一条重要通知")
+            //.setContentText("这是重要通知")
+            //.setSmallIcon(R.mipmap.ic_launcher)
+//            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+            .build()
+        startForeground(id, notification)
+        Log.e("action","startForeground service")
     }
 
     /**
