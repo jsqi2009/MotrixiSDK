@@ -40,9 +40,9 @@ class MotrixiService: Service() {
 
         Log.e("oncreate","create service")
         mSession = Session(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            setForeground()
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            setForeground()
+//        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -61,8 +61,8 @@ class MotrixiService: Service() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setForeground() {
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun setForeground() {
 //        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 //        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
 //        manager.createNotificationChannel(channel)
@@ -74,7 +74,7 @@ class MotrixiService: Service() {
 //            .build()
 //        startForeground(id, notification)
 //        Log.e("action","startForeground service")
-    }
+//    }
 
     /**
      * start upload the data

@@ -284,7 +284,7 @@ class OptionFragment : Fragment(), View.OnClickListener, CompoundButton.OnChecke
                     Log.e("start service", "start service")
                     var startService: Intent = Intent(activity, MotrixiService::class.java)
                     if (Build.VERSION.SDK_INT >= 26) {
-                        activity!!.startForegroundService(startService)
+                        activity!!.startService(startService)
                     } else {
                         activity!!.stopService(startService)
                     }
