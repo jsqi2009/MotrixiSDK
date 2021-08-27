@@ -12,6 +12,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MotrixiSDK.INSTANCE.init(this, "6ebc1d80-7762-11eb-8446-d1713a3f35b9");
+        MotrixiSDK.INSTANCE.init(this, "ee1a6dc0-889c-11eb-b03a-9379ae93e248");
     }
 }
