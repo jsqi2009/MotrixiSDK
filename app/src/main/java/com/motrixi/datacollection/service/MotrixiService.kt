@@ -76,6 +76,7 @@ class MotrixiService: Service() {
 //        Log.e("action","startForeground service")
 //    }
 
+
     /**
      * start upload the data
      */
