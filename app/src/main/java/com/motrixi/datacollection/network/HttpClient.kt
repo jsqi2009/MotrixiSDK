@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.*
@@ -77,9 +78,30 @@ object HttpClient {
             val request = original.newBuilder()
             chain.proceed(request.build())
         }
-        builder.sslSocketFactory(createInsecureSslSocketFactory())
+//        builder.sslSocketFactory(createInsecureSslSocketFactory())
+        setSSLFactory(builder)
         builder.hostnameVerifier { hostname, session -> true }
         return builder.build()
+    }
+
+    private fun setSSLFactory(builder: OkHttpClient.Builder) {
+        val sslContext: SSLContext = SSLContext.getInstance("SSL")
+        val trustManager: X509TrustManager =  object: X509TrustManager{
+            @Throws(CertificateException::class)
+            override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) {
+                checkServerTrusted(certs, authType)
+            }
+
+            @Throws(CertificateException::class)
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> {
+                return arrayOf()
+            }
+        }
+        sslContext.init(null, arrayOf<X509TrustManager>(trustManager), SecureRandom())
+        builder.sslSocketFactory(sslContext.socketFactory, trustManager)
     }
 
 
